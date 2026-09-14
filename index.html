@@ -312,11 +312,13 @@
        ========================================================================= -->
   <main id="studio-workspace" class="flex-1 flex overflow-hidden relative studio-workspace is-hidden">
 
+    <div id="studio-drawer-backdrop" class="studio-drawer-backdrop" aria-hidden="true"></div>
+
     <!-- LEFT PALETTE & DRAWER (Tabs + Dynamic Content) -->
-    <aside class="w-80 md:w-96 border-r border-zinc-800 bg-zinc-900/60 flex shrink-0 z-20">
+    <aside id="sidebar-left" class="studio-sidebar-left w-80 md:w-96 border-r border-zinc-800 bg-zinc-900/60 flex shrink-0 z-20">
       
       <!-- Icon Tab Strip -->
-      <div class="w-14 border-r border-zinc-800 bg-zinc-950 flex flex-col items-center py-3 gap-3 shrink-0">
+      <div class="studio-tab-rail w-14 border-r border-zinc-800 bg-zinc-950 flex flex-col items-center py-3 gap-3 shrink-0">
         <button class="tab-btn p-2 rounded-lg text-amber-400 bg-zinc-800/80 transition flex flex-col items-center gap-1" data-tab="templates" title="Template Suites">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -364,6 +366,7 @@
       <div id="sidebar-left-content" class="flex-1 p-4 overflow-y-auto">
         <!-- Injected dynamically via JS -->
       </div>
+      <button type="button" id="btn-close-tools-drawer" class="studio-drawer-close" aria-label="Close tools">Close</button>
     </aside>
 
     <!-- CENTER CANVAS EDITING STAGE -->
@@ -386,11 +389,41 @@
     </section>
 
     <!-- RIGHT INSPECTOR & STYLING PANEL -->
-    <aside id="sidebar-right" class="w-72 md:w-84 border-l border-zinc-800 bg-zinc-900/90 flex flex-col shrink-0 z-20 overflow-y-auto">
+    <aside id="sidebar-right" class="studio-sidebar-right w-72 md:w-84 border-l border-zinc-800 bg-zinc-900/90 flex flex-col shrink-0 z-20 overflow-y-auto">
+      <div class="studio-drawer-handle" aria-hidden="true"><span></span></div>
       <div id="sidebar-right-content" class="p-4 flex-1">
         <!-- Injected dynamically via JS (Quick Customize Form or Element Properties) -->
       </div>
     </aside>
+
+    <!-- Mobile bottom chrome -->
+    <nav id="studio-mobile-bar" class="studio-mobile-bar" aria-label="Studio mobile tools">
+      <button type="button" id="btn-mobile-tools" class="studio-mobile-bar-btn">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h10M4 18h14" />
+        </svg>
+        <span>Tools</span>
+      </button>
+      <button type="button" id="btn-mobile-inspector" class="studio-mobile-bar-btn">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+        </svg>
+        <span>Edit</span>
+      </button>
+      <button type="button" id="btn-mobile-guest" class="studio-mobile-bar-btn">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+        <span>Preview</span>
+      </button>
+      <button type="button" id="btn-mobile-whatsapp" class="studio-mobile-bar-btn studio-mobile-bar-btn--wa">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.86 9.86 0 0012.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.22 8.22 0 012.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.39-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.25 8.25-8.25zm4.52 10.52c-.2-.1-1.18-.58-1.36-.64-.18-.07-.32-.1-.45.1-.13.2-.51.64-.63.77-.11.13-.23.15-.43.05-.2-.1-.84-.31-1.6-.99-.59-.53-.99-1.18-1.1-1.38-.12-.2-.01-.3.09-.4.09-.09.2-.23.3-.35.1-.12.13-.2.2-.33.07-.13.03-.25-.02-.35-.05-.1-.45-1.08-.62-1.47-.16-.39-.33-.33-.45-.34h-.38c-.13 0-.35.05-.53.25-.18.2-.7.68-.7 1.65s.72 1.92.82 2.05c.1.13 1.41 2.15 3.42 3.02.48.21.85.33 1.14.42.48.15.91.13 1.26.08.38-.06 1.18-.48 1.34-.95.17-.47.17-.87.12-.95-.05-.08-.18-.13-.38-.23z"/>
+        </svg>
+        <span>Share</span>
+      </button>
+    </nav>
 
   </main>
 

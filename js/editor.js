@@ -836,8 +836,13 @@ export class CardEditor {
     const bgColor = t.bgColor || '#FAF7F2';
 
     // Canvas container (Standard 5x7 proportion: 400px wide x 560px tall)
+    const stageW = 400;
+    const stageH = 560;
+    const shellW = Math.round(stageW * this.zoom);
+    const shellH = Math.round(stageH * this.zoom);
+
     this.container.innerHTML = `
-      <div class="relative flex flex-col items-center justify-center p-4 md:p-8">
+      <div class="relative flex flex-col items-center justify-center p-2 sm:p-4 md:p-8 canvas-stage-outer">
         <!-- SVG Definitions for Metallic Foil Shimmer -->
         <svg width="0" height="0" class="absolute">
           <defs>
@@ -856,25 +861,27 @@ export class CardEditor {
           </defs>
         </svg>
 
-        <!-- Main 5x7 Card Stage -->
-        <div id="card-canvas-stage" 
-             class="relative select-none transition-all duration-300 ${t.bgImage ? '' : bgTexture} ${this.showBleed ? 'bleed-guides' : ''} shadow-2xl rounded-sm"
-             style="width: 400px; height: 560px; background-color: ${bgColor}; ${t.bgImage ? `background-image: url('${this.getEffectiveBg(t.bgImage)}'); background-size: cover; background-position: center;` : ''} overflow: hidden; transform: scale(${this.zoom}); transform-origin: top center;">
-          
-          <!-- Rendered Card Elements -->
-          <div id="card-elements-wrapper" class="absolute inset-0 w-full h-full">
-            ${elements.map(el => this.renderElementHTML(el)).join('')}
-          </div>
+        <!-- Scaled shell keeps layout size correct for mobile fit -->
+        <div class="canvas-stage-shell" style="width: ${shellW}px; height: ${shellH}px;">
+          <div id="card-canvas-stage" 
+               class="relative select-none ${t.bgImage ? '' : bgTexture} ${this.showBleed ? 'bleed-guides' : ''} shadow-2xl rounded-sm"
+               style="width: ${stageW}px; height: ${stageH}px; background-color: ${bgColor}; ${t.bgImage ? `background-image: url('${this.getEffectiveBg(t.bgImage)}'); background-size: cover; background-position: center;` : ''} overflow: hidden; transform: scale(${this.zoom}); transform-origin: top left;">
+            
+            <!-- Rendered Card Elements -->
+            <div id="card-elements-wrapper" class="absolute inset-0 w-full h-full">
+              ${elements.map(el => this.renderElementHTML(el)).join('')}
+            </div>
 
+          </div>
         </div>
 
         <!-- Canvas Card Side Label -->
-        <div class="mt-4 flex items-center gap-3">
-          <span class="text-xs font-serif tracking-widest text-zinc-400 uppercase">
+        <div class="mt-3 sm:mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3 canvas-stage-meta">
+          <span class="text-[10px] sm:text-xs font-serif tracking-widest text-zinc-400 uppercase text-center">
             ${t.title} • <span class="text-amber-400 font-semibold">${this.activeSide.toUpperCase()} SIDE</span>
           </span>
-          <span class="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
-            5" × 7" Standard Ratio (300 DPI Ready)
+          <span class="text-[9px] sm:text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
+            5" × 7" · 300 DPI Ready
           </span>
         </div>
       </div>

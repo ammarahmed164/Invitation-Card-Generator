@@ -64,7 +64,7 @@ export class GuestExperienceModal {
           </div>
 
           <!-- 3D Envelope & Card Container -->
-          <div id="envelope-wrapper" class="relative perspective-1000 w-[360px] sm:w-[400px] h-[520px] sm:h-[560px] flex items-center justify-center my-2">
+          <div id="envelope-wrapper" class="relative perspective-1000 guest-envelope-wrap flex items-center justify-center my-2">
             
             <!-- Realistic Envelope Back / Base -->
             <div id="envelope-body" class="absolute inset-0 bg-[#f3ede4] rounded-lg shadow-2xl border border-[#e0d6c5] overflow-hidden flex items-end justify-center">
@@ -88,7 +88,7 @@ export class GuestExperienceModal {
               </div>
 
               <!-- Card inside Envelope (Glides up when opened) -->
-              <div id="envelope-card-inner" class="envelope-card relative w-[320px] sm:w-[350px] h-[450px] sm:h-[490px] shadow-2xl cursor-pointer">
+              <div id="envelope-card-inner" class="envelope-card relative guest-envelope-card shadow-2xl cursor-pointer">
                 
                 <!-- 3D Flipper -->
                 <div id="guest-card-flipper" class="card-flipper relative w-full h-full">

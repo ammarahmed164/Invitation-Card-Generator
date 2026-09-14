@@ -1,7 +1,7 @@
 /**
- * ATELIER LUMIÈRE — Standalone Distribution Bundle
+ * Invitation Card Generator — Standalone Distribution Bundle
  * Self-contained bundle for zero-config execution via file:// protocol (double-click index.html)
- * and http:// servers. Perfect for Etsy digital product distribution.
+ * and http:// servers (including Vercel static hosting).
  */
 
 (function() {
@@ -5730,8 +5730,13 @@
       const bgColor = t.bgColor || '#FAF7F2';
   
       // Canvas container (Standard 5x7 proportion: 400px wide x 560px tall)
+      const stageW = 400;
+      const stageH = 560;
+      const shellW = Math.round(stageW * this.zoom);
+      const shellH = Math.round(stageH * this.zoom);
+  
       this.container.innerHTML = `
-        <div class="relative flex flex-col items-center justify-center p-4 md:p-8">
+        <div class="relative flex flex-col items-center justify-center p-2 sm:p-4 md:p-8 canvas-stage-outer">
           <!-- SVG Definitions for Metallic Foil Shimmer -->
           <svg width="0" height="0" class="absolute">
             <defs>
@@ -5750,25 +5755,27 @@
             </defs>
           </svg>
   
-          <!-- Main 5x7 Card Stage -->
-          <div id="card-canvas-stage" 
-               class="relative select-none transition-all duration-300 ${t.bgImage ? '' : bgTexture} ${this.showBleed ? 'bleed-guides' : ''} shadow-2xl rounded-sm"
-               style="width: 400px; height: 560px; background-color: ${bgColor}; ${t.bgImage ? `background-image: url('${this.getEffectiveBg(t.bgImage)}'); background-size: cover; background-position: center;` : ''} overflow: hidden; transform: scale(${this.zoom}); transform-origin: top center;">
-            
-            <!-- Rendered Card Elements -->
-            <div id="card-elements-wrapper" class="absolute inset-0 w-full h-full">
-              ${elements.map(el => this.renderElementHTML(el)).join('')}
-            </div>
+          <!-- Scaled shell keeps layout size correct for mobile fit -->
+          <div class="canvas-stage-shell" style="width: ${shellW}px; height: ${shellH}px;">
+            <div id="card-canvas-stage" 
+                 class="relative select-none ${t.bgImage ? '' : bgTexture} ${this.showBleed ? 'bleed-guides' : ''} shadow-2xl rounded-sm"
+                 style="width: ${stageW}px; height: ${stageH}px; background-color: ${bgColor}; ${t.bgImage ? `background-image: url('${this.getEffectiveBg(t.bgImage)}'); background-size: cover; background-position: center;` : ''} overflow: hidden; transform: scale(${this.zoom}); transform-origin: top left;">
+              
+              <!-- Rendered Card Elements -->
+              <div id="card-elements-wrapper" class="absolute inset-0 w-full h-full">
+                ${elements.map(el => this.renderElementHTML(el)).join('')}
+              </div>
   
+            </div>
           </div>
   
           <!-- Canvas Card Side Label -->
-          <div class="mt-4 flex items-center gap-3">
-            <span class="text-xs font-serif tracking-widest text-zinc-400 uppercase">
+          <div class="mt-3 sm:mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3 canvas-stage-meta">
+            <span class="text-[10px] sm:text-xs font-serif tracking-widest text-zinc-400 uppercase text-center">
               ${t.title} • <span class="text-amber-400 font-semibold">${this.activeSide.toUpperCase()} SIDE</span>
             </span>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
-              5" × 7" Standard Ratio (300 DPI Ready)
+            <span class="text-[9px] sm:text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
+              5" × 7" · 300 DPI Ready
             </span>
           </div>
         </div>
@@ -6879,7 +6886,7 @@
             </div>
   
             <!-- 3D Envelope & Card Container -->
-            <div id="envelope-wrapper" class="relative perspective-1000 w-[360px] sm:w-[400px] h-[520px] sm:h-[560px] flex items-center justify-center my-2">
+            <div id="envelope-wrapper" class="relative perspective-1000 guest-envelope-wrap flex items-center justify-center my-2">
               
               <!-- Realistic Envelope Back / Base -->
               <div id="envelope-body" class="absolute inset-0 bg-[#f3ede4] rounded-lg shadow-2xl border border-[#e0d6c5] overflow-hidden flex items-end justify-center">
@@ -6903,7 +6910,7 @@
                 </div>
   
                 <!-- Card inside Envelope (Glides up when opened) -->
-                <div id="envelope-card-inner" class="envelope-card relative w-[320px] sm:w-[350px] h-[450px] sm:h-[490px] shadow-2xl cursor-pointer">
+                <div id="envelope-card-inner" class="envelope-card relative guest-envelope-card shadow-2xl cursor-pointer">
                   
                   <!-- 3D Flipper -->
                   <div id="guest-card-flipper" class="card-flipper relative w-full h-full">
@@ -7318,6 +7325,7 @@
       this.renderLeftSidebar();
       this.renderInspector(null);
       this.bindGlobalEvents();
+      this.bindResponsiveChrome();
     }
   
     sectionTemplateCount(sectionId) {
@@ -7389,6 +7397,8 @@
       this.switchLeftTab('templates');
       this.renderLeftSidebar();
       this.renderInspector(null);
+      this.closeStudioDrawers();
+      requestAnimationFrame(() => this.fitCanvasToViewport());
     }
   
     renderLobbySections() {
@@ -7512,6 +7522,7 @@
   
     handleSideChanged(side) {
       this.updateSideUI(side);
+      if (this.inStudio) this.fitCanvasToViewport();
     }
   
     updateSideUI(side) {
@@ -7544,20 +7555,19 @@
       document.getElementById('btn-redo')?.addEventListener('click', () => this.editor.redo());
   
       // Zoom
+      // Zoom
       document.getElementById('btn-zoom-in')?.addEventListener('click', () => {
         this.editor.zoom = Math.min(1.5, this.editor.zoom + 0.1);
         this.editor.render();
-        document.getElementById('zoom-display').textContent = `${Math.round(this.editor.zoom * 100)}%`;
+        this.syncZoomDisplay();
       });
       document.getElementById('btn-zoom-out')?.addEventListener('click', () => {
-        this.editor.zoom = Math.max(0.6, this.editor.zoom - 0.1);
+        this.editor.zoom = Math.max(0.28, this.editor.zoom - 0.1);
         this.editor.render();
-        document.getElementById('zoom-display').textContent = `${Math.round(this.editor.zoom * 100)}%`;
+        this.syncZoomDisplay();
       });
       document.getElementById('btn-zoom-reset')?.addEventListener('click', () => {
-        this.editor.zoom = 1;
-        this.editor.render();
-        document.getElementById('zoom-display').textContent = `100%`;
+        this.fitCanvasToViewport({ forceDesktop: window.innerWidth > 900 });
       });
   
       // Guest 3D Preview Modal
@@ -7623,6 +7633,83 @@
         btn.classList.toggle('text-zinc-400', !isActive);
       });
       this.renderLeftSidebar();
+      if (window.innerWidth <= 900) {
+        this.openStudioDrawer('tools');
+      }
+    }
+  
+    syncZoomDisplay() {
+      const el = document.getElementById('zoom-display');
+      if (el) el.textContent = `${Math.round(this.editor.zoom * 100)}%`;
+    }
+  
+    isMobileStudio() {
+      return window.innerWidth <= 900;
+    }
+  
+    fitCanvasToViewport({ forceDesktop = false } = {}) {
+      if (!this.editor?.currentTemplate) return;
+  
+      if (forceDesktop || !this.isMobileStudio()) {
+        this.editor.zoom = 1;
+        this.editor.render();
+        this.syncZoomDisplay();
+        return;
+      }
+  
+      const stage = document.getElementById('canvas-outer-stage');
+      if (!stage) return;
+  
+      const padX = 24;
+      const padY = 120; // toolbar + meta + mobile bar breathing room
+      const availW = Math.max(180, stage.clientWidth - padX);
+      const availH = Math.max(220, stage.clientHeight - padY);
+      const fit = Math.min(availW / 400, availH / 560, 1);
+      this.editor.zoom = Math.max(0.28, Math.min(1, Math.floor(fit * 100) / 100));
+      this.editor.render();
+      this.syncZoomDisplay();
+    }
+  
+    openStudioDrawer(which) {
+      document.body.classList.toggle('drawer-tools-open', which === 'tools');
+      document.body.classList.toggle('drawer-inspector-open', which === 'inspector');
+      document.body.classList.toggle('studio-drawer-open', which === 'tools' || which === 'inspector');
+    }
+  
+    closeStudioDrawers() {
+      document.body.classList.remove('drawer-tools-open', 'drawer-inspector-open', 'studio-drawer-open');
+    }
+  
+    bindResponsiveChrome() {
+      const backdrop = document.getElementById('studio-drawer-backdrop');
+      backdrop?.addEventListener('click', () => this.closeStudioDrawers());
+      document.getElementById('btn-close-tools-drawer')?.addEventListener('click', () => this.closeStudioDrawers());
+  
+      document.getElementById('btn-mobile-tools')?.addEventListener('click', () => {
+        if (document.body.classList.contains('drawer-tools-open')) this.closeStudioDrawers();
+        else this.openStudioDrawer('tools');
+      });
+      document.getElementById('btn-mobile-inspector')?.addEventListener('click', () => {
+        if (document.body.classList.contains('drawer-inspector-open')) this.closeStudioDrawers();
+        else this.openStudioDrawer('inspector');
+      });
+      document.getElementById('btn-mobile-guest')?.addEventListener('click', () => {
+        this.closeStudioDrawers();
+        this.guestModal.show();
+      });
+      document.getElementById('btn-mobile-whatsapp')?.addEventListener('click', () => {
+        this.closeStudioDrawers();
+        this.exporter.shareToWhatsApp();
+      });
+  
+      let resizeTimer = null;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (!this.isMobileStudio()) this.closeStudioDrawers();
+          if (this.inStudio) this.fitCanvasToViewport();
+        }, 120);
+      });
     }
   
     renderLeftSidebar() {

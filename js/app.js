@@ -54,6 +54,7 @@ class InvitationStudioApp {
     this.renderLeftSidebar();
     this.renderInspector(null);
     this.bindGlobalEvents();
+    this.bindResponsiveChrome();
   }
 
   sectionTemplateCount(sectionId) {
@@ -125,6 +126,8 @@ class InvitationStudioApp {
     this.switchLeftTab('templates');
     this.renderLeftSidebar();
     this.renderInspector(null);
+    this.closeStudioDrawers();
+    requestAnimationFrame(() => this.fitCanvasToViewport());
   }
 
   renderLobbySections() {
@@ -248,6 +251,7 @@ class InvitationStudioApp {
 
   handleSideChanged(side) {
     this.updateSideUI(side);
+    if (this.inStudio) this.fitCanvasToViewport();
   }
 
   updateSideUI(side) {
@@ -280,20 +284,19 @@ class InvitationStudioApp {
     document.getElementById('btn-redo')?.addEventListener('click', () => this.editor.redo());
 
     // Zoom
+    // Zoom
     document.getElementById('btn-zoom-in')?.addEventListener('click', () => {
       this.editor.zoom = Math.min(1.5, this.editor.zoom + 0.1);
       this.editor.render();
-      document.getElementById('zoom-display').textContent = `${Math.round(this.editor.zoom * 100)}%`;
+      this.syncZoomDisplay();
     });
     document.getElementById('btn-zoom-out')?.addEventListener('click', () => {
-      this.editor.zoom = Math.max(0.6, this.editor.zoom - 0.1);
+      this.editor.zoom = Math.max(0.28, this.editor.zoom - 0.1);
       this.editor.render();
-      document.getElementById('zoom-display').textContent = `${Math.round(this.editor.zoom * 100)}%`;
+      this.syncZoomDisplay();
     });
     document.getElementById('btn-zoom-reset')?.addEventListener('click', () => {
-      this.editor.zoom = 1;
-      this.editor.render();
-      document.getElementById('zoom-display').textContent = `100%`;
+      this.fitCanvasToViewport({ forceDesktop: window.innerWidth > 900 });
     });
 
     // Guest 3D Preview Modal
@@ -359,6 +362,83 @@ class InvitationStudioApp {
       btn.classList.toggle('text-zinc-400', !isActive);
     });
     this.renderLeftSidebar();
+    if (window.innerWidth <= 900) {
+      this.openStudioDrawer('tools');
+    }
+  }
+
+  syncZoomDisplay() {
+    const el = document.getElementById('zoom-display');
+    if (el) el.textContent = `${Math.round(this.editor.zoom * 100)}%`;
+  }
+
+  isMobileStudio() {
+    return window.innerWidth <= 900;
+  }
+
+  fitCanvasToViewport({ forceDesktop = false } = {}) {
+    if (!this.editor?.currentTemplate) return;
+
+    if (forceDesktop || !this.isMobileStudio()) {
+      this.editor.zoom = 1;
+      this.editor.render();
+      this.syncZoomDisplay();
+      return;
+    }
+
+    const stage = document.getElementById('canvas-outer-stage');
+    if (!stage) return;
+
+    const padX = 24;
+    const padY = 120; // toolbar + meta + mobile bar breathing room
+    const availW = Math.max(180, stage.clientWidth - padX);
+    const availH = Math.max(220, stage.clientHeight - padY);
+    const fit = Math.min(availW / 400, availH / 560, 1);
+    this.editor.zoom = Math.max(0.28, Math.min(1, Math.floor(fit * 100) / 100));
+    this.editor.render();
+    this.syncZoomDisplay();
+  }
+
+  openStudioDrawer(which) {
+    document.body.classList.toggle('drawer-tools-open', which === 'tools');
+    document.body.classList.toggle('drawer-inspector-open', which === 'inspector');
+    document.body.classList.toggle('studio-drawer-open', which === 'tools' || which === 'inspector');
+  }
+
+  closeStudioDrawers() {
+    document.body.classList.remove('drawer-tools-open', 'drawer-inspector-open', 'studio-drawer-open');
+  }
+
+  bindResponsiveChrome() {
+    const backdrop = document.getElementById('studio-drawer-backdrop');
+    backdrop?.addEventListener('click', () => this.closeStudioDrawers());
+    document.getElementById('btn-close-tools-drawer')?.addEventListener('click', () => this.closeStudioDrawers());
+
+    document.getElementById('btn-mobile-tools')?.addEventListener('click', () => {
+      if (document.body.classList.contains('drawer-tools-open')) this.closeStudioDrawers();
+      else this.openStudioDrawer('tools');
+    });
+    document.getElementById('btn-mobile-inspector')?.addEventListener('click', () => {
+      if (document.body.classList.contains('drawer-inspector-open')) this.closeStudioDrawers();
+      else this.openStudioDrawer('inspector');
+    });
+    document.getElementById('btn-mobile-guest')?.addEventListener('click', () => {
+      this.closeStudioDrawers();
+      this.guestModal.show();
+    });
+    document.getElementById('btn-mobile-whatsapp')?.addEventListener('click', () => {
+      this.closeStudioDrawers();
+      this.exporter.shareToWhatsApp();
+    });
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (!this.isMobileStudio()) this.closeStudioDrawers();
+        if (this.inStudio) this.fitCanvasToViewport();
+      }, 120);
+    });
   }
 
   renderLeftSidebar() {
