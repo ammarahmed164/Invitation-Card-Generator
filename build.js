@@ -1,5 +1,5 @@
 /**
- * Bundle source modules into js/bundle.js for standalone / production use.
+ * Bundle source modules into js/bundle.js and prepare /public for Vercel.
  * Run: node build.js
  */
 import fs from 'fs';
@@ -42,22 +42,11 @@ for (const relPath of files) {
 
   let code = fs.readFileSync(fullPath, 'utf8');
 
-  // Remove import statements
   code = code.replace(/^\s*import\s+[^;]+;?\s*$/gm, '');
-
-  // Replace "export const " with "const "
   code = code.replace(/^\s*export\s+const\s+/gm, 'const ');
-
-  // Replace "export function " with "function "
   code = code.replace(/^\s*export\s+function\s+/gm, 'function ');
-
-  // Replace "export class " with "class "
   code = code.replace(/^\s*export\s+class\s+/gm, 'class ');
-
-  // Replace "export default " with ""
   code = code.replace(/^\s*export\s+default\s+/gm, '');
-
-  // Replace "export { ... }" with ""
   code = code.replace(/^\s*export\s*\{[^}]*\}\s*;?\s*$/gm, '');
 
   bundledCode += `\n  // =========================================================================\n`;
@@ -70,6 +59,24 @@ bundledCode += `
 })();
 `;
 
-const outputPath = path.join(projectRoot, 'js', 'bundle.js');
-fs.writeFileSync(outputPath, bundledCode, 'utf8');
-console.log(`✓ Standalone bundle created at ${outputPath} (${(bundledCode.length / 1024).toFixed(1)} KB)`);
+const bundlePath = path.join(projectRoot, 'js', 'bundle.js');
+fs.writeFileSync(bundlePath, bundledCode, 'utf8');
+console.log(`✓ Bundle created at js/bundle.js (${(bundledCode.length / 1024).toFixed(1)} KB)`);
+
+// Prepare static output for Vercel (outputDirectory: "public")
+const publicDir = path.join(projectRoot, 'public');
+fs.rmSync(publicDir, { recursive: true, force: true });
+fs.mkdirSync(publicDir, { recursive: true });
+
+const toCopy = ['index.html', 'css', 'js', 'lib', 'assets'];
+for (const item of toCopy) {
+  const src = path.join(projectRoot, item);
+  const dest = path.join(publicDir, item);
+  if (!fs.existsSync(src)) {
+    console.error(`Missing deploy asset: ${src}`);
+    process.exit(1);
+  }
+  fs.cpSync(src, dest, { recursive: true });
+}
+
+console.log('✓ Static site prepared at /public for Vercel');
