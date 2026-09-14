@@ -1920,55 +1920,73 @@ body.mode-lobby {
     padding: 0.5rem 0.5rem 4.75rem !important;
   }
 
-  .studio-sidebar-left,
-  .studio-sidebar-right {
-    position: fixed !important;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
-    width: 100% !important;
-    max-width: none !important;
-    height: min(72vh, 560px);
-    z-index: 70;
-    border: 0 !important;
-    border-top: 1px solid rgba(226, 208, 170, 0.2) !important;
-    border-radius: 1.1rem 1.1rem 0 0;
-    background: rgba(12, 10, 8, 0.98) !important;
-    box-shadow: 0 -18px 40px rgba(0, 0, 0, 0.45);
-    transform: translateY(108%);
-    transition: transform 240ms ease;
-    overflow: hidden;
-  }
-
-  .studio-sidebar-left {
-    flex-direction: row;
-  }
-
-  .studio-sidebar-right {
-    display: flex;
-    flex-direction: column;
-  }
-
-  body.drawer-tools-open .studio-sidebar-left,
-  body.drawer-inspector-open .studio-sidebar-right {
-    transform: translateY(0);
-  }
-
-  .studio-drawer-backdrop {
+  /* Backdrop below drawers; leave mobile bar uncovered */
+  #studio-drawer-backdrop.studio-drawer-backdrop {
     display: block;
     position: fixed;
-    inset: 0;
-    z-index: 65;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 3.7rem;
+    z-index: 60 !important;
     background: rgba(0, 0, 0, 0.55);
     opacity: 0;
     pointer-events: none;
     transition: opacity 200ms ease;
   }
 
-  body.studio-drawer-open .studio-drawer-backdrop {
+  body.studio-drawer-open #studio-drawer-backdrop {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  /* Drawers above backdrop so taps reach Tools/Edit content */
+  #sidebar-left.studio-sidebar-left,
+  #sidebar-right.studio-sidebar-right {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    bottom: 3.7rem;
+    top: auto;
+    width: 100% !important;
+    max-width: none !important;
+    height: min(68vh, 520px);
+    z-index: 80 !important;
+    border: 0 !important;
+    border-top: 1px solid rgba(226, 208, 170, 0.2) !important;
+    border-radius: 1.1rem 1.1rem 0 0;
+    background: rgba(12, 10, 8, 0.98) !important;
+    box-shadow: 0 -18px 40px rgba(0, 0, 0, 0.45);
+    transform: translateY(110%);
+    transition: transform 240ms ease;
+    overflow: hidden;
+    pointer-events: none;
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body.drawer-tools-open #sidebar-left.studio-sidebar-left,
+  body.drawer-inspector-open #sidebar-right.studio-sidebar-right {
+    transform: translateY(0);
+    pointer-events: auto !important;
+  }
+
+  #sidebar-left.studio-sidebar-left {
+    flex-direction: row;
+  }
+
+  #sidebar-right.studio-sidebar-right {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  #sidebar-left-content,
+  #sidebar-right-content {
+    pointer-events: auto !important;
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   .studio-drawer-close {
@@ -1976,7 +1994,7 @@ body.mode-lobby {
     position: absolute;
     top: 0.65rem;
     right: 0.75rem;
-    z-index: 2;
+    z-index: 5;
     height: 1.85rem;
     padding: 0 0.7rem;
     border-radius: 999px;
@@ -1987,12 +2005,14 @@ body.mode-lobby {
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    pointer-events: auto;
   }
 
   .studio-drawer-handle {
     display: flex;
     justify-content: center;
     padding: 0.55rem 0 0.15rem;
+    flex-shrink: 0;
   }
 
   .studio-drawer-handle span {
@@ -2005,6 +2025,13 @@ body.mode-lobby {
   .studio-tab-rail {
     width: 3.4rem !important;
     padding-top: 2.4rem;
+    pointer-events: auto;
+    z-index: 2;
+  }
+
+  .studio-tab-rail .tab-btn {
+    pointer-events: auto;
+    min-height: 2.75rem;
   }
 
   .studio-tab-rail .tab-btn span {
@@ -2013,21 +2040,25 @@ body.mode-lobby {
 
   #sidebar-left-content {
     padding-top: 2.6rem !important;
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto !important;
   }
 
-  .studio-mobile-bar {
+  #studio-mobile-bar.studio-mobile-bar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 55;
+    z-index: 90 !important;
     height: 3.65rem;
     padding: 0.35rem 0.4rem calc(0.35rem + env(safe-area-inset-bottom));
     background: rgba(10, 8, 7, 0.96);
     border-top: 1px solid rgba(226, 208, 170, 0.16);
     backdrop-filter: blur(10px);
+    pointer-events: auto;
   }
 
   .studio-mobile-bar-btn {
@@ -2044,6 +2075,8 @@ body.mode-lobby {
     letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
+    pointer-events: auto;
+    touch-action: manipulation;
   }
 
   .studio-mobile-bar-btn--wa {
@@ -2055,7 +2088,6 @@ body.mode-lobby {
     color: #e2d0aa;
   }
 
-  /* Export menu as bottom sheet on tablet/phone */
   .studio-export-menu {
     position: fixed !important;
     left: 0.75rem !important;
@@ -2066,6 +2098,7 @@ body.mode-lobby {
     max-height: min(70vh, 480px);
     overflow-y: auto;
     margin: 0 !important;
+    z-index: 95 !important;
   }
 
   .live-edit-dock {
@@ -2133,9 +2166,9 @@ body.mode-lobby {
     display: none;
   }
 
-  .studio-sidebar-left,
-  .studio-sidebar-right {
-    height: min(78vh, 620px);
+  #sidebar-left.studio-sidebar-left,
+  #sidebar-right.studio-sidebar-right {
+    height: min(74vh, 580px);
   }
 
   .lobby-templates-grid {

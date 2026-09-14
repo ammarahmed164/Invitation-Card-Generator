@@ -7682,22 +7682,36 @@
   
     bindResponsiveChrome() {
       const backdrop = document.getElementById('studio-drawer-backdrop');
+      // Keep backdrop at body level so it can't trap drawer hit-testing
+      if (backdrop && backdrop.parentElement !== document.body) {
+        document.body.appendChild(backdrop);
+      }
+  
       backdrop?.addEventListener('click', () => this.closeStudioDrawers());
       document.getElementById('btn-close-tools-drawer')?.addEventListener('click', () => this.closeStudioDrawers());
   
-      document.getElementById('btn-mobile-tools')?.addEventListener('click', () => {
+      const stopBubble = (e) => e.stopPropagation();
+      document.getElementById('sidebar-left')?.addEventListener('click', stopBubble);
+      document.getElementById('sidebar-right')?.addEventListener('click', stopBubble);
+      document.getElementById('studio-mobile-bar')?.addEventListener('click', stopBubble);
+  
+      document.getElementById('btn-mobile-tools')?.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (document.body.classList.contains('drawer-tools-open')) this.closeStudioDrawers();
         else this.openStudioDrawer('tools');
       });
-      document.getElementById('btn-mobile-inspector')?.addEventListener('click', () => {
+      document.getElementById('btn-mobile-inspector')?.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (document.body.classList.contains('drawer-inspector-open')) this.closeStudioDrawers();
         else this.openStudioDrawer('inspector');
       });
-      document.getElementById('btn-mobile-guest')?.addEventListener('click', () => {
+      document.getElementById('btn-mobile-guest')?.addEventListener('click', (e) => {
+        e.stopPropagation();
         this.closeStudioDrawers();
         this.guestModal.show();
       });
-      document.getElementById('btn-mobile-whatsapp')?.addEventListener('click', () => {
+      document.getElementById('btn-mobile-whatsapp')?.addEventListener('click', (e) => {
+        e.stopPropagation();
         this.closeStudioDrawers();
         this.exporter.shareToWhatsApp();
       });
