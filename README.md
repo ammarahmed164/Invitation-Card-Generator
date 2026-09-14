@@ -94,6 +94,20 @@ Then open [http://localhost:3000](http://localhost:3000) in your web browser.
 
 ---
 
+## ☁️ Deploy on Vercel (recommended)
+
+This app is a **static** studio (HTML/CSS/JS). Do **not** choose the Node.js framework preset.
+
+1. Import the GitHub repo on [Vercel](https://vercel.com/new)
+2. Set **Framework Preset** → **Other**
+3. **Build Command** → `node build.js` (already in `vercel.json`)
+4. Leave **Output Directory** empty (project root)
+5. Deploy
+
+`vercel.json` is already configured so Vercel serves `index.html` + assets correctly (no `server.js` on production).
+
+---
+
 ## 💼 How to Sell on Etsy
 
 1. **Instant PDF Delivery**: Provide a branded PDF in your Etsy digital download containing your studio link (e.g. hosted on GitHub Pages, Vercel, or your custom domain).

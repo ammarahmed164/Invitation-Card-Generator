@@ -66,7 +66,7 @@ server.on('error', (err) => {
 server.listen(PORT, '0.0.0.0', () => {
   const address = server.address();
   console.log(`\n✨ ========================================================`);
-  console.log(`   ATELIER LUMIÈRE • European Luxury Invitation Studio`);
+  console.log(`   Invitation Card Generator`);
   console.log(`   Studio running at: http://localhost:${address.port}`);
   console.log(`   Direct IP: http://127.0.0.1:${address.port}`);
   console.log(`========================================================\n`);
