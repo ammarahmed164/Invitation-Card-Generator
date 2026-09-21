@@ -282,21 +282,30 @@ class InvitationStudioApp {
     // Undo / Redo
     document.getElementById('btn-undo')?.addEventListener('click', () => this.editor.undo());
     document.getElementById('btn-redo')?.addEventListener('click', () => this.editor.redo());
+    document.getElementById('btn-reset-card')?.addEventListener('click', () => {
+      this.resetCurrentTemplate({ showConfirm: true });
+    });
 
-    // Zoom
     // Zoom
     document.getElementById('btn-zoom-in')?.addEventListener('click', () => {
       this.editor.zoom = Math.min(1.5, this.editor.zoom + 0.1);
       this.editor.render();
+      const currentSelId = this.editor.selectedElementId;
+      if (currentSelId) this.editor.selectElement(currentSelId, { forceRefresh: true });
       this.syncZoomDisplay();
     });
     document.getElementById('btn-zoom-out')?.addEventListener('click', () => {
       this.editor.zoom = Math.max(0.28, this.editor.zoom - 0.1);
       this.editor.render();
+      const currentSelId = this.editor.selectedElementId;
+      if (currentSelId) this.editor.selectElement(currentSelId, { forceRefresh: true });
       this.syncZoomDisplay();
     });
     document.getElementById('btn-zoom-reset')?.addEventListener('click', () => {
-      this.fitCanvasToViewport({ forceDesktop: window.innerWidth > 900 });
+      this.resetZoom();
+    });
+    document.getElementById('zoom-display')?.addEventListener('click', () => {
+      this.resetZoom();
     });
 
     // Guest 3D Preview Modal
@@ -354,6 +363,10 @@ class InvitationStudioApp {
   }
 
   switchLeftTab(tab) {
+    this.hideLiveEditDock();
+    if (this.editor?.selectedElementId) {
+      this.editor.selectElement(null);
+    }
     this.activeLeftTab = tab;
     document.querySelectorAll('.tab-btn').forEach(btn => {
       const isActive = btn.getAttribute('data-tab') === tab;
@@ -397,6 +410,64 @@ class InvitationStudioApp {
     this.editor.zoom = Math.max(0.28, Math.min(1, Math.floor(fit * 100) / 100));
     this.editor.render();
     this.syncZoomDisplay();
+  }
+
+  resetZoom() {
+    if (!this.editor?.currentTemplate) return;
+    const currentSelId = this.editor.selectedElementId;
+    // Toggle: if zoomed away from 100%, reset cleanly to 100%; if already 100%, fit to viewport
+    if (Math.abs(this.editor.zoom - 1) > 0.05) {
+      this.editor.zoom = 1;
+    } else {
+      const stage = document.getElementById('canvas-outer-stage');
+      if (stage) {
+        const padX = 24;
+        const padY = 120;
+        const availW = Math.max(180, stage.clientWidth - padX);
+        const availH = Math.max(220, stage.clientHeight - padY);
+        const fit = Math.min(availW / 400, availH / 560, 1);
+        this.editor.zoom = Math.max(0.28, Math.min(1, Math.floor(fit * 100) / 100));
+      } else {
+        this.editor.zoom = 1;
+      }
+    }
+    this.editor.render();
+    if (currentSelId) {
+      this.editor.selectElement(currentSelId, { forceRefresh: true });
+    }
+    this.syncZoomDisplay();
+    this.exporter?.showToast(`Zoom: ${Math.round(this.editor.zoom * 100)}%`);
+  }
+
+  resetCurrentTemplate({ showConfirm = true } = {}) {
+    if (!this.editor?.currentTemplate) return;
+    const currentId = this.editor.currentTemplate.id;
+    const orig = TEMPLATES.find(t => t.id === currentId);
+    if (!orig) {
+      this.exporter?.showToast('Original template not found', 'error');
+      return;
+    }
+
+    if (showConfirm) {
+      const ok = window.confirm('Reset this card back to original template design?\n\nAll text, colors, and layout will be restored to defaults. (You can also press Ctrl+Z / Undo to revert this reset).');
+      if (!ok) return;
+    }
+
+    // Save current state so the user can easily Undo the reset if desired
+    this.editor.saveState();
+
+    // Reload template fresh from source definitions
+    this.editor.loadTemplate(orig);
+
+    // Keep active section and lobby in sync
+    this.activeSection = orig.section;
+    this.lobbySectionId = orig.section;
+
+    // Refresh UI components
+    this.renderLeftSidebar();
+    this.renderInspector(null);
+    this.fitCanvasToViewport();
+    this.exporter?.showToast('Card restored to original template design.');
   }
 
   openStudioDrawer(which) {
@@ -1381,13 +1452,17 @@ class InvitationStudioApp {
   }
 
   // =========================================================================
-  // RIGHT SIDEBAR: ELEMENT INSPECTOR & CONTROLS
+  // LEFT SIDEBAR: DOCKED ELEMENT EDITOR MODAL (NEVER COVERS THE TEMPLATE CARD)
   // =========================================================================
   hideLiveEditDock() {
     const dock = document.getElementById('live-edit-dock');
     if (dock) {
       dock.classList.add('is-hidden');
       dock.innerHTML = '';
+    }
+    const leftContent = document.getElementById('sidebar-left-content');
+    if (leftContent) {
+      leftContent.classList.remove('hidden');
     }
     document.getElementById('sidebar-right')?.classList.remove('inspector-spotlight');
   }
@@ -1400,100 +1475,379 @@ class InvitationStudioApp {
     }
 
     dock.classList.remove('is-hidden');
-    document.getElementById('sidebar-right')?.classList.add('inspector-spotlight');
+    const leftContent = document.getElementById('sidebar-left-content');
+    if (leftContent) {
+      leftContent.classList.add('hidden');
+    }
+
+    // Automatically highlight the appropriate tab icon on the left rail
+    let targetTab = 'text';
+    if (element.type === 'text') targetTab = 'text';
+    else if (element.type === 'image') targetTab = 'photos';
+    else if (element.type === 'qr-code') targetTab = 'qr';
+    else if (element.type === 'svg' || element.type === 'wax-seal') targetTab = 'elements';
+
+    this.activeLeftTab = targetTab;
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      const isActive = btn.getAttribute('data-tab') === targetTab;
+      btn.classList.toggle('text-amber-400', isActive);
+      btn.classList.toggle('bg-zinc-800/80', isActive);
+      btn.classList.toggle('text-zinc-400', !isActive);
+    });
+
+    if (window.innerWidth <= 900) {
+      this.openStudioDrawer('tools');
+    }
+
+    const luxuryColors = [
+      { name: 'Classic Noir', hex: '#111111' },
+      { name: 'Pure White', hex: '#FFFFFF' },
+      { name: 'Ivory Vellum', hex: '#FAF7F2' },
+      { name: 'Gold Leaf', hex: '#C79B4B' },
+      { name: 'Royal Emerald', hex: '#09231B' },
+      { name: 'Bordeaux Red', hex: '#5B1E29' },
+      { name: 'Cotswolds Sage', hex: '#4A6B5B' },
+      { name: 'Tuscan Ochre', hex: '#C05C3D' }
+    ];
+
+    const quickFonts = [
+      { name: 'Garamond', family: "'Cormorant Garamond', serif" },
+      { name: 'Bodoni', family: "'Bodoni Moda', serif" },
+      { name: 'Playfair', family: "'Playfair Display', serif" },
+      { name: 'Cinzel', family: "'Cinzel', serif" },
+      { name: 'Great Vibes', family: "'Great Vibes', cursive" },
+      { name: 'Pinyon', family: "'Pinyon Script', cursive" }
+    ];
 
     if (element.type === 'text') {
       dock.innerHTML = `
+        <!-- Done / Back Button -->
+        <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          <span>Done • Back to Suite</span>
+        </button>
+
+        <!-- Header -->
         <div class="live-edit-dock-header">
           <div>
-            <p class="live-edit-dock-sub">Selected text · live preview</p>
-            <h3 class="live-edit-dock-title">Edit this text</h3>
+            <p class="live-edit-dock-sub">Selected text layer</p>
+            <h3 class="live-edit-dock-title">Edit Typography</h3>
           </div>
-          <button type="button" class="live-edit-dock-close" id="dock-close-btn" title="Close">×</button>
+          <div class="flex items-center gap-1">
+            <button type="button" id="dock-dup-btn" title="Duplicate Text (Ctrl+D)" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
+            </button>
+            <button type="button" id="dock-del-btn" title="Delete Text (Del)" class="p-1.5 rounded bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
+          </div>
         </div>
-        <textarea id="dock-text-content" rows="3" placeholder="Type your text…">${this.editor.escapeHtml(element.content || '')}</textarea>
-        <div class="live-edit-dock-actions">
-          <button type="button" class="live-edit-dock-btn" id="dock-fs-down">− Size</button>
-          <button type="button" class="live-edit-dock-btn" id="dock-fs-val">${element.fontSize || 14}px</button>
-          <button type="button" class="live-edit-dock-btn" id="dock-fs-up">+ Size</button>
-          <button type="button" class="live-edit-dock-btn" id="dock-type-on-card">Type on card</button>
-          <button type="button" class="live-edit-dock-btn live-edit-dock-btn--primary" id="dock-more-styles">More styles →</button>
+
+        <!-- Text Content Area -->
+        <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5 mb-3">
+          <div class="flex items-center justify-between">
+            <label class="text-amber-300 font-serif font-bold uppercase tracking-wider text-[10px]">Change text content</label>
+            <span class="text-[9px] text-zinc-400">Live sync</span>
+          </div>
+          <textarea id="dock-text-content" rows="3" placeholder="Type your text…" class="w-full bg-zinc-950 border border-amber-500/50 rounded-lg p-2 text-zinc-100 text-xs focus:outline-none focus:border-amber-400 leading-relaxed shadow-inner font-sans">${this.editor.escapeHtml(element.content || '')}</textarea>
+        </div>
+
+        <!-- Font Size Controls -->
+        <div class="mb-3">
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-[11px] text-zinc-400 font-medium">Font Size:</label>
+            <span id="dock-fs-val" class="font-mono text-amber-300 font-bold text-xs">${element.fontSize || 14}px</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="dock-fs-down" class="w-7 h-7 rounded bg-zinc-950 border border-zinc-700 hover:bg-zinc-800 text-zinc-200 font-bold flex items-center justify-center transition text-xs">− Size</button>
+            <input id="dock-fs-slider" type="range" min="8" max="80" value="${element.fontSize || 14}" class="flex-1 accent-amber-500 cursor-pointer" />
+            <button type="button" id="dock-fs-up" class="w-7 h-7 rounded bg-zinc-950 border border-zinc-700 hover:bg-zinc-800 text-zinc-200 font-bold flex items-center justify-center transition text-xs">+ Size</button>
+          </div>
+        </div>
+
+        <!-- Font Family Selector -->
+        <div class="mb-3">
+          <label class="block text-[11px] text-zinc-400 mb-1 font-medium">European Luxury Fonts:</label>
+          <div class="grid grid-cols-3 gap-1 mb-1.5">
+            ${quickFonts.map(f => `
+              <button type="button" class="dock-font-chip px-1.5 py-1 rounded text-[10px] truncate border ${element.fontFamily === f.family ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold' : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:text-white'}" data-font="${f.family}">
+                ${f.name}
+              </button>
+            `).join('')}
+          </div>
+          <select id="dock-font-family" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-zinc-200 text-xs focus:outline-none focus:border-amber-500">
+            ${LUXURY_FONTS.map(f => `
+              <option value="${f.family}" ${element.fontFamily === f.family ? 'selected' : ''}>
+                ${f.name} (${f.category})
+              </option>
+            `).join('')}
+          </select>
+        </div>
+
+        <!-- Style & Alignment -->
+        <div class="mb-3">
+          <label class="block text-[11px] text-zinc-400 mb-1 font-medium">Style & Alignment:</label>
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="dock-toggle-bold" class="flex-1 py-1 px-2 rounded bg-zinc-950 border ${element.fontWeight === '700' || element.fontWeight === 'bold' ? 'border-amber-500 text-amber-300 bg-amber-500/10 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition">
+              Bold
+            </button>
+            <button type="button" id="dock-toggle-italic" class="flex-1 py-1 px-2 rounded bg-zinc-950 border ${element.fontStyle === 'italic' ? 'border-amber-500 text-amber-300 bg-amber-500/10 italic' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition">
+              Italic
+            </button>
+            <div class="flex items-center bg-zinc-950 rounded border border-zinc-800 p-0.5">
+              <button type="button" id="dock-align-left" class="p-1 rounded ${element.textAlign === 'left' ? 'text-amber-400 bg-zinc-800' : 'text-zinc-400 hover:text-white'} transition" title="Align Left">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h14"/></svg>
+              </button>
+              <button type="button" id="dock-align-center" class="p-1 rounded ${!element.textAlign || element.textAlign === 'center' ? 'text-amber-400 bg-zinc-800' : 'text-zinc-400 hover:text-white'} transition" title="Align Center">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M5 18h14"/></svg>
+              </button>
+              <button type="button" id="dock-align-right" class="p-1 rounded ${element.textAlign === 'right' ? 'text-amber-400 bg-zinc-800' : 'text-zinc-400 hover:text-white'} transition" title="Align Right">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M6 18h14"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gold Foil Pressed Toggle -->
+        <div class="p-2 rounded-lg bg-zinc-950 border border-amber-500/30 flex items-center justify-between mb-3">
+          <div>
+            <span class="text-xs font-serif font-bold text-amber-300 block flex items-center gap-1">
+              <span>✨ Gold Foil Pressed</span>
+            </span>
+            <span class="text-[9px] text-zinc-500">Metallic gold leaf shimmer</span>
+          </div>
+          <input type="checkbox" id="dock-foil-check" ${element.isFoil ? 'checked' : ''} class="w-4 h-4 accent-amber-500 cursor-pointer" />
+        </div>
+
+        <!-- Color Palette Swatches & Picker -->
+        <div class="mb-3">
+          <label class="block text-[11px] text-zinc-400 mb-1 font-medium">Text Color:</label>
+          <div class="flex items-center gap-1.5 bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">
+            ${luxuryColors.map(c => `
+              <button type="button" class="dock-swatch-btn w-5 h-5 rounded-full transition hover:scale-110 shrink-0" 
+                      style="background-color: ${c.hex}; ${element.color === c.hex ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-zinc-950' : 'border: 1px solid rgba(255,255,255,0.2)'}" 
+                      data-hex="${c.hex}" title="${c.name}">
+              </button>
+            `).join('')}
+            <div class="h-4 w-px bg-zinc-800 mx-0.5"></div>
+            <input id="dock-color-picker" type="color" value="${element.color || '#2C2825'}" class="w-6 h-6 rounded bg-transparent cursor-pointer shrink-0" title="Custom Color" />
+          </div>
+        </div>
+
+        <!-- Letter Spacing -->
+        <div class="mb-3">
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-[11px] text-zinc-400 font-medium">Letter Spacing:</label>
+            <span id="dock-spacing-val" class="font-mono text-zinc-300 text-xs">${element.letterSpacing !== undefined ? element.letterSpacing : 0}px</span>
+          </div>
+          <input id="dock-letter-spacing" type="range" min="0" max="10" step="0.5" value="${element.letterSpacing || 0}" class="w-full accent-amber-500 cursor-pointer" />
+        </div>
+
+        <!-- Center Alignment -->
+        <div class="pt-2 border-t border-zinc-800/80">
+          <button type="button" id="dock-center-x" class="w-full py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-[11px] font-serif transition text-center">
+            ⬌ Center Horizontally
+          </button>
+        </div>
+
+        <!-- Layer Ordering Controls -->
+        <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+          <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+            <span>Layer Order:</span>
+            <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="dock-layer-num" class="text-amber-400 font-bold">Layer ${element.zIndex || 1}</strong></span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button type="button" id="dock-bring-fwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+              <span>▲ Bring Forward</span>
+            </button>
+            <button type="button" id="dock-send-bwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+              <span>▼ Send Backward</span>
+            </button>
+          </div>
         </div>
       `;
 
-      const syncLive = (val) => {
-        this.editor.updateElement(element.id, { content: val }, { saveState: true, updateInspector: false });
+      // Event Bindings for Text
+      const textInput = document.getElementById('dock-text-content');
+      textInput?.addEventListener('input', (e) => {
+        this.editor.updateElement(element.id, { content: e.target.value }, { saveState: true, updateInspector: false });
         const sideTa = document.getElementById('ins-text-content');
-        if (sideTa && document.activeElement !== sideTa) sideTa.value = val;
-      };
+        if (sideTa && document.activeElement !== sideTa) sideTa.value = e.target.value;
+      });
 
-      document.getElementById('dock-text-content')?.addEventListener('input', (e) => syncLive(e.target.value));
       document.getElementById('dock-fs-down')?.addEventListener('click', () => {
         const next = Math.max(8, (element.fontSize || 14) - 1);
-        this.editor.updateElement(element.id, { fontSize: next }, { saveState: true, updateInspector: false });
-        const label = document.getElementById('dock-fs-val');
-        if (label) label.textContent = `${next}px`;
-        const slider = document.getElementById('ins-font-size');
+        this.editor.updateElement(element.id, { fontSize: next });
+        const lbl = document.getElementById('dock-fs-val');
+        if (lbl) lbl.textContent = `${next}px`;
+        const slider = document.getElementById('dock-fs-slider');
         if (slider) slider.value = next;
-        const fsVal = document.getElementById('ins-fs-val');
-        if (fsVal) fsVal.textContent = `${next}px`;
-      });
-      document.getElementById('dock-fs-up')?.addEventListener('click', () => {
-        const next = Math.min(80, (element.fontSize || 14) + 1);
-        this.editor.updateElement(element.id, { fontSize: next }, { saveState: true, updateInspector: false });
-        const label = document.getElementById('dock-fs-val');
-        if (label) label.textContent = `${next}px`;
-        const slider = document.getElementById('ins-font-size');
-        if (slider) slider.value = next;
-        const fsVal = document.getElementById('ins-fs-val');
-        if (fsVal) fsVal.textContent = `${next}px`;
-      });
-      document.getElementById('dock-type-on-card')?.addEventListener('click', () => {
-        const node = this.editor.getCanvasElementNode(element.id);
-        if (node) this.editor.startInlineEdit(element, node);
-      });
-      document.getElementById('dock-more-styles')?.addEventListener('click', () => {
-        document.getElementById('sidebar-right')?.scrollTo({ top: 0, behavior: 'smooth' });
-        document.getElementById('ins-edit-spotlight')?.classList.add('edit-panel-pulse');
-        document.getElementById('ins-text-content')?.focus();
-      });
-      document.getElementById('dock-close-btn')?.addEventListener('click', () => {
-        this.editor.selectElement(null);
       });
 
-      requestAnimationFrame(() => {
-        const ta = document.getElementById('dock-text-content');
-        if (ta) {
-          ta.focus();
-          ta.select();
-        }
-        dock.classList.add('edit-panel-pulse');
+      document.getElementById('dock-fs-up')?.addEventListener('click', () => {
+        const next = Math.min(80, (element.fontSize || 14) + 1);
+        this.editor.updateElement(element.id, { fontSize: next });
+        const lbl = document.getElementById('dock-fs-val');
+        if (lbl) lbl.textContent = `${next}px`;
+        const slider = document.getElementById('dock-fs-slider');
+        if (slider) slider.value = next;
       });
+
+      document.getElementById('dock-fs-slider')?.addEventListener('input', (e) => {
+        const next = parseInt(e.target.value, 10);
+        this.editor.updateElement(element.id, { fontSize: next });
+        const lbl = document.getElementById('dock-fs-val');
+        if (lbl) lbl.textContent = `${next}px`;
+      });
+
+      dock.querySelectorAll('.dock-font-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const font = btn.getAttribute('data-font');
+          this.editor.updateElement(element.id, { fontFamily: font });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
+        });
+      });
+
+      document.getElementById('dock-font-family')?.addEventListener('change', (e) => {
+        this.editor.updateElement(element.id, { fontFamily: e.target.value });
+        this.showLiveEditDock(this.editor.getSelectedElement() || element);
+      });
+
+      document.getElementById('dock-toggle-bold')?.addEventListener('click', () => {
+        const isBold = element.fontWeight === '700' || element.fontWeight === 'bold';
+        this.editor.updateElement(element.id, { fontWeight: isBold ? '400' : '700' });
+        this.showLiveEditDock(this.editor.getSelectedElement() || element);
+      });
+
+      document.getElementById('dock-toggle-italic')?.addEventListener('click', () => {
+        const isItalic = element.fontStyle === 'italic';
+        this.editor.updateElement(element.id, { fontStyle: isItalic ? 'normal' : 'italic' });
+        this.showLiveEditDock(this.editor.getSelectedElement() || element);
+      });
+
+      document.getElementById('dock-align-left')?.addEventListener('click', () => {
+        this.editor.updateElement(element.id, { textAlign: 'left' });
+        this.showLiveEditDock(this.editor.getSelectedElement() || element);
+      });
+      document.getElementById('dock-align-center')?.addEventListener('click', () => {
+        this.editor.updateElement(element.id, { textAlign: 'center' });
+        this.showLiveEditDock(this.editor.getSelectedElement() || element);
+      });
+      document.getElementById('dock-align-right')?.addEventListener('click', () => {
+        this.editor.updateElement(element.id, { textAlign: 'right' });
+        this.showLiveEditDock(this.editor.getSelectedElement() || element);
+      });
+
+      document.getElementById('dock-foil-check')?.addEventListener('change', (e) => {
+        this.editor.updateElement(element.id, { isFoil: e.target.checked });
+      });
+
+      dock.querySelectorAll('.dock-swatch-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const hex = btn.getAttribute('data-hex');
+          this.editor.updateElement(element.id, { color: hex, isFoil: false });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
+        });
+      });
+
+      document.getElementById('dock-color-picker')?.addEventListener('input', (e) => {
+        this.editor.updateElement(element.id, { color: e.target.value, isFoil: false });
+      });
+
+      document.getElementById('dock-letter-spacing')?.addEventListener('input', (e) => {
+        const sp = parseFloat(e.target.value);
+        this.editor.updateElement(element.id, { letterSpacing: sp });
+        const lbl = document.getElementById('dock-spacing-val');
+        if (lbl) lbl.textContent = `${sp}px`;
+      });
+
+      document.getElementById('dock-center-x')?.addEventListener('click', () => {
+        const newX = Math.round(200 - element.width / 2);
+        this.editor.updateElement(element.id, { x: newX });
+      });
+      document.getElementById('dock-bring-fwd')?.addEventListener('click', () => this.editor.bringForward(element.id));
+      document.getElementById('dock-send-bwd')?.addEventListener('click', () => this.editor.sendBackward(element.id));
+      document.getElementById('dock-dup-btn')?.addEventListener('click', () => this.editor.duplicateElement(element.id));
+      document.getElementById('dock-del-btn')?.addEventListener('click', () => this.editor.deleteElement(element.id));
+      document.getElementById('dock-done-btn')?.addEventListener('click', () => this.editor.selectElement(null));
+
+      requestAnimationFrame(() => {
+        if (textInput && document.activeElement !== textInput) {
+          textInput.focus();
+        }
+      });
+
     } else if (element.type === 'image') {
       const src = this.editor.getEffectiveBg(element.src) || element.src || '';
       dock.innerHTML = `
+        <!-- Done / Back Button -->
+        <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          <span>Done • Back to Suite</span>
+        </button>
+
         <div class="live-edit-dock-header">
           <div>
-            <p class="live-edit-dock-sub">Selected photo · live preview</p>
-            <h3 class="live-edit-dock-title">Replace this photo</h3>
+            <p class="live-edit-dock-sub">Selected photo</p>
+            <h3 class="live-edit-dock-title">Edit Photo & Frame</h3>
           </div>
-          <button type="button" class="live-edit-dock-close" id="dock-close-btn" title="Close">×</button>
+          <button type="button" id="dock-del-btn" title="Delete Photo" class="p-1.5 rounded bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          </button>
         </div>
-        <div class="live-edit-dock-photo" id="dock-photo-box">
-          <img id="dock-photo-preview" src="${src}" alt="Selected photo" />
-          <div style="flex:1; display:flex; flex-direction:column; gap:0.55rem; justify-content:center;">
-            <p style="margin:0; font-size:0.8rem; color:rgba(244,236,223,0.7); font-family:'Cormorant Garamond', serif;">
-              Upload a new image — the card updates instantly.
-            </p>
-            <div class="live-edit-dock-actions" style="margin:0;">
-              <label class="live-edit-dock-btn live-edit-dock-btn--primary" style="cursor:pointer;">
-                Choose / Upload Photo
-                <input id="dock-photo-file" type="file" accept="image/*" class="hidden" />
-              </label>
-              <button type="button" class="live-edit-dock-btn" data-mask="mask-arch">Arch</button>
-              <button type="button" class="live-edit-dock-btn" data-mask="mask-oval">Oval</button>
-              <button type="button" class="live-edit-dock-btn" data-mask="mask-rectangle">Rect</button>
-            </div>
+
+        <!-- Replace / Upload Custom Photo Card -->
+        <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/40 space-y-2.5 mb-3.5 shadow-sm">
+          <div class="flex items-center gap-2 text-amber-300 font-serif font-bold text-xs">
+            <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>Replace This Photo</span>
+          </div>
+          <div class="w-full h-32 rounded-lg overflow-hidden border border-zinc-700 bg-zinc-950 flex items-center justify-center">
+            <img id="dock-photo-preview" src="${src}" alt="Current photo" class="w-full h-full object-cover" />
+          </div>
+          <p class="text-[10px] text-zinc-400 leading-tight">
+            Upload your couple portrait or venue photo. The card updates instantly.
+          </p>
+          <label class="w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-2 cursor-pointer text-center">
+            <span>Choose / Upload Photo</span>
+            <input id="dock-photo-file" type="file" accept="image/*" class="hidden" />
+          </label>
+        </div>
+
+        <!-- Silhouette Frame Masks -->
+        <div class="mb-3.5">
+          <label class="block text-[11px] text-zinc-400 mb-1.5 font-medium">Silhouette Mask:</label>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button type="button" class="dock-mask-btn p-2 rounded bg-zinc-950 border ${element.mask === 'mask-arch' ? 'border-amber-500 text-amber-300 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition" data-mask="mask-arch">
+              Arch Cutout
+            </button>
+            <button type="button" class="dock-mask-btn p-2 rounded bg-zinc-950 border ${element.mask === 'mask-oval' ? 'border-amber-500 text-amber-300 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition" data-mask="mask-oval">
+              Oval Cameo
+            </button>
+            <button type="button" class="dock-mask-btn p-2 rounded bg-zinc-950 border ${element.mask === 'mask-scallop' ? 'border-amber-500 text-amber-300 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition" data-mask="mask-scallop">
+              Scalloped Frame
+            </button>
+            <button type="button" class="dock-mask-btn p-2 rounded bg-zinc-950 border ${!element.mask || element.mask === 'rounded-sm' || element.mask === 'mask-rectangle' ? 'border-amber-500 text-amber-300 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition" data-mask="mask-rectangle">
+              Classic Rectangle
+            </button>
+          </div>
+        </div>
+
+        <!-- Layer Ordering Controls -->
+        <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+          <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+            <span>Layer Order:</span>
+            <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="dock-layer-num" class="text-amber-400 font-bold">Layer ${element.zIndex || 1}</strong></span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button type="button" id="dock-bring-fwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+              <span>▲ Bring Forward</span>
+            </button>
+            <button type="button" id="dock-send-bwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+              <span>▼ Send Backward</span>
+            </button>
           </div>
         </div>
       `;
@@ -1503,71 +1857,165 @@ class InvitationStudioApp {
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (ev) => {
-          this.editor.updateElement(element.id, { src: ev.target.result }, { saveState: true, updateInspector: false });
-          const preview = document.getElementById('dock-photo-preview');
-          if (preview) preview.src = ev.target.result;
-          const sidePreview = document.querySelector('#ins-photo-replace-box img');
-          if (sidePreview) sidePreview.src = ev.target.result;
+          this.editor.updateElement(element.id, { src: ev.target.result });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
         };
         reader.readAsDataURL(file);
       });
-      dock.querySelectorAll('[data-mask]').forEach(btn => {
+
+      dock.querySelectorAll('.dock-mask-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          this.editor.updateElement(element.id, { mask: btn.getAttribute('data-mask') }, { saveState: true, updateInspector: true });
+          this.editor.updateElement(element.id, { mask: btn.getAttribute('data-mask') });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
         });
       });
-      document.getElementById('dock-close-btn')?.addEventListener('click', () => {
-        this.editor.selectElement(null);
-      });
 
-      requestAnimationFrame(() => dock.classList.add('edit-panel-pulse'));
+      document.getElementById('dock-bring-fwd')?.addEventListener('click', () => this.editor.bringForward(element.id));
+      document.getElementById('dock-send-bwd')?.addEventListener('click', () => this.editor.sendBackward(element.id));
+      document.getElementById('dock-del-btn')?.addEventListener('click', () => this.editor.deleteElement(element.id));
+      document.getElementById('dock-done-btn')?.addEventListener('click', () => this.editor.selectElement(null));
+
     } else if (element.type === 'qr-code') {
       dock.innerHTML = `
+        <!-- Done / Back Button -->
+        <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          <span>Done • Back to Suite</span>
+        </button>
+
         <div class="live-edit-dock-header">
           <div>
-            <p class="live-edit-dock-sub">Selected QR · live preview</p>
-            <h3 class="live-edit-dock-title">Edit QR link</h3>
+            <p class="live-edit-dock-sub">Dynamic RSVP Code</p>
+            <h3 class="live-edit-dock-title">RSVP QR Code</h3>
           </div>
-          <button type="button" class="live-edit-dock-close" id="dock-close-btn" title="Close">×</button>
+          <button type="button" id="dock-del-btn" title="Delete QR Code" class="p-1.5 rounded bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          </button>
         </div>
-        <input id="dock-qr-url" type="url" value="${this.editor.escapeHtml(element.qrValue || '')}" placeholder="https://…" />
-        <div class="live-edit-dock-actions">
-          <button type="button" class="live-edit-dock-btn live-edit-dock-btn--primary" id="dock-more-styles">More options →</button>
+
+        <div class="space-y-3 mb-3.5">
+          <div>
+            <label class="block text-[11px] text-zinc-400 mb-1 font-medium">Destination RSVP URL:</label>
+            <input id="dock-qr-url" type="url" value="${this.editor.escapeHtml(element.qrValue || '')}" placeholder="https://withjoy.com/your-wedding" 
+                   class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-2 text-zinc-200 text-xs focus:outline-none focus:border-amber-500" />
+          </div>
+
+          <div class="p-3 bg-zinc-950 rounded-lg border border-zinc-800 text-[11px] text-zinc-400 leading-relaxed">
+            Point your smartphone camera at the card on screen to test scan this live QR code!
+          </div>
+        </div>
+
+        <!-- Layer Ordering Controls -->
+        <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+          <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+            <span>Layer Order:</span>
+            <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="dock-layer-num" class="text-amber-400 font-bold">Layer ${element.zIndex || 1}</strong></span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button type="button" id="dock-bring-fwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+              <span>▲ Bring Forward</span>
+            </button>
+            <button type="button" id="dock-send-bwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+              <span>▼ Send Backward</span>
+            </button>
+          </div>
         </div>
       `;
+
       document.getElementById('dock-qr-url')?.addEventListener('input', (e) => {
-        this.editor.updateElement(element.id, { qrValue: e.target.value }, { saveState: true, updateInspector: false });
-        const side = document.getElementById('ins-qr-url');
-        if (side && document.activeElement !== side) side.value = e.target.value;
+        this.editor.updateElement(element.id, { qrValue: e.target.value });
       });
-      document.getElementById('dock-more-styles')?.addEventListener('click', () => {
-        document.getElementById('sidebar-right')?.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-      document.getElementById('dock-close-btn')?.addEventListener('click', () => this.editor.selectElement(null));
-      requestAnimationFrame(() => {
-        document.getElementById('dock-qr-url')?.focus();
-        dock.classList.add('edit-panel-pulse');
-      });
+
+      document.getElementById('dock-bring-fwd')?.addEventListener('click', () => this.editor.bringForward(element.id));
+      document.getElementById('dock-send-bwd')?.addEventListener('click', () => this.editor.sendBackward(element.id));
+      document.getElementById('dock-del-btn')?.addEventListener('click', () => this.editor.deleteElement(element.id));
+      document.getElementById('dock-done-btn')?.addEventListener('click', () => this.editor.selectElement(null));
+
     } else {
+      // SVG, Wax Seal, or other elements
       dock.innerHTML = `
+        <!-- Done / Back Button -->
+        <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          <span>Done • Back to Suite</span>
+        </button>
+
         <div class="live-edit-dock-header">
           <div>
-            <p class="live-edit-dock-sub">Selected ${element.type || 'element'} · live preview</p>
-            <h3 class="live-edit-dock-title">Customize in the right panel</h3>
+            <p class="live-edit-dock-sub">Selected artwork</p>
+            <h3 class="live-edit-dock-title">Artwork & Seal</h3>
           </div>
-          <button type="button" class="live-edit-dock-close" id="dock-close-btn" title="Close">×</button>
+          <button type="button" id="dock-del-btn" title="Delete Element" class="p-1.5 rounded bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          </button>
         </div>
-        <div class="live-edit-dock-actions">
-          <button type="button" class="live-edit-dock-btn live-edit-dock-btn--primary" id="dock-more-styles">Open style controls →</button>
+
+        <div class="space-y-3 mb-3.5">
+          <div>
+            <label class="block text-[11px] text-zinc-400 mb-1 font-medium">Element Color:</label>
+            <div class="flex items-center gap-1.5 bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">
+              ${luxuryColors.map(c => `
+                <button type="button" class="dock-swatch-btn w-5 h-5 rounded-full transition hover:scale-110 shrink-0" 
+                        style="background-color: ${c.hex}; ${element.color === c.hex ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-zinc-950' : 'border: 1px solid rgba(255,255,255,0.2)'}" 
+                        data-hex="${c.hex}" title="${c.name}">
+                </button>
+              `).join('')}
+              <div class="h-4 w-px bg-zinc-800 mx-0.5"></div>
+              <input id="dock-color-picker" type="color" value="${element.color || '#D4AF37'}" class="w-6 h-6 rounded bg-transparent cursor-pointer shrink-0" />
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-[11px] text-zinc-400 font-medium">Opacity:</label>
+              <span id="dock-opacity-val" class="font-mono text-zinc-300 text-xs">${Math.round((element.opacity !== undefined ? element.opacity : 1) * 100)}%</span>
+            </div>
+            <input id="dock-opacity" type="range" min="0.1" max="1" step="0.05" value="${element.opacity !== undefined ? element.opacity : 1}" class="w-full accent-amber-500 cursor-pointer" />
+          </div>
+        </div>
+
+        <!-- Layer Ordering Controls -->
+        <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+          <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+            <span>Layer Order:</span>
+            <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="dock-layer-num" class="text-amber-400 font-bold">Layer ${element.zIndex || 1}</strong></span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button type="button" id="dock-bring-fwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+              <span>▲ Bring Forward</span>
+            </button>
+            <button type="button" id="dock-send-bwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+              <span>▼ Send Backward</span>
+            </button>
+          </div>
         </div>
       `;
-      document.getElementById('dock-more-styles')?.addEventListener('click', () => {
-        document.getElementById('sidebar-right')?.scrollTo({ top: 0, behavior: 'smooth' });
+
+      dock.querySelectorAll('.dock-swatch-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.editor.updateElement(element.id, { color: btn.getAttribute('data-hex') });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
+        });
       });
-      document.getElementById('dock-close-btn')?.addEventListener('click', () => this.editor.selectElement(null));
+
+      document.getElementById('dock-color-picker')?.addEventListener('input', (e) => {
+        this.editor.updateElement(element.id, { color: e.target.value });
+      });
+
+      document.getElementById('dock-opacity')?.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        this.editor.updateElement(element.id, { opacity: val });
+        const lbl = document.getElementById('dock-opacity-val');
+        if (lbl) lbl.textContent = `${Math.round(val * 100)}%`;
+      });
+
+      document.getElementById('dock-bring-fwd')?.addEventListener('click', () => this.editor.bringForward(element.id));
+      document.getElementById('dock-send-bwd')?.addEventListener('click', () => this.editor.sendBackward(element.id));
+      document.getElementById('dock-del-btn')?.addEventListener('click', () => this.editor.deleteElement(element.id));
+      document.getElementById('dock-done-btn')?.addEventListener('click', () => this.editor.selectElement(null));
     }
 
-    dock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    dock.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   renderInspector(element) {
@@ -1904,10 +2352,7 @@ class InvitationStudioApp {
       });
 
       document.getElementById('btn-restore-template-art')?.addEventListener('click', () => {
-        const orig = TEMPLATES.find(t => t.id === this.editor.currentTemplate?.id);
-        if (orig) {
-          this.editor.loadTemplate(orig);
-        }
+        this.resetCurrentTemplate({ showConfirm: true });
       });
       return;
     }
@@ -1982,6 +2427,22 @@ class InvitationStudioApp {
             <button id="btn-nudge-right" class="w-6 h-6 rounded bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 text-zinc-300 hover:text-amber-300 text-xs flex items-center justify-center" title="Nudge Right 5px">▶</button>
           </div>
         </div>
+
+        <!-- Layer Ordering Controls -->
+        <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+          <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+            <span>Layer Order:</span>
+            <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="pos-layer-val" class="text-amber-400 font-bold">Layer ${el.zIndex || 1}</strong></span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button type="button" id="ins-bring-front" class="py-1.5 px-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+              <span>▲ Bring Forward</span>
+            </button>
+            <button type="button" id="ins-send-back" class="py-1.5 px-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+              <span>▼ Send Backward</span>
+            </button>
+          </div>
+        </div>
       </div>
     `;
   }
@@ -2035,6 +2496,17 @@ class InvitationStudioApp {
     document.getElementById('btn-nudge-down')?.addEventListener('click', () => updatePos(undefined, el.y + 5));
     document.getElementById('btn-nudge-left')?.addEventListener('click', () => updatePos(el.x - 5, undefined));
     document.getElementById('btn-nudge-right')?.addEventListener('click', () => updatePos(el.x + 5, undefined));
+
+    document.getElementById('ins-bring-front')?.addEventListener('click', () => {
+      this.editor.bringForward(el.id);
+      const val = document.getElementById('pos-layer-val');
+      if (val) val.textContent = `Layer ${el.zIndex || 1}`;
+    });
+    document.getElementById('ins-send-back')?.addEventListener('click', () => {
+      this.editor.sendBackward(el.id);
+      const val = document.getElementById('pos-layer-val');
+      if (val) val.textContent = `Layer ${el.zIndex || 1}`;
+    });
   }
 
   renderTextInspector(container, el) {
@@ -2189,16 +2661,6 @@ class InvitationStudioApp {
           <input id="ins-letter-spacing" type="range" min="0" max="12" step="0.5" value="${el.letterSpacing || 0}" 
                  class="w-full accent-amber-500 cursor-pointer" />
         </div>
-
-        <!-- Layer Ordering -->
-        <div class="pt-2 border-t border-zinc-800 flex gap-2">
-          <button id="ins-bring-front" class="flex-1 py-1.5 rounded bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 text-zinc-300 text-[11px] transition">
-            Bring Forward
-          </button>
-          <button id="ins-send-back" class="flex-1 py-1.5 rounded bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 text-zinc-300 text-[11px] transition">
-            Send Backward
-          </button>
-        </div>
       </div>
     `;
 
@@ -2305,8 +2767,6 @@ class InvitationStudioApp {
     document.getElementById('align-right')?.addEventListener('click', () => this.editor.updateElement(el.id, { textAlign: 'right' }));
     document.getElementById('ins-dup-btn')?.addEventListener('click', () => this.editor.duplicateElement(el.id));
     document.getElementById('ins-del-btn')?.addEventListener('click', () => this.editor.deleteElement(el.id));
-    document.getElementById('ins-bring-front')?.addEventListener('click', () => this.editor.bringForward(el.id));
-    document.getElementById('ins-send-back')?.addEventListener('click', () => this.editor.sendBackward(el.id));
   }
 
   renderSVGInspector(container, el) {
@@ -2346,11 +2806,6 @@ class InvitationStudioApp {
 
         <!-- Position & Alignment Control Panel -->
         ${this.renderPositionControlsHTML(el)}
-
-        <div class="pt-2 border-t border-zinc-800 flex gap-2">
-          <button id="ins-bring-front" class="flex-1 py-1.5 rounded bg-zinc-900 border border-zinc-700 text-[11px]">Bring Forward</button>
-          <button id="ins-send-back" class="flex-1 py-1.5 rounded bg-zinc-900 border border-zinc-700 text-[11px]">Send Backward</button>
-        </div>
       </div>
     `;
 
@@ -2369,8 +2824,6 @@ class InvitationStudioApp {
       this.editor.updateElement(el.id, { rotation: parseInt(e.target.value, 10) });
     });
     document.getElementById('ins-del-btn')?.addEventListener('click', () => this.editor.deleteElement(el.id));
-    document.getElementById('ins-bring-front')?.addEventListener('click', () => this.editor.bringForward(el.id));
-    document.getElementById('ins-send-back')?.addEventListener('click', () => this.editor.sendBackward(el.id));
   }
 
   renderWaxSealInspector(container, el) {

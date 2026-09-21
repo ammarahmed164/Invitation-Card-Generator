@@ -36,6 +36,15 @@ export class CardEditor {
   loadTemplate(template) {
     // Deep clone template to avoid mutating original source
     this.currentTemplate = JSON.parse(JSON.stringify(template));
+    ['front', 'back'].forEach(side => {
+      if (Array.isArray(this.currentTemplate[side])) {
+        // Stable sort by initial zIndex if specified, then assign normalized layer numbers 1..N
+        this.currentTemplate[side].sort((a, b) => (a.zIndex || 1) - (b.zIndex || 1));
+        this.currentTemplate[side].forEach((el, idx) => {
+          el.zIndex = idx + 1;
+        });
+      }
+    });
     this.activeSide = 'front';
     this.selectedElementId = null;
     this.selectedElementIds = [];
@@ -189,6 +198,7 @@ export class CardEditor {
     // Same single selection re-click
     if (!additive && this.selectedElementIds.length === 1 && this.selectedElementId === id) {
       if (forceRefresh) {
+        this.applySelectionVisuals();
         if (this.options.onElementSelect) this.options.onElementSelect(this.getSelectedElement());
         this.updateFloatingToolbar();
       }
@@ -443,16 +453,17 @@ export class CardEditor {
   addElement(elementData) {
     this.saveState();
     const id = 'el-' + Date.now();
+    const active = this.getActiveElements();
     const newElement = {
       id,
       x: 60,
       y: 180,
       width: 280,
       height: 40,
-      zIndex: this.getActiveElements().length + 2,
-      ...elementData
+      ...elementData,
+      zIndex: active.length + 1
     };
-    this.getActiveElements().push(newElement);
+    active.push(newElement);
     this.render();
     this.selectElement(id);
   }
@@ -464,6 +475,7 @@ export class CardEditor {
     const index = elements.findIndex(el => el.id === id);
     if (index !== -1) {
       elements.splice(index, 1);
+      elements.forEach((el, i) => { el.zIndex = i + 1; });
       this.selectedElementId = null;
       this.selectedElementIds = [];
       this.render();
@@ -475,37 +487,94 @@ export class CardEditor {
   }
 
   duplicateElement(id) {
-    const el = this.getActiveElements().find(item => item.id === id);
+    const active = this.getActiveElements();
+    const el = active.find(item => item.id === id);
     if (!el) return;
     this.saveState();
     const clone = JSON.parse(JSON.stringify(el));
     clone.id = 'el-' + Date.now();
     clone.x = Math.min(320, clone.x + 15);
     clone.y = Math.min(480, clone.y + 15);
-    clone.zIndex = this.getActiveElements().length + 2;
-    this.getActiveElements().push(clone);
+    clone.zIndex = active.length + 1;
+    active.push(clone);
     this.render();
     this.selectElement(clone.id);
   }
 
   bringForward(id) {
     const elements = this.getActiveElements();
-    const el = elements.find(item => item.id === id);
-    if (!el) return;
+    const idx = elements.findIndex(item => item.id === id);
+    if (idx === -1 || idx >= elements.length - 1) return;
+
     this.saveState();
-    el.zIndex = (el.zIndex || 1) + 1;
-    const node = this.getCanvasElementNode(id);
-    if (node) node.style.zIndex = el.zIndex;
+
+    // Swap element with the one directly above it in the stack
+    const temp = elements[idx];
+    elements[idx] = elements[idx + 1];
+    elements[idx + 1] = temp;
+
+    // Normalize z-indices to strictly reflect the new stack order
+    elements.forEach((item, i) => {
+      item.zIndex = i + 1;
+    });
+
+    this.render();
+    this.selectElement(id, { forceRefresh: true });
   }
 
   sendBackward(id) {
     const elements = this.getActiveElements();
-    const el = elements.find(item => item.id === id);
-    if (!el) return;
+    const idx = elements.findIndex(item => item.id === id);
+    if (idx === -1 || idx <= 0) return;
+
     this.saveState();
-    el.zIndex = Math.max(1, (el.zIndex || 1) - 1);
-    const node = this.getCanvasElementNode(id);
-    if (node) node.style.zIndex = el.zIndex;
+
+    // Swap element with the one directly below it in the stack
+    const temp = elements[idx];
+    elements[idx] = elements[idx - 1];
+    elements[idx - 1] = temp;
+
+    // Normalize z-indices to strictly reflect the new stack order
+    elements.forEach((item, i) => {
+      item.zIndex = i + 1;
+    });
+
+    this.render();
+    this.selectElement(id, { forceRefresh: true });
+  }
+
+  bringToFront(id) {
+    const elements = this.getActiveElements();
+    const idx = elements.findIndex(item => item.id === id);
+    if (idx === -1 || idx >= elements.length - 1) return;
+
+    this.saveState();
+    const [item] = elements.splice(idx, 1);
+    elements.push(item);
+
+    elements.forEach((el, i) => {
+      el.zIndex = i + 1;
+    });
+
+    this.render();
+    this.selectElement(id, { forceRefresh: true });
+  }
+
+  sendToBack(id) {
+    const elements = this.getActiveElements();
+    const idx = elements.findIndex(item => item.id === id);
+    if (idx === -1 || idx <= 0) return;
+
+    this.saveState();
+    const [item] = elements.splice(idx, 1);
+    elements.unshift(item);
+
+    elements.forEach((el, i) => {
+      el.zIndex = i + 1;
+    });
+
+    this.render();
+    this.selectElement(id, { forceRefresh: true });
   }
 
   toggleBleed(show) {
@@ -902,6 +971,8 @@ export class CardEditor {
     let contentHTML = '';
 
     if (el.type === 'text') {
+      const isSingleLine = !String(el.content).includes('\n');
+      const shouldNoWrap = el.noWrap || (isSingleLine && (el.height <= (el.fontSize || 14) * 2.5));
       const styles = `
         font-family: ${el.fontFamily || "'Cormorant Garamond', serif"};
         font-size: ${el.fontSize || 14}px;
@@ -911,8 +982,9 @@ export class CardEditor {
         line-height: ${el.lineHeight || 1.3};
         text-align: ${el.textAlign || 'center'};
         color: ${el.color || '#2C2825'};
-        white-space: ${el.noWrap ? 'nowrap' : 'pre-wrap'};
-        word-break: ${el.noWrap ? 'normal' : 'break-word'};
+        white-space: ${shouldNoWrap ? 'nowrap' : 'pre-wrap'};
+        word-break: ${shouldNoWrap ? 'normal' : 'keep-all'};
+        overflow-wrap: normal;
       `;
       let justifyClass = 'justify-center';
       if (el.textAlign === 'left') justifyClass = 'justify-start';
@@ -963,7 +1035,7 @@ export class CardEditor {
       `;
     }
 
-    const effectiveZ = el.type === 'text' ? Math.max(el.zIndex || 2, 4) : (el.zIndex || 2);
+    const effectiveZ = el.zIndex !== undefined ? el.zIndex : 1;
 
     return `
       <div id="${domId}" 
@@ -1132,7 +1204,6 @@ export class CardEditor {
               requestAnimationFrame(() => {
                 document.getElementById('ins-photo-replace-box')?.classList.add('edit-panel-pulse');
                 document.getElementById('dock-photo-box')?.classList.add('edit-panel-pulse');
-                document.getElementById('live-edit-dock')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
               });
             }
           } else if (el.type === 'qr-code') {
@@ -1359,123 +1430,8 @@ export class CardEditor {
       return;
     }
 
-    if (el.type === 'text') {
-      toolbar.innerHTML = `
-        <div class="floating-canvas-toolbar bg-zinc-900/95 backdrop-blur-md border border-amber-500/40 rounded-xl px-2.5 py-1.5 flex items-center gap-2 shadow-2xl z-30">
-          
-          <!-- Font Size Buttons -->
-          <div class="flex items-center gap-1 bg-zinc-950 px-1.5 py-1 rounded-lg border border-zinc-800">
-            <button id="float-fs-down" class="w-5 h-5 rounded hover:bg-zinc-800 text-zinc-300 flex items-center justify-center text-xs font-bold transition">-</button>
-            <span class="text-[11px] font-mono text-amber-300 w-8 text-center">${el.fontSize || 14}px</span>
-            <button id="float-fs-up" class="w-5 h-5 rounded hover:bg-zinc-800 text-zinc-300 flex items-center justify-center text-xs font-bold transition">+</button>
-          </div>
-
-          <!-- Gold Foil Toggle -->
-          <button id="float-toggle-foil" class="px-2 py-1 rounded-lg text-xs font-serif flex items-center gap-1 transition ${el.isFoil ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 font-bold shadow-sm' : 'bg-zinc-950 text-amber-300 border border-amber-500/40 hover:bg-zinc-800'}">
-            <span>✨ Gold Foil</span>
-          </button>
-
-          <!-- Color Swatches -->
-          <div class="flex items-center gap-1 bg-zinc-950 p-1 rounded-lg border border-zinc-800">
-            ${['#FFFFFF', '#111111', '#E8D49E', '#4A6B5B', '#5B1E29'].map(c => `
-              <button class="float-color-btn w-4 h-4 rounded-full transition hover:scale-110" 
-                      style="background-color: ${c}; ${el.color === c ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-zinc-950' : 'border: 1px solid rgba(255,255,255,0.2)'}" 
-                      data-color="${c}">
-              </button>
-            `).join('')}
-          </div>
-
-          <div class="h-4 w-px bg-zinc-700 mx-0.5"></div>
-
-          <!-- Duplicate -->
-          <button id="float-btn-dup" title="Duplicate (Ctrl+D)" class="p-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-            </svg>
-          </button>
-
-          <!-- Delete -->
-          <button id="float-btn-del" title="Delete (Del)" class="p-1.5 rounded-lg bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-
-        </div>
-      `;
-
-      // Bind text toolbar
-      document.getElementById('float-fs-down')?.addEventListener('click', () => {
-        const newSize = Math.max(8, (el.fontSize || 14) - 1);
-        this.updateElement(el.id, { fontSize: newSize });
-      });
-      document.getElementById('float-fs-up')?.addEventListener('click', () => {
-        const newSize = Math.min(80, (el.fontSize || 14) + 1);
-        this.updateElement(el.id, { fontSize: newSize });
-      });
-      document.getElementById('float-toggle-foil')?.addEventListener('click', () => {
-        this.updateElement(el.id, { isFoil: !el.isFoil });
-      });
-      toolbar.querySelectorAll('.float-color-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          this.updateElement(el.id, { color: btn.getAttribute('data-color') });
-        });
-      });
-      document.getElementById('float-btn-dup')?.addEventListener('click', () => this.duplicateElement(el.id));
-      document.getElementById('float-btn-del')?.addEventListener('click', () => this.deleteElement(el.id));
-
-    } else if (el.type === 'image') {
-      toolbar.innerHTML = `
-        <div class="floating-canvas-toolbar bg-zinc-900/95 backdrop-blur-md border border-amber-500/40 rounded-xl px-3 py-1.5 flex items-center gap-2.5 shadow-2xl z-30">
-          <span class="text-xs font-serif text-amber-300 font-semibold">Photo Frame:</span>
-
-          <!-- Mask Buttons -->
-          <div class="flex items-center gap-1 bg-zinc-950 p-1 rounded-lg border border-zinc-800">
-            <button id="float-mask-arch" class="px-2 py-1 rounded text-[10px] ${el.mask === 'mask-arch' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'text-zinc-400 hover:text-white'}">Arch</button>
-            <button id="float-mask-oval" class="px-2 py-1 rounded text-[10px] ${el.mask === 'mask-oval' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'text-zinc-400 hover:text-white'}">Oval</button>
-            <button id="float-mask-rect" class="px-2 py-1 rounded text-[10px] ${el.mask === 'mask-rectangle' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'text-zinc-400 hover:text-white'}">Rect</button>
-          </div>
-
-          <!-- Replace Photo -->
-          <label class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 text-xs font-serif cursor-pointer border border-amber-500/40">
-            <span>Replace Photo</span>
-            <input id="float-photo-input" type="file" accept="image/*" class="hidden" />
-          </label>
-
-          <button id="float-btn-del" class="p-1.5 rounded-lg bg-red-950/60 hover:bg-red-900 text-red-400 border border-red-800/60">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-        </div>
-      `;
-
-      document.getElementById('float-mask-arch')?.addEventListener('click', () => this.updateElement(el.id, { mask: 'mask-arch' }));
-      document.getElementById('float-mask-oval')?.addEventListener('click', () => this.updateElement(el.id, { mask: 'mask-oval' }));
-      document.getElementById('float-mask-rect')?.addEventListener('click', () => this.updateElement(el.id, { mask: 'mask-rectangle' }));
-      document.getElementById('float-photo-input')?.addEventListener('change', (e) => {
-        const file = e.target.files?.[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            this.updateElement(el.id, { src: ev.target.result });
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-      document.getElementById('float-btn-del')?.addEventListener('click', () => this.deleteElement(el.id));
-
-    } else {
-      toolbar.innerHTML = `
-        <div class="floating-canvas-toolbar bg-zinc-900/95 backdrop-blur-md border border-zinc-700 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-2xl z-30">
-          <span class="text-xs font-serif text-zinc-300 capitalize">${el.type || 'Element'}:</span>
-          <button id="float-btn-dup" class="px-2 py-1 rounded bg-zinc-950 text-zinc-300 hover:bg-zinc-800 text-xs border border-zinc-800">Duplicate</button>
-          <button id="float-btn-del" class="px-2 py-1 rounded bg-red-950/60 text-red-400 hover:bg-red-900 text-xs border border-red-800/60">Delete</button>
-        </div>
-      `;
-      document.getElementById('float-btn-dup')?.addEventListener('click', () => this.duplicateElement(el.id));
-      document.getElementById('float-btn-del')?.addEventListener('click', () => this.deleteElement(el.id));
-    }
+    // Single element editing is docked strictly on the LEFT sidebar (#live-edit-dock), keeping the canvas stage completely unobstructed
+    toolbar.innerHTML = '';
   }
 }
 

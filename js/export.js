@@ -1,13 +1,14 @@
 /**
- * Professional Export Engine
- * Print-ready PDF (5×7" + bleed), high-res PNG/JPG, and WhatsApp share.
+ * Professional Multi-Format Export Engine
+ * 100% Live-Preview & Guest-View Fidelity Capture Engine
+ * Exports Front & Back together across WhatsApp, Email JPG, Print PDF, and PNG.
  */
 
 export class CardExporter {
   constructor(editor) {
     this.editor = editor;
     this._busy = false;
-    this._captureState = null;
+    this._toastTimer = null;
   }
 
   getBaseFilename() {
@@ -59,50 +60,10 @@ export class CardExporter {
     this._toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 4200);
   }
 
-  async prepareCapture({ resetZoom = true } = {}) {
-    this._captureState = {
-      showBleed: this.editor.showBleed,
-      selectedElementId: this.editor.selectedElementId,
-      selectedElementIds: [...(this.editor.selectedElementIds || [])],
-      zoom: this.editor.zoom,
-      activeSide: this.editor.activeSide,
-      isInlineEditing: this.editor.isInlineEditing
-    };
-
-    if (this.editor.isInlineEditing && typeof this.editor.finishInlineEdit === 'function') {
-      try { this.editor.finishInlineEdit(); } catch (_) { /* ignore */ }
-    }
-
-    this.editor.selectedElementId = null;
-    this.editor.selectedElementIds = [];
-    this.editor.showBleed = false;
-    if (resetZoom) this.editor.zoom = 1;
-    this.editor.render();
-
-    await this.waitForPaint();
-    if (document.fonts?.ready) {
-      try { await document.fonts.ready; } catch (_) { /* ignore */ }
-    }
-    await this.waitForImages(document.getElementById('card-canvas-stage'));
-    await this.waitForPaint();
-  }
-
-  restoreCapture() {
-    if (!this._captureState) return;
-    const s = this._captureState;
-    this.editor.showBleed = s.showBleed;
-    this.editor.selectedElementId = s.selectedElementId;
-    this.editor.selectedElementIds = s.selectedElementIds || [];
-    this.editor.zoom = s.zoom;
-    this.editor.activeSide = s.activeSide;
-    this._captureState = null;
-    this.editor.render();
-  }
-
   waitForPaint() {
     return new Promise((resolve) => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => setTimeout(resolve, 60));
+        requestAnimationFrame(() => setTimeout(resolve, 80));
       });
     });
   }
@@ -122,57 +83,6 @@ export class CardExporter {
         });
       })
     );
-  }
-
-  getStage() {
-    return document.getElementById('card-canvas-stage');
-  }
-
-  async captureStage(options = {}) {
-    if (!window.html2canvas) {
-      throw new Error('Export engine is still loading. Please try again in a moment.');
-    }
-    const stage = this.getStage();
-    if (!stage) throw new Error('Invitation canvas not found.');
-
-    const {
-      scale = 3,
-      backgroundColor = null,
-      type = 'image/png',
-      quality = 0.95
-    } = options;
-
-    const canvas = await window.html2canvas(stage, {
-      scale,
-      useCORS: true,
-      allowTaint: false,
-      backgroundColor,
-      logging: false,
-      imageTimeout: 8000,
-      onclone: (clonedDoc) => {
-        const clonedStage = clonedDoc.getElementById('card-canvas-stage');
-        if (clonedStage) {
-          clonedStage.style.transform = 'none';
-          clonedStage.classList.remove('bleed-guides');
-        }
-        clonedDoc.querySelectorAll('.resize-handle, .photo-replace-hint, .element-multi-selected')
-          .forEach((node) => node.remove());
-      }
-    });
-
-    if (type === 'image/jpeg' || type === 'image/jpg') {
-      return {
-        canvas,
-        dataUrl: canvas.toDataURL('image/jpeg', quality),
-        mime: 'image/jpeg'
-      };
-    }
-
-    return {
-      canvas,
-      dataUrl: canvas.toDataURL('image/png'),
-      mime: 'image/png'
-    };
   }
 
   dataUrlToBlob(dataUrl) {
@@ -203,64 +113,501 @@ export class CardExporter {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
   }
 
   /**
-   * Export as High-Resolution PNG
+   * Spaced sequential downloads to avoid browser popup/download throttling.
+   */
+  async triggerSequentialDownloads(downloads) {
+    for (let i = 0; i < downloads.length; i++) {
+      const item = downloads[i];
+      if (item.blob) {
+        this.downloadBlob(item.blob, item.filename);
+      } else if (item.dataUrl) {
+        this.triggerDownload(item.dataUrl, item.filename);
+      }
+      if (i < downloads.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 380));
+      }
+    }
+  }
+
+  getStage() {
+    return document.getElementById('card-canvas-stage');
+  }
+
+  /**
+   * Captures an exact card side directly with 100% Live-Preview & Guest-View fidelity.
+   * Uses an isolated 400x560 stage attached directly to body, ensuring zero clipping,
+   * zero white bottom bars, and preserving background artwork on both front and back.
+   */
+  async captureSide(side = 'front', options = {}) {
+    if (!window.html2canvas) {
+      throw new Error('Export engine is still loading. Please try again in a moment.');
+    }
+    const t = this.editor.currentTemplate;
+    if (!t) throw new Error('No invitation template loaded.');
+
+    if (this.editor.isInlineEditing && typeof this.editor.finishInlineEdit === 'function') {
+      try { this.editor.finishInlineEdit(); } catch (_) { /* ignore */ }
+    }
+
+    const {
+      scale = 3,
+      backgroundColor = null,
+      type = 'image/png',
+      quality = 0.96
+    } = options;
+
+    const elements = side === 'front' ? t.front : (t.back || []);
+    const bgTexture = t.bgTexture || 'texture-deckle';
+    const bgColor = t.bgColor || '#FAF7F2';
+    const bgImage = t.bgImage ? this.editor.getEffectiveBg(t.bgImage) : '';
+    const effectiveBg = (type === 'image/jpeg' || type === 'image/jpg')
+      ? (backgroundColor || (bgImage ? '#ffffff' : bgColor))
+      : (backgroundColor !== undefined ? backgroundColor : (bgImage ? null : bgColor));
+
+    // Create an isolated export stage directly attached to body.
+    // This completely bypasses responsive studio containers (.canvas-stage-shell, #canvas-outer-stage)
+    // and guarantees an exact 400x560 (5"x7") aspect ratio with 0px white space or clipping.
+    const exportCard = document.createElement('div');
+    exportCard.id = 'export-card-stage';
+    exportCard.className = `export-card-stage select-none ${bgImage ? '' : bgTexture}`;
+    exportCard.style.cssText = `
+      position: fixed !important;
+      left: 0 !important;
+      top: 0 !important;
+      width: 400px !important;
+      height: 560px !important;
+      min-width: 400px !important;
+      max-width: 400px !important;
+      min-height: 560px !important;
+      max-height: 560px !important;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      border-radius: 0px !important;
+      box-shadow: none !important;
+      transform: none !important;
+      overflow: hidden !important;
+      z-index: 100000 !important;
+      pointer-events: none !important;
+      background-color: ${bgColor} !important;
+      ${bgImage ? `background-image: url('${bgImage}') !important; background-size: cover !important; background-position: center !important;` : ''}
+    `;
+
+    exportCard.innerHTML = `
+      <!-- SVG Definitions for Metallic Foil Shimmer -->
+      <svg width="0" height="0" class="absolute" style="position: absolute; width: 0; height: 0;">
+        <defs>
+          <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#BF953F" />
+            <stop offset="25%" stop-color="#FCF6BA" />
+            <stop offset="50%" stop-color="#B38728" />
+            <stop offset="75%" stop-color="#FBF5B7" />
+            <stop offset="100%" stop-color="#AA771C" />
+          </linearGradient>
+          <linearGradient id="roseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#B76E79" />
+            <stop offset="50%" stop-color="#FFD1DC" />
+            <stop offset="100%" stop-color="#8B4513" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div id="export-elements-wrapper" class="absolute inset-0 w-full h-full" style="position: absolute; left: 0; top: 0; width: 400px; height: 560px; overflow: hidden;">
+        ${elements.map(el => this.editor.renderElementHTML(el, { preview: true, previewKey: 'exp-' + side })).join('')}
+      </div>
+    `;
+
+    // Mount vector QR code if present
+    if (window.QRCode) {
+      elements.forEach(el => {
+        if (el.type === 'qr-code') {
+          const qrBox = exportCard.querySelector(`#qr-box-pv-exp-${side}-${el.id}`);
+          if (qrBox) {
+            try {
+              qrBox.innerHTML = '';
+              new window.QRCode(qrBox, {
+                text: el.qrValue || 'https://wedbuilder.example/rsvp',
+                width: Math.max(30, el.width - 12),
+                height: Math.max(30, el.height - 12),
+                colorDark: "#111111",
+                colorLight: "#ffffff",
+                correctLevel: window.QRCode.CorrectLevel?.M || 0
+              });
+            } catch (qrErr) {
+              console.warn('Vector QR code render fallback in export:', qrErr);
+            }
+          }
+        }
+      });
+    }
+
+    document.body.appendChild(exportCard);
+
+    try {
+      // Preload background image & assets
+      if (bgImage) {
+        await new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = bgImage;
+          if (img.complete) resolve();
+        });
+      }
+
+      if (document.fonts?.ready) {
+        try { await document.fonts.ready; } catch (_) {}
+      }
+
+      await this.waitForImages(exportCard);
+      await this.waitForPaint();
+
+      const canvas = await window.html2canvas(exportCard, {
+        scale,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: effectiveBg,
+        logging: false,
+        imageTimeout: 10000,
+        width: 400,
+        height: 560,
+        windowWidth: 1200,
+        windowHeight: 800,
+        onclone: (clonedDoc) => {
+          const overlay = clonedDoc.getElementById('export-busy-overlay');
+          if (overlay) overlay.style.display = 'none';
+
+          const modal = clonedDoc.getElementById('guest-experience-modal');
+          if (modal) modal.remove();
+
+          const clonedCard = clonedDoc.getElementById('export-card-stage');
+          if (clonedCard) {
+            clonedCard.style.position = 'fixed';
+            clonedCard.style.left = '0px';
+            clonedCard.style.top = '0px';
+            clonedCard.style.width = '400px';
+            clonedCard.style.height = '560px';
+            clonedCard.style.transform = 'none';
+            clonedCard.style.boxShadow = 'none';
+            clonedCard.style.borderRadius = '0px';
+          }
+
+          // Strip background gradients from foil elements so html2canvas renders pure elegant metallic text without solid rectangular bars
+          const foilElements = clonedDoc.querySelectorAll('.foil-gold, .foil-rose, .foil-silver, [class*="foil-"]');
+          foilElements.forEach((el) => {
+            el.style.setProperty('background', 'none', 'important');
+            el.style.setProperty('background-image', 'none', 'important');
+            el.style.setProperty('-webkit-background-clip', 'initial', 'important');
+            el.style.setProperty('background-clip', 'initial', 'important');
+            if (el.classList.contains('foil-rose')) {
+              el.style.setProperty('-webkit-text-fill-color', '#E8B4B8', 'important');
+              el.style.setProperty('color', '#E8B4B8', 'important');
+            } else if (el.classList.contains('foil-silver')) {
+              el.style.setProperty('-webkit-text-fill-color', '#E0E4E8', 'important');
+              el.style.setProperty('color', '#E0E4E8', 'important');
+            } else {
+              el.style.setProperty('-webkit-text-fill-color', '#E2C785', 'important');
+              el.style.setProperty('color', '#E2C785', 'important');
+            }
+          });
+
+          const style = clonedDoc.createElement('style');
+          style.textContent = `
+            * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+            .text-content-inner { overflow: visible !important; }
+            .canvas-element { outline: none !important; box-shadow: none !important; }
+            .foil-gold, [class*="foil-gold"] {
+              background: none !important;
+              background-image: none !important;
+              -webkit-background-clip: initial !important;
+              background-clip: initial !important;
+              -webkit-text-fill-color: #E2C785 !important;
+              color: #E2C785 !important;
+              text-shadow: 0 1px 1px rgba(255, 245, 200, 0.4), 0 0 2px rgba(212, 175, 55, 0.6) !important;
+            }
+            .foil-rose, [class*="foil-rose"] {
+              background: none !important;
+              background-image: none !important;
+              -webkit-background-clip: initial !important;
+              background-clip: initial !important;
+              -webkit-text-fill-color: #E8B4B8 !important;
+              color: #E8B4B8 !important;
+              text-shadow: 0 1px 1px rgba(255, 230, 235, 0.4), 0 0 2px rgba(183, 110, 121, 0.6) !important;
+            }
+            .foil-silver, [class*="foil-silver"] {
+              background: none !important;
+              background-image: none !important;
+              -webkit-background-clip: initial !important;
+              background-clip: initial !important;
+              -webkit-text-fill-color: #E0E4E8 !important;
+              color: #E0E4E8 !important;
+              text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 2px rgba(190, 195, 200, 0.6) !important;
+            }
+          `;
+          clonedDoc.head.appendChild(style);
+        }
+      });
+
+      if (type === 'image/jpeg' || type === 'image/jpg') {
+        return {
+          canvas,
+          dataUrl: canvas.toDataURL('image/jpeg', quality),
+          mime: 'image/jpeg'
+        };
+      }
+
+      return {
+        canvas,
+        dataUrl: canvas.toDataURL('image/png'),
+        mime: 'image/png'
+      };
+    } finally {
+      if (exportCard.parentNode) {
+        exportCard.parentNode.removeChild(exportCard);
+      }
+    }
+  }
+
+  /**
+   * Fallback for single-stage capture (delegates to captureSide)
+   */
+  async captureStage(options = {}) {
+    return this.captureSide(this.editor.activeSide || 'front', options);
+  }
+
+  /**
+   * Creates a luxury side-by-side presentation canvas displaying Front and Back cards together.
+   */
+  createCompositeCanvas(frontCanvas, backCanvas) {
+    const t = this.editor.currentTemplate || {};
+    const title = t.title || 'Invitation Card';
+
+    const cardW = frontCanvas.width || 1200;
+    const cardH = frontCanvas.height || 1680;
+    const gap = Math.round(cardW * 0.1);
+    const padX = Math.round(cardW * 0.12);
+    const padTop = Math.round(cardH * 0.13);
+    const padBottom = Math.round(cardH * 0.1);
+
+    const compositeW = (padX * 2) + (cardW * 2) + gap;
+    const compositeH = padTop + cardH + padBottom;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = compositeW;
+    canvas.height = compositeH;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return frontCanvas;
+
+    // 1. Rich Obsidian Backdrop
+    const bgGrad = ctx.createRadialGradient(
+      compositeW / 2, compositeH / 2, 250,
+      compositeW / 2, compositeH / 2, compositeW * 0.75
+    );
+    bgGrad.addColorStop(0, '#1c1a20');
+    bgGrad.addColorStop(0.55, '#121115');
+    bgGrad.addColorStop(1, '#080709');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, compositeW, compositeH);
+
+    // 2. Subtle Gold Ambient Center Light
+    const glowGrad = ctx.createRadialGradient(
+      compositeW / 2, padTop + (cardH * 0.45), 100,
+      compositeW / 2, padTop + (cardH * 0.45), compositeW * 0.55
+    );
+    glowGrad.addColorStop(0, 'rgba(212, 175, 55, 0.08)');
+    glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = glowGrad;
+    ctx.fillRect(0, 0, compositeW, compositeH);
+
+    // 3. Header Presentation Typography
+    ctx.save();
+    ctx.textAlign = 'center';
+
+    // Suite Tagline
+    ctx.font = '500 24px "Montserrat", sans-serif';
+    ctx.fillStyle = '#C5A059';
+    ctx.fillText('✦  EXCLUSIVE INVITATION SUITE  ✦', compositeW / 2, Math.round(padTop * 0.38));
+
+    // Main Card Title
+    ctx.font = '600 46px "Cinzel", "Cormorant Garamond", serif';
+    ctx.fillStyle = '#F5EFE6';
+    const displayTitle = String(title).toUpperCase();
+    ctx.fillText(displayTitle, compositeW / 2, Math.round(padTop * 0.65));
+
+    // Section Labels
+    const frontX = padX;
+    const backX = padX + cardW + gap;
+    const cardY = padTop;
+
+    ctx.font = '600 22px "Montserrat", sans-serif';
+    ctx.fillStyle = '#E8D5A3';
+    ctx.fillText('FRONT INVITATION', frontX + (cardW / 2), cardY - 24);
+    ctx.fillText('EVENT DETAILS & RSVP', backX + (cardW / 2), cardY - 24);
+    ctx.restore();
+
+    // Helper: Draw card with clean shadow and border
+    const drawCard = (srcCanvas, x, y) => {
+      // 1. Soft realistic drop shadow
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+      ctx.shadowBlur = 40;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 20;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x, y, cardW, cardH);
+      ctx.restore();
+
+      // 2. Draw card canvas image
+      ctx.drawImage(srcCanvas, x, y, cardW, cardH);
+
+      // 3. Subtle gold border around card
+      ctx.save();
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x, y, cardW, cardH);
+      ctx.restore();
+    };
+
+    drawCard(frontCanvas, frontX, cardY);
+    drawCard(backCanvas, backX, cardY);
+
+    // 4. Footer Details
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.font = '400 20px "Montserrat", sans-serif';
+    ctx.fillStyle = '#8E8880';
+    ctx.fillText('5" × 7" Standard Dimension  ·  300 DPI High-Definition Print & Digital Suite', compositeW / 2, compositeH - 50);
+    ctx.restore();
+
+    return canvas;
+  }
+
+  /**
+   * Export as High-Resolution PNG (Front + Back + Complete Suite)
    */
   async exportPNG(filename) {
     if (this._busy) return;
-    const name = filename || `${this.getBaseFilename()}-digital.png`;
-    this.setBusy(true, 'Creating crisp PNG…');
+    const base = this.getBaseFilename();
+    this.setBusy(true, 'Rendering Front side (Lossless PNG)…');
+
+    const initialState = {
+      side: this.editor.activeSide,
+      zoom: this.editor.zoom,
+      selectedElementId: this.editor.selectedElementId,
+      selectedElementIds: [...(this.editor.selectedElementIds || [])],
+      showBleed: this.editor.showBleed
+    };
 
     try {
-      await this.prepareCapture();
-      const { dataUrl } = await this.captureStage({
+      // 1. Capture Front Side
+      const front = await this.captureSide('front', {
         scale: 3,
-        backgroundColor: null,
         type: 'image/png'
       });
-      this.triggerDownload(dataUrl, name);
-      this.showToast('PNG downloaded — ready for WhatsApp & Instagram.');
+
+      // 2. Capture Back Side
+      this.setBusy(true, 'Rendering Back side (Lossless PNG)…');
+      const back = await this.captureSide('back', {
+        scale: 3,
+        type: 'image/png'
+      });
+
+      // 3. Create Complete Side-by-Side Suite
+      this.setBusy(true, 'Assembling complete suite presentation…');
+      const compositeCanvas = this.createCompositeCanvas(front.canvas, back.canvas);
+      const suiteDataUrl = compositeCanvas.toDataURL('image/png');
+
+      // 4. Trigger sequential downloads
+      await this.triggerSequentialDownloads([
+        { dataUrl: front.dataUrl, filename: `${base}-front.png` },
+        { dataUrl: back.dataUrl, filename: `${base}-back.png` },
+        { dataUrl: suiteDataUrl, filename: `${base}-complete-suite.png` }
+      ]);
+
+      this.showToast('✓ Front, Back & Complete Suite PNGs exported.');
     } catch (err) {
       console.error('Export PNG failed:', err);
       this.showToast(err.message || 'PNG export failed. Please try again.', 'error');
     } finally {
-      this.restoreCapture();
+      this.editor.activeSide = initialState.side;
+      this.editor.zoom = initialState.zoom;
+      this.editor.selectedElementId = initialState.selectedElementId;
+      this.editor.selectedElementIds = initialState.selectedElementIds;
+      this.editor.showBleed = initialState.showBleed;
+      this.editor.render();
       this.setBusy(false);
     }
   }
 
   /**
-   * Export as High-Resolution JPG
+   * Export as High-Resolution JPG (Front + Back + Complete Suite)
    */
   async exportJPG(filename) {
     if (this._busy) return;
-    const name = filename || `${this.getBaseFilename()}-invite.jpg`;
-    this.setBusy(true, 'Creating email-ready JPG…');
+    const base = this.getBaseFilename();
+    this.setBusy(true, 'Rendering Front side (Email JPG)…');
+
+    const initialState = {
+      side: this.editor.activeSide,
+      zoom: this.editor.zoom,
+      selectedElementId: this.editor.selectedElementId,
+      selectedElementIds: [...(this.editor.selectedElementIds || [])],
+      showBleed: this.editor.showBleed
+    };
 
     try {
-      await this.prepareCapture();
-      const { dataUrl } = await this.captureStage({
+      // 1. Capture Front Side
+      const front = await this.captureSide('front', {
         scale: 3,
-        backgroundColor: '#ffffff',
         type: 'image/jpeg',
-        quality: 0.95
+        backgroundColor: '#ffffff',
+        quality: 0.96
       });
-      this.triggerDownload(dataUrl, name);
-      this.showToast('JPG downloaded — perfect for email invites.');
+
+      // 2. Capture Back Side
+      this.setBusy(true, 'Rendering Back side (Email JPG)…');
+      const back = await this.captureSide('back', {
+        scale: 3,
+        type: 'image/jpeg',
+        backgroundColor: '#ffffff',
+        quality: 0.96
+      });
+
+      // 3. Create Complete Suite
+      this.setBusy(true, 'Assembling complete suite presentation…');
+      const compositeCanvas = this.createCompositeCanvas(front.canvas, back.canvas);
+      const suiteDataUrl = compositeCanvas.toDataURL('image/jpeg', 0.96);
+
+      // 4. Trigger sequential downloads
+      await this.triggerSequentialDownloads([
+        { dataUrl: front.dataUrl, filename: `${base}-front.jpg` },
+        { dataUrl: back.dataUrl, filename: `${base}-back.jpg` },
+        { dataUrl: suiteDataUrl, filename: `${base}-complete-suite.jpg` }
+      ]);
+
+      this.showToast('✓ Front, Back & Complete Suite JPGs downloaded for email.');
     } catch (err) {
       console.error('Export JPG failed:', err);
       this.showToast(err.message || 'JPG export failed. Please try again.', 'error');
     } finally {
-      this.restoreCapture();
+      this.editor.activeSide = initialState.side;
+      this.editor.zoom = initialState.zoom;
+      this.editor.selectedElementId = initialState.selectedElementId;
+      this.editor.selectedElementIds = initialState.selectedElementIds;
+      this.editor.showBleed = initialState.showBleed;
+      this.editor.render();
       this.setBusy(false);
     }
   }
 
   /**
-   * Export Print-Ready PDF (Standard 5" × 7" with Bleed and Trim Marks)
+   * Export Print-Ready PDF (Standard 5" × 7" with Bleed and Crop Marks)
+   * 2-Page Document: Page 1 = Front, Page 2 = Back
    */
   async exportPrintPDF(options = { includeBleed: true, cropMarks: true, bothSides: true }) {
     if (this._busy) return;
@@ -271,11 +618,17 @@ export class CardExporter {
     }
 
     const { jsPDF } = window.jspdf;
-    this.setBusy(true, 'Building print-ready PDF…');
+    this.setBusy(true, 'Rendering Front side for PDF (300 DPI)…');
+
+    const initialState = {
+      side: this.editor.activeSide,
+      zoom: this.editor.zoom,
+      selectedElementId: this.editor.selectedElementId,
+      selectedElementIds: [...(this.editor.selectedElementIds || [])],
+      showBleed: this.editor.showBleed
+    };
 
     try {
-      await this.prepareCapture();
-
       const cardW = 127;
       const cardH = 177.8;
       const bleed = options.includeBleed ? 3.175 : 0;
@@ -289,16 +642,11 @@ export class CardExporter {
         compress: true
       });
 
-      // Front
-      this.editor.activeSide = 'front';
-      this.editor.render();
-      await this.waitForPaint();
-      await this.waitForImages(this.getStage());
-
-      const front = await this.captureStage({
+      // Front Page
+      const front = await this.captureSide('front', {
         scale: 3.5,
-        backgroundColor: '#ffffff',
         type: 'image/jpeg',
+        backgroundColor: '#ffffff',
         quality: 0.98
       });
       pdf.addImage(front.dataUrl, 'JPEG', 0, 0, docW, docH, undefined, 'FAST');
@@ -306,21 +654,13 @@ export class CardExporter {
         this.drawCropMarks(pdf, bleed, cardW, cardH);
       }
 
-      // Back
-      const hasBack = Array.isArray(this.editor.currentTemplate?.back)
-        && this.editor.currentTemplate.back.length > 0;
-
-      if (options.bothSides && hasBack) {
-        this.setBusy(true, 'Adding back side…');
-        this.editor.activeSide = 'back';
-        this.editor.render();
-        await this.waitForPaint();
-        await this.waitForImages(this.getStage());
-
-        const back = await this.captureStage({
+      // Back Page
+      if (options.bothSides) {
+        this.setBusy(true, 'Rendering Back side for PDF (300 DPI)…');
+        const back = await this.captureSide('back', {
           scale: 3.5,
-          backgroundColor: '#ffffff',
           type: 'image/jpeg',
+          backgroundColor: '#ffffff',
           quality: 0.98
         });
         pdf.addPage([docW, docH], 'portrait');
@@ -331,12 +671,17 @@ export class CardExporter {
       }
 
       pdf.save(`${this.getBaseFilename()}-print-ready-300dpi.pdf`);
-      this.showToast('Print-ready PDF downloaded (300 DPI).');
+      this.showToast('✓ Print-ready 2-page PDF downloaded (Front & Back — 300 DPI).');
     } catch (err) {
       console.error('Export PDF failed:', err);
       this.showToast(err.message || 'PDF export failed. Please try again.', 'error');
     } finally {
-      this.restoreCapture();
+      this.editor.activeSide = initialState.side;
+      this.editor.zoom = initialState.zoom;
+      this.editor.selectedElementId = initialState.selectedElementId;
+      this.editor.selectedElementIds = initialState.selectedElementIds;
+      this.editor.showBleed = initialState.showBleed;
+      this.editor.render();
       this.setBusy(false);
     }
   }
@@ -361,76 +706,140 @@ export class CardExporter {
 
   buildWhatsAppCaption() {
     const t = this.editor.currentTemplate || {};
-    const title = t.title || 'Invitation';
-    return [
-      `✨ You're invited`,
+    const title = t.title || 'Wedding Invitation';
+
+    const dateEl = (t.front || []).find(e => e.type === 'text' && (e.id.includes('date') || e.content.includes('202')));
+    const venueEl = (t.front || []).find(e => e.type === 'text' && (e.id.includes('venue') || e.id.includes('loc')));
+    const rsvpEl = (t.back || []).find(e => e.type === 'text' && (e.id.includes('rsvp') || e.content.includes('RSVP')));
+
+    const lines = [
+      `✨ *YOU'RE CORDIALLY INVITED* ✨`,
       ``,
-      title,
+      `*${String(title).toUpperCase()}*`,
+      ``
+    ];
+
+    if (dateEl) {
+      lines.push(`📅 *Date:* ${dateEl.content.replace(/\n/g, ' · ')}`);
+    }
+    if (venueEl) {
+      lines.push(`📍 *Venue:* ${venueEl.content.replace(/\n/g, ' · ')}`);
+    }
+    if (rsvpEl) {
+      lines.push(`✉️ *RSVP:* ${rsvpEl.content.replace(/\n/g, ' · ')}`);
+    }
+
+    lines.push(
       ``,
-      `We would be honoured by your presence.`,
-      `Please save this invitation card.`
-    ].join('\n');
+      `We would be deeply honored by your gracious presence.`,
+      `*(Please find both Front & Back invitation cards attached)*`
+    );
+
+    return lines.join('\n');
   }
 
   /**
-   * Share invitation image directly to WhatsApp when the browser allows it.
-   * Falls back to download + WhatsApp open with a ready caption.
+   * Share invitation images (Front + Back) directly to WhatsApp.
+   * On mobile/supported platforms: shares both Front & Back images in 1 share sheet.
+   * On desktop: downloads Front, Back & Complete Suite + copies caption + opens WhatsApp Web.
    */
   async shareToWhatsApp() {
     if (this._busy) return;
-    this.setBusy(true, 'Preparing WhatsApp invite…');
+    this.setBusy(true, 'Preparing WhatsApp invite (Front & Back)…');
 
-    const filename = `${this.getBaseFilename()}-whatsapp.jpg`;
+    const base = this.getBaseFilename();
     const caption = this.buildWhatsAppCaption();
 
+    const initialState = {
+      side: this.editor.activeSide,
+      zoom: this.editor.zoom,
+      selectedElementId: this.editor.selectedElementId,
+      selectedElementIds: [...(this.editor.selectedElementIds || [])],
+      showBleed: this.editor.showBleed
+    };
+
     try {
-      await this.prepareCapture();
-      const { dataUrl } = await this.captureStage({
-        scale: 2.5,
-        backgroundColor: '#ffffff',
+      // 1. Capture Front Side
+      const front = await this.captureSide('front', {
+        scale: 3,
         type: 'image/jpeg',
-        quality: 0.92
+        backgroundColor: '#ffffff',
+        quality: 0.95
       });
-      this.restoreCapture();
 
-      const blob = this.dataUrlToBlob(dataUrl);
-      const file = new File([blob], filename, { type: 'image/jpeg' });
+      // 2. Capture Back Side
+      this.setBusy(true, 'Rendering Back side for WhatsApp…');
+      const back = await this.captureSide('back', {
+        scale: 3,
+        type: 'image/jpeg',
+        backgroundColor: '#ffffff',
+        quality: 0.95
+      });
 
-      // Best path: native share sheet → user picks WhatsApp (mobile + some desktop)
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      // 3. Assemble Complete Suite
+      this.setBusy(true, 'Assembling Complete Suite…');
+      const compositeCanvas = this.createCompositeCanvas(front.canvas, back.canvas);
+      const suiteDataUrl = compositeCanvas.toDataURL('image/jpeg', 0.95);
+
+      const frontBlob = this.dataUrlToBlob(front.dataUrl);
+      const backBlob = this.dataUrlToBlob(back.dataUrl);
+      const suiteBlob = this.dataUrlToBlob(suiteDataUrl);
+
+      const frontFile = new File([frontBlob], `${base}-front.jpg`, { type: 'image/jpeg' });
+      const backFile = new File([backBlob], `${base}-back.jpg`, { type: 'image/jpeg' });
+      const suiteFile = new File([suiteBlob], `${base}-complete-suite.jpg`, { type: 'image/jpeg' });
+
+      // Native share sheet (Mobile & supported desktop)
+      if (navigator.canShare && navigator.canShare({ files: [frontFile, backFile] })) {
         this.setBusy(false);
-        await navigator.share({
-          files: [file],
-          title: this.editor.currentTemplate?.title || 'Invitation',
-          text: caption
-        });
-        this.showToast('Shared — choose WhatsApp to send your invite.');
-        return;
+        try {
+          await navigator.share({
+            files: [frontFile, backFile],
+            title: this.editor.currentTemplate?.title || 'Invitation',
+            text: caption
+          });
+          this.showToast('✓ Shared — choose WhatsApp to send both Front & Back cards.');
+          return;
+        } catch (shareErr) {
+          if (shareErr && (shareErr.name === 'AbortError' || shareErr.name === 'NotAllowedError')) {
+            this.showToast('Share cancelled.');
+            return;
+          }
+          console.warn('Native share failed, falling back to download:', shareErr);
+        }
       }
 
-      // Desktop fallback: download image, copy caption, open WhatsApp
-      this.downloadBlob(blob, filename);
+      // Desktop fallback: download all 3 images, copy caption, open WhatsApp Web
+      await this.triggerSequentialDownloads([
+        { blob: frontBlob, filename: `${base}-front.jpg` },
+        { blob: backBlob, filename: `${base}-back.jpg` },
+        { blob: suiteBlob, filename: `${base}-complete-suite.jpg` }
+      ]);
 
       try {
         if (navigator.clipboard?.writeText) {
           await navigator.clipboard.writeText(caption);
         }
-      } catch (_) { /* ignore clipboard failures */ }
+      } catch (_) { /* ignore clipboard errors */ }
 
       const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(caption)}`;
       window.open(waUrl, '_blank', 'noopener,noreferrer');
 
-      this.showToast('Invite saved. In WhatsApp, attach the downloaded image to send.');
+      this.showToast('✓ Front, Back & Suite saved to downloads! In WhatsApp, paste caption and attach your cards.');
     } catch (err) {
-      // User cancel on share sheet
       if (err && (err.name === 'AbortError' || err.name === 'NotAllowedError')) {
         this.showToast('Share cancelled.');
       } else {
         console.error('WhatsApp share failed:', err);
-        this.showToast(err.message || 'Could not share to WhatsApp. Try PNG export instead.', 'error');
+        this.showToast(err.message || 'Could not prepare WhatsApp cards. Please try again.', 'error');
       }
-      this.restoreCapture();
     } finally {
+      this.editor.activeSide = initialState.side;
+      this.editor.zoom = initialState.zoom;
+      this.editor.selectedElementId = initialState.selectedElementId;
+      this.editor.selectedElementIds = initialState.selectedElementIds;
+      this.editor.showBleed = initialState.showBleed;
+      this.editor.render();
       this.setBusy(false);
     }
   }

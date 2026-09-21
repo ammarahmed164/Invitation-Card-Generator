@@ -70,23 +70,18 @@
        ========================================================================= -->
   <header id="studio-header" class="studio-header is-hidden">
     <div class="studio-nav-shell">
-      <!-- Left: Back + suite context -->
+      <!-- Left: Back button + Suite identity -->
       <div class="studio-nav-brand">
-        <button type="button" id="btn-open-catalog" class="studio-collections-btn" title="Back to all collections">
+        <button type="button" id="btn-open-catalog" class="studio-collections-btn" title="Back to All Templates">
           <svg class="studio-collections-chevron" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          <span class="studio-collections-grid" aria-hidden="true">
-            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-            </svg>
-          </span>
-          <span class="studio-collections-label">Collections</span>
+          <span class="studio-collections-label">Templates</span>
         </button>
 
         <span class="studio-brand-rule" aria-hidden="true"></span>
 
-        <button type="button" id="btn-open-lobby" class="studio-brand-btn" title="Back to this collection">
+        <button type="button" id="btn-open-lobby" class="studio-brand-btn" title="Template details / Back to suite">
           <span class="studio-brand-mark" aria-hidden="true">IC</span>
           <span class="studio-brand-copy">
             <span id="header-template-title" class="studio-suite-title">Select a suite</span>
@@ -95,54 +90,45 @@
         </button>
       </div>
 
-      <!-- Center: Studio tools -->
+      <!-- Center: Card Side Switcher & History -->
       <div class="studio-nav-center">
-        <div class="studio-tool-rail" role="group" aria-label="Card side">
+        <!-- Segmented Card Side Control (Front | Back) -->
+        <div class="studio-side-toggle" role="group" aria-label="Card side">
           <button id="btn-side-front" type="button" class="studio-side-btn is-active">
-            <span class="studio-side-label">Front</span>
-            <span class="studio-side-sub">Invite</span>
+            <span>Front</span>
           </button>
           <button id="btn-side-back" type="button" class="studio-side-btn">
-            <span class="studio-side-label">Back</span>
-            <span class="studio-side-sub">Details</span>
+            <span>Back</span>
           </button>
         </div>
 
         <div class="studio-tool-divider" aria-hidden="true"></div>
 
-        <button id="btn-toggle-bleed" type="button" title="Toggle 0.125 inch Bleed Zone Guidelines" class="studio-icon-btn is-on">
-          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-          </svg>
-          <span>Bleed</span>
-        </button>
-
+        <!-- History Cluster (Undo / Redo / Reset) -->
         <div class="studio-tool-cluster" role="group" aria-label="History">
-          <button id="btn-undo" type="button" title="Undo (Ctrl+Z)" class="studio-icon-btn studio-icon-btn--square">
+          <button id="btn-undo" type="button" title="Undo (Ctrl+Z)" class="studio-icon-btn studio-icon-btn--square" aria-label="Undo">
             <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h10a5 5 0 015 5v2a5 5 0 01-5 5H6" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 6L3 10l4 4" />
             </svg>
           </button>
-          <button id="btn-redo" type="button" title="Redo (Ctrl+Y)" class="studio-icon-btn studio-icon-btn--square">
+          <button id="btn-redo" type="button" title="Redo (Ctrl+Y)" class="studio-icon-btn studio-icon-btn--square" aria-label="Redo">
             <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 10H11a5 5 0 00-5 5v2a5 5 0 005 5h7" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 6l4 4-4 4" />
             </svg>
           </button>
-        </div>
-
-        <div class="studio-zoom-cluster" role="group" aria-label="Zoom">
-          <button id="btn-zoom-out" type="button" class="studio-zoom-btn" title="Zoom out">−</button>
-          <span id="zoom-display" class="studio-zoom-value">100%</span>
-          <button id="btn-zoom-in" type="button" class="studio-zoom-btn" title="Zoom in">+</button>
-          <button id="btn-zoom-reset" type="button" class="studio-zoom-reset" title="Reset Zoom">Reset</button>
+          <button id="btn-reset-card" type="button" title="Reset Card (Revert to Original Template)" class="studio-icon-btn studio-icon-btn--square hover:text-amber-300" aria-label="Reset Card to Original Template">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
         </div>
       </div>
 
-      <!-- Right: Actions -->
+      <!-- Right: Preview, Guides & Primary Export -->
       <div class="studio-nav-actions">
-        <button id="btn-guest-preview" type="button" class="studio-nav-chip">
+        <button id="btn-guest-preview" type="button" class="studio-nav-chip studio-preview-btn" title="Guest View Preview">
           <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -150,30 +136,24 @@
           <span class="studio-nav-chip-label">Guest View</span>
         </button>
 
-        <button id="btn-etsy-guide" type="button" title="Paper Stock & Printing Instructions" class="studio-icon-btn studio-icon-btn--square">
-          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-        </button>
+        <div class="studio-util-cluster" role="group" aria-label="Reference Guides">
+          <button id="btn-etsy-guide" type="button" title="Paper Stock & Printing Instructions" class="studio-icon-btn studio-icon-btn--square">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </button>
 
-        <button id="btn-seller-toolkit" type="button" title="Seller Demo Link & Order Toolkit" class="studio-icon-btn studio-icon-btn--square studio-nav-hide-sm">
-          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-        </button>
-
-        <button id="btn-share-whatsapp" type="button" class="studio-whatsapp-btn" title="Share invitation to WhatsApp">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.86 9.86 0 0012.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.22 8.22 0 012.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.39-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.25 8.25-8.25zm4.52 10.52c-.2-.1-1.18-.58-1.36-.64-.18-.07-.32-.1-.45.1-.13.2-.51.64-.63.77-.11.13-.23.15-.43.05-.2-.1-.84-.31-1.6-.99-.59-.53-.99-1.18-1.1-1.38-.12-.2-.01-.3.09-.4.09-.09.2-.23.3-.35.1-.12.13-.2.2-.33.07-.13.03-.25-.02-.35-.05-.1-.45-1.08-.62-1.47-.16-.39-.33-.33-.45-.34h-.38c-.13 0-.35.05-.53.25-.18.2-.7.68-.7 1.65s.72 1.92.82 2.05c.1.13 1.41 2.15 3.42 3.02.48.21.85.33 1.14.42.48.15.91.13 1.26.08.38-.06 1.18-.48 1.34-.95.17-.47.17-.87.12-.95-.05-.08-.18-.13-.38-.23z"/>
-          </svg>
-          <span class="studio-whatsapp-btn-label">WhatsApp</span>
-          <span class="studio-whatsapp-pulse" aria-hidden="true"></span>
-        </button>
+          <button id="btn-seller-toolkit" type="button" title="Seller Demo Link & Order Toolkit" class="studio-icon-btn studio-icon-btn--square studio-nav-hide-sm">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </button>
+        </div>
 
         <div class="relative">
           <button id="btn-export-dropdown" type="button" class="studio-export-btn">
             <span>Export</span>
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
@@ -192,6 +172,7 @@
               <div class="studio-wa-menu-copy">
                 <span class="studio-wa-menu-title">Share to WhatsApp</span>
                 <span class="studio-wa-menu-sub">Send your invite card in one tap</span>
+                <span class="studio-wa-menu-sub">Share Front & Back cards in one tap</span>
               </div>
               <span class="studio-wa-menu-badge">Popular</span>
             </button>
@@ -209,6 +190,7 @@
               <div>
                 <span class="text-xs font-serif font-bold text-zinc-100 block">Print-Ready PDF (300 DPI)</span>
                 <span class="text-[10px] text-zinc-400 block">5" × 7" with 0.125" Bleed & Crop Marks</span>
+                <span class="text-[10px] text-zinc-400 block">2-Page Front & Back with Bleed & Marks</span>
               </div>
             </button>
 
@@ -221,6 +203,8 @@
               <div>
                 <span class="text-xs font-serif font-bold text-zinc-100 block">Digital PNG Invite</span>
                 <span class="text-[10px] text-zinc-400 block">Crisp graphic for social & stories</span>
+                <span class="text-xs font-serif font-bold text-zinc-100 block">Digital PNG Suite</span>
+                <span class="text-[10px] text-zinc-400 block">Front, Back & Complete Suite PNGs</span>
               </div>
             </button>
 
@@ -233,6 +217,8 @@
               <div>
                 <span class="text-xs font-serif font-bold text-zinc-100 block">Email JPG Card</span>
                 <span class="text-[10px] text-zinc-400 block">Lightweight paperless invite</span>
+                <span class="text-xs font-serif font-bold text-zinc-100 block">Email JPG Suite</span>
+                <span class="text-[10px] text-zinc-400 block">Front, Back & Complete Suite JPGs</span>
               </div>
             </button>
           </div>
@@ -362,31 +348,55 @@
         </button>
       </div>
 
-      <!-- Tab Content Area -->
-      <div id="sidebar-left-content" class="flex-1 p-4 overflow-y-auto">
-        <!-- Injected dynamically via JS -->
+      <!-- Left Sidebar Panel Body (Edit Dock + Tab Content) -->
+      <div class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        <!-- Prominent Live Edit Dock (Docked on the LEFT — never covers canvas template) -->
+        <div id="live-edit-dock" class="live-edit-dock is-hidden flex-1 overflow-y-auto" aria-live="polite"></div>
+
+        <!-- Tab Content Area -->
+        <div id="sidebar-left-content" class="flex-1 p-4 overflow-y-auto">
+          <!-- Injected dynamically via JS -->
+        </div>
       </div>
       <button type="button" id="btn-close-tools-drawer" class="studio-drawer-close" aria-label="Close tools">Close</button>
     </aside>
 
     <!-- CENTER CANVAS EDITING STAGE -->
-    <section class="flex-1 bg-zinc-950 flex flex-col items-center justify-start overflow-auto relative p-4" id="canvas-outer-stage">
-      
-      <!-- Background Ambient Grid / Studio Floor -->
-      <div class="absolute inset-0 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none"></div>
+    <div class="flex-1 relative flex flex-col min-w-0 overflow-hidden">
+      <section class="flex-1 bg-zinc-950 flex flex-col items-center justify-start overflow-auto relative p-4" id="canvas-outer-stage">
+        
+        <!-- Background Ambient Grid / Studio Floor -->
+        <div class="absolute inset-0 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none"></div>
 
-      <!-- Floating Quick-Action Toolbar (appears when any card element is active) -->
-      <div id="canvas-quick-toolbar" class="z-30 my-1 sticky top-2 min-h-[38px] transition-all"></div>
+        <!-- Floating Quick-Action Toolbar (subtle multi-selection and nudge hints) -->
+        <div id="canvas-quick-toolbar" class="z-30 my-1 sticky top-2 min-h-[32px] transition-all"></div>
 
-      <!-- Prominent Live Edit Dock — appears when text/photo selected -->
-      <div id="live-edit-dock" class="live-edit-dock is-hidden z-40" aria-live="polite"></div>
+        <!-- Canvas Stage Container -->
+        <div id="canvas-wrapper" class="relative z-10 my-auto">
+          <!-- Rendered by CardEditor -->
+        </div>
 
-      <!-- Canvas Stage Container -->
-      <div id="canvas-wrapper" class="relative z-10 my-auto">
-        <!-- Rendered by CardEditor -->
-      </div>
+      </section>
 
-    </section>
+      <!-- Floating Viewport & Zoom Dock (Figma / Canva style) -->
+      <aside class="canvas-viewport-dock" role="toolbar" aria-label="Canvas zoom and view controls">
+        <button id="btn-toggle-bleed" type="button" title="Toggle 0.125 inch Bleed Guidelines" class="dock-btn is-on">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+          <span>Bleed</span>
+        </button>
+
+        <div class="dock-divider" aria-hidden="true"></div>
+
+        <div class="dock-zoom-group" role="group" aria-label="Zoom controls">
+          <button id="btn-zoom-out" type="button" class="dock-zoom-btn" title="Zoom out">−</button>
+          <span id="zoom-display" class="dock-zoom-val" title="Click to reset zoom (100%)">100%</span>
+          <button id="btn-zoom-in" type="button" class="dock-zoom-btn" title="Zoom in">+</button>
+          <button id="btn-zoom-reset" type="button" class="dock-zoom-reset" title="Reset Zoom / Fit to Screen">Fit</button>
+        </div>
+      </aside>
+    </div>
 
     <!-- RIGHT INSPECTOR & STYLING PANEL -->
     <aside id="sidebar-right" class="studio-sidebar-right w-72 md:w-84 border-l border-zinc-800 bg-zinc-900/90 flex flex-col shrink-0 overflow-y-auto">

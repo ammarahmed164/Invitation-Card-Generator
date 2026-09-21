@@ -15,8 +15,7 @@
   /**
    * Curated European Luxury Fonts Collection
    * Used for high-end wedding, soirée, baby shower & gala invitation typography
-   */
-  const LUXURY_FONTS = [
+   */const LUXURY_FONTS = [
     {
       name: 'Cormorant Garamond',
       family: "'Cormorant Garamond', serif",
@@ -101,8 +100,7 @@
       weights: ['400', '500', '600', '700'],
       description: 'Contemporary European sans-serif'
     }
-  ];
-  const FONT_PAIRINGS = [
+  ];const FONT_PAIRINGS = [
     {
       name: 'Parisian Editorial',
       heading: 'Bodoni Moda',
@@ -138,8 +136,7 @@
   /**
    * Vector Artwork, Luxury Badges, Frames & Wax Seals
    * Handcrafted SVG assets for European invitation card styling
-   */
-  const ASSET_LIBRARY = {
+   */const ASSET_LIBRARY = {
     // Wax Seals
     waxSeals: [
       {
@@ -635,36 +632,38 @@
           id: 'em-f-sub1',
           type: 'text',
           content: 'TOGETHER WITH THEIR FAMILIES',
-          x: 40, y: 135, width: 320, height: 20,
+          x: 60, y: 140, width: 280, height: 18,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8.5,
+          fontSize: 8,
           fontWeight: '500',
-          letterSpacing: 3.5,
+          letterSpacing: 2.8,
           textAlign: 'center',
           color: '#F3E5AB',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'em-f-name1',
           type: 'text',
           content: 'Zainab',
-          x: 20, y: 155, width: 360, height: 50,
+          x: 60, y: 162, width: 280, height: 46,
           fontFamily: "'Great Vibes', cursive",
-          fontSize: 46,
+          fontSize: 44,
           fontWeight: '400',
           textAlign: 'center',
           color: '#FDFBF0',
           isFoil: true,
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'em-f-and',
           type: 'text',
           content: '&',
-          x: 40, y: 200, width: 320, height: 25,
+          x: 60, y: 210, width: 280, height: 22,
           fontFamily: "'Cormorant Garamond', serif",
           fontStyle: 'italic',
-          fontSize: 26,
+          fontSize: 22,
           textAlign: 'center',
           color: '#D4AF37',
           zIndex: 3
@@ -673,73 +672,78 @@
           id: 'em-f-name2',
           type: 'text',
           content: 'Hamza',
-          x: 20, y: 220, width: 360, height: 50,
+          x: 60, y: 232, width: 280, height: 46,
           fontFamily: "'Great Vibes', cursive",
-          fontSize: 46,
+          fontSize: 44,
           fontWeight: '400',
           textAlign: 'center',
           color: '#FDFBF0',
           isFoil: true,
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'em-f-sub2',
           type: 'text',
-          content: 'INVITE YOU TO THEIR WEDDING',
-          x: 40, y: 275, width: 320, height: 20,
+          content: 'INVITE YOU TO CELEBRATE THEIR WEDDING',
+          x: 60, y: 284, width: 280, height: 18,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8.5,
+          fontSize: 7.8,
           fontWeight: '500',
-          letterSpacing: 3,
+          letterSpacing: 2.2,
           textAlign: 'center',
           color: '#F3E5AB',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'em-f-date',
           type: 'text',
-          content: 'SAT   |   20   |   DEC 2026',
-          x: 30, y: 305, width: 340, height: 35,
+          content: 'SATURDAY  ·  20  ·  DECEMBER 2026',
+          x: 50, y: 310, width: 300, height: 22,
           fontFamily: "'Cinzel', serif",
-          fontSize: 18,
-          fontWeight: '700',
-          letterSpacing: 4,
+          fontSize: 12.5,
+          fontWeight: '600',
+          letterSpacing: 2.5,
           textAlign: 'center',
           color: '#FFFFFF',
           isFoil: true,
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'em-f-venue',
           type: 'text',
           content: 'THE GARDEN MARQUEE',
-          x: 30, y: 350, width: 340, height: 25,
+          x: 60, y: 340, width: 280, height: 20,
           fontFamily: "'Cinzel', serif",
-          fontSize: 13,
+          fontSize: 12,
           fontWeight: '600',
-          letterSpacing: 3,
+          letterSpacing: 2.2,
           textAlign: 'center',
           color: '#F3E5AB',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'em-f-loc',
           type: 'text',
-          content: 'LAHORE • 7:00 PM ONWARDS',
-          x: 40, y: 375, width: 320, height: 20,
+          content: 'LAHORE  ·  SEVEN O\'CLOCK IN THE EVENING',
+          x: 60, y: 364, width: 280, height: 18,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8.5,
+          fontSize: 7.5,
           fontWeight: '500',
-          letterSpacing: 3,
+          letterSpacing: 2,
           textAlign: 'center',
           color: '#D1E0D7',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'em-f-icons',
           type: 'svg',
           assetId: 'event-icons-row',
-          x: 55, y: 405, width: 290, height: 55,
+          x: 65, y: 394, width: 270, height: 48,
           color: '#F3E5AB',
           opacity: 0.95,
           zIndex: 3
@@ -747,83 +751,39 @@
         {
           id: 'em-f-footer',
           type: 'text',
-          content: 'NEW CHAPTER  |  SAME SOULS  |  FOREVER TOGETHER',
-          x: 30, y: 470, width: 340, height: 20,
+          content: 'NEW CHAPTER  ·  FOREVER TOGETHER',
+          x: 60, y: 450, width: 280, height: 16,
           fontFamily: "'Montserrat', sans-serif",
           fontSize: 7.5,
           fontWeight: '600',
           letterSpacing: 2.5,
           textAlign: 'center',
           color: '#D4AF37',
+          noWrap: true,
           zIndex: 3
         }
       ],
       back: [
         {
-          id: 'em-b-title',
-          type: 'text',
-          content: 'BARAAT & VALIMA DETAILS',
-          x: 40, y: 60, width: 320, height: 30,
-          fontFamily: "'Cinzel', serif",
-          fontSize: 16,
-          letterSpacing: 4,
-          textAlign: 'center',
-          color: '#F3E5AB',
-          zIndex: 3
-        },
-        {
-          id: 'em-b-day1',
-          type: 'text',
-          content: 'SATURDAY, 20 DEC • BARAAT CEREMONY\n7:00 PM Arrival of Groom • 8:30 PM Dinner & Rukhsati',
-          x: 40, y: 110, width: 320, height: 45,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 14,
-          lineHeight: 1.6,
-          textAlign: 'center',
-          color: '#E0EDE6',
-          zIndex: 3
-        },
-        {
-          id: 'em-b-day2',
-          type: 'text',
-          content: 'SUNDAY, 21 DEC • VALIMA RECEPTION\n8:00 PM Musical Night & Royal Banquet Dinner',
-          x: 40, y: 170, width: 320, height: 45,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 14,
-          lineHeight: 1.6,
-          textAlign: 'center',
-          color: '#E0EDE6',
-          zIndex: 3
-        },
-        {
           id: 'em-b-qr',
           type: 'qr-code',
           qrValue: 'https://zainab-hamza.wedding/rsvp',
-          x: 160, y: 245, width: 80, height: 80,
-          zIndex: 4
+          x: 140, y: 180, width: 120, height: 120,
+          zIndex: 2
         },
         {
-          id: 'em-b-rsvp-txt',
+          id: 'em-b-rsvp',
           type: 'text',
-          content: 'SCAN TO CONFIRM ATTENDANCE & LOCATION MAP',
-          x: 40, y: 345, width: 320, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8,
+          content: 'ZAINAB & HAMZA\nRSVP: +92 300 1234567',
+          x: 40, y: 324, width: 320, height: 52,
+          fontFamily: "'Cinzel', serif",
+          fontSize: 12,
           fontWeight: '600',
           letterSpacing: 2.5,
+          lineHeight: 1.7,
           textAlign: 'center',
           color: '#F3E5AB',
-          zIndex: 3
-        },
-        {
-          id: 'em-b-contact',
-          type: 'text',
-          content: 'RSVP: +92 300 1234567 • The Garden Marquee',
-          x: 40, y: 375, width: 320, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 9,
-          textAlign: 'center',
-          color: '#CBD8D0',
+          isFoil: true,
           zIndex: 3
         }
       ]
@@ -843,62 +803,26 @@
       description: 'Intricate golden Mughal arch with hanging silk tassel, deep crimson and shimmering gold autumn foliage, and royal Urdu/English calligraphy.',
       front: [
         {
-          id: 'mu-f-top',
-          type: 'text',
-          content: 'HAPPILY EVER AFTER BEGINS HERE',
-          x: 175, y: 35, width: 200, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 7.5,
-          fontWeight: '600',
-          letterSpacing: 2,
-          textAlign: 'center',
-          color: '#701323',
-          zIndex: 3
-        },
-        {
-          id: 'mu-f-heart1',
-          type: 'text',
-          content: '♡',
-          x: 255, y: 55, width: 40, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 16,
-          textAlign: 'center',
-          color: '#701323',
-          zIndex: 3
-        },
-        {
-          id: 'mu-f-sub1',
-          type: 'text',
-          content: 'TOGETHER WITH THEIR FAMILIES',
-          x: 160, y: 95, width: 230, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8,
-          fontWeight: '500',
-          letterSpacing: 3,
-          textAlign: 'center',
-          color: '#4A3D36',
-          zIndex: 3
-        },
-        {
           id: 'mu-f-name1',
           type: 'text',
           content: 'Zainab',
-          x: 150, y: 120, width: 240, height: 48,
+          x: 165, y: 136, width: 210, height: 42,
           fontFamily: "'Great Vibes', cursive",
-          fontSize: 46,
+          fontSize: 40,
           fontWeight: '400',
           textAlign: 'center',
           color: '#701323',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'mu-f-and',
           type: 'text',
           content: '&',
-          x: 160, y: 165, width: 220, height: 25,
+          x: 165, y: 178, width: 210, height: 20,
           fontFamily: "'Cormorant Garamond', serif",
           fontStyle: 'italic',
-          fontSize: 24,
+          fontSize: 20,
           textAlign: 'center',
           color: '#C79B4B',
           zIndex: 3
@@ -907,129 +831,102 @@
           id: 'mu-f-name2',
           type: 'text',
           content: 'Hamza',
-          x: 150, y: 185, width: 240, height: 48,
+          x: 165, y: 198, width: 210, height: 42,
           fontFamily: "'Great Vibes', cursive",
-          fontSize: 46,
+          fontSize: 40,
           fontWeight: '400',
           textAlign: 'center',
           color: '#701323',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'mu-f-sub2',
           type: 'text',
-          content: 'REQUEST THE HONOUR OF YOUR PRESENCE AT THEIR WEDDING',
-          x: 155, y: 240, width: 230, height: 35,
+          content: 'REQUEST THE HONOUR OF YOUR PRESENCE\nAT THE CELEBRATION OF THEIR WEDDING',
+          x: 165, y: 246, width: 210, height: 30,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 7.5,
+          fontSize: 6.8,
           fontWeight: '500',
-          lineHeight: 1.5,
-          letterSpacing: 2,
+          lineHeight: 1.45,
+          letterSpacing: 1.4,
           textAlign: 'center',
-          color: '#4A3D36',
+          color: '#6A564C',
           zIndex: 3
         },
         {
           id: 'mu-f-date',
           type: 'text',
-          content: 'SUNDAY • 21 DEC 2026',
-          x: 150, y: 285, width: 240, height: 25,
+          content: 'SUNDAY  ·  21 DEC 2026',
+          x: 165, y: 288, width: 210, height: 22,
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: '700',
           letterSpacing: 2,
           textAlign: 'center',
           color: '#2C221D',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'mu-f-venue',
           type: 'text',
-          content: 'FAISAL MOSQUE ISLAMABAD',
-          x: 150, y: 315, width: 240, height: 25,
+          content: 'FAISAL MOSQUE  ·  ISLAMABAD',
+          x: 165, y: 316, width: 210, height: 18,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 9,
+          fontSize: 7.5,
           fontWeight: '600',
-          letterSpacing: 2.5,
+          letterSpacing: 1.8,
           textAlign: 'center',
           color: '#701323',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'mu-f-time',
           type: 'text',
-          content: '7:00 PM ONWARDS',
-          x: 150, y: 338, width: 240, height: 20,
+          content: 'SEVEN O\'CLOCK IN THE EVENING',
+          x: 165, y: 338, width: 210, height: 16,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8,
-          letterSpacing: 2,
+          fontSize: 6.8,
+          letterSpacing: 1.5,
           textAlign: 'center',
-          color: '#6E6157',
+          color: '#7A6B62',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'mu-f-footer',
           type: 'text',
-          content: '"Same Souls, New Journey"',
-          x: 180, y: 395, width: 200, height: 40,
-          fontFamily: "'Great Vibes', cursive",
-          fontSize: 22,
+          content: 'Reception to follow at Serena Hotel',
+          x: 165, y: 366, width: 210, height: 22,
+          fontFamily: "'Cormorant Garamond', serif",
+          fontStyle: 'italic',
+          fontSize: 13,
           textAlign: 'center',
           color: '#8A2E3E',
-          zIndex: 3
-        },
-        {
-          id: 'mu-f-heart2',
-          type: 'text',
-          content: '♡',
-          x: 260, y: 430, width: 40, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 16,
-          textAlign: 'center',
-          color: '#701323',
+          noWrap: true,
           zIndex: 3
         }
       ],
       back: [
         {
-          id: 'mu-b-title',
-          type: 'text',
-          content: 'RECEPTION & MAP',
-          x: 40, y: 70, width: 320, height: 25,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 16,
-          fontWeight: '700',
-          letterSpacing: 3,
-          textAlign: 'center',
-          color: '#701323',
-          zIndex: 3
-        },
-        {
-          id: 'mu-b-venue-d',
-          type: 'text',
-          content: 'Nikkah & Reception at Courtyard of Faisal Mosque.\nTraditional feast & live qawwali to follow at Serena Hotel.',
-          x: 50, y: 110, width: 300, height: 50,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 14,
-          textAlign: 'center',
-          color: '#4A3D36',
-          zIndex: 3
-        },
-        {
           id: 'mu-b-qr',
           type: 'qr-code',
           qrValue: 'https://zainab-hamza-nikkah.com',
-          x: 160, y: 190, width: 80, height: 80,
-          zIndex: 4
+          x: 140, y: 180, width: 120, height: 120,
+          zIndex: 2
         },
         {
           id: 'mu-b-rsvp',
           type: 'text',
-          content: 'SCAN FOR MAP & HOTEL BOOKINGS',
-          x: 40, y: 290, width: 320, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8.5,
-          letterSpacing: 2,
+          content: 'ZAINAB & HAMZA\nRSVP: +92 300 9876543',
+          x: 40, y: 324, width: 320, height: 52,
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 14,
+          fontWeight: '700',
+          letterSpacing: 2.2,
+          lineHeight: 1.6,
           textAlign: 'center',
           color: '#701323',
           zIndex: 3
@@ -1054,35 +951,37 @@
           id: 'bl-f-sub1',
           type: 'text',
           content: 'TOGETHER WITH THEIR FAMILIES',
-          x: 65, y: 135, width: 270, height: 20,
+          x: 85, y: 142, width: 210, height: 16,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8,
+          fontSize: 7.5,
           fontWeight: '500',
-          letterSpacing: 3,
+          letterSpacing: 2.2,
           textAlign: 'center',
           color: '#5A464B',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'bl-f-name1',
           type: 'text',
           content: 'Areeb',
-          x: 50, y: 160, width: 300, height: 48,
+          x: 85, y: 162, width: 210, height: 42,
           fontFamily: "'Great Vibes', cursive",
-          fontSize: 46,
+          fontSize: 40,
           fontWeight: '400',
           textAlign: 'center',
           color: '#8A253A',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'bl-f-and',
           type: 'text',
           content: '&',
-          x: 65, y: 200, width: 270, height: 25,
+          x: 85, y: 202, width: 210, height: 20,
           fontFamily: "'Cormorant Garamond', serif",
           fontStyle: 'italic',
-          fontSize: 22,
+          fontSize: 20,
           textAlign: 'center',
           color: '#B57988',
           zIndex: 3
@@ -1091,24 +990,25 @@
           id: 'bl-f-name2',
           type: 'text',
           content: 'Maha',
-          x: 50, y: 220, width: 300, height: 48,
+          x: 85, y: 220, width: 210, height: 42,
           fontFamily: "'Great Vibes', cursive",
-          fontSize: 46,
+          fontSize: 40,
           fontWeight: '400',
           textAlign: 'center',
           color: '#8A253A',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'bl-f-sub2',
           type: 'text',
-          content: 'REQUEST THE PLEASURE OF YOUR COMPANY AT THEIR WEDDING',
-          x: 60, y: 275, width: 280, height: 30,
+          content: 'REQUEST THE PLEASURE OF YOUR COMPANY\nAT THEIR WEDDING CELEBRATION',
+          x: 85, y: 272, width: 210, height: 26,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 7.5,
+          fontSize: 6.8,
           fontWeight: '500',
-          lineHeight: 1.5,
-          letterSpacing: 2,
+          lineHeight: 1.45,
+          letterSpacing: 1.4,
           textAlign: 'center',
           color: '#5A464B',
           zIndex: 3
@@ -1116,94 +1016,63 @@
         {
           id: 'bl-f-date',
           type: 'text',
-          content: 'SAT   |   14 DEC 2026',
-          x: 60, y: 315, width: 280, height: 25,
+          content: 'SATURDAY  ·  14 DEC 2026',
+          x: 85, y: 304, width: 210, height: 20,
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 16,
+          fontSize: 13.5,
           fontWeight: '700',
-          letterSpacing: 3,
+          letterSpacing: 2,
           textAlign: 'center',
           color: '#8A253A',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'bl-f-venue',
           type: 'text',
-          content: 'SERENA HOTEL ISLAMABAD',
-          x: 60, y: 350, width: 280, height: 20,
+          content: 'SERENA HOTEL  ·  ISLAMABAD',
+          x: 85, y: 328, width: 210, height: 16,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 9,
+          fontSize: 7.5,
           fontWeight: '600',
-          letterSpacing: 2,
+          letterSpacing: 1.8,
           textAlign: 'center',
           color: '#3B292D',
+          noWrap: true,
           zIndex: 3
         },
         {
           id: 'bl-f-time',
           type: 'text',
           content: '7:00 PM ONWARDS',
-          x: 60, y: 370, width: 280, height: 20,
+          x: 85, y: 348, width: 210, height: 16,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8,
-          letterSpacing: 2,
+          fontSize: 7,
+          letterSpacing: 1.5,
           textAlign: 'center',
           color: '#7E636A',
-          zIndex: 3
-        },
-        {
-          id: 'bl-f-footer',
-          type: 'text',
-          content: 'SEALED WITH LOVE • A LIFETIME TOGETHER',
-          x: 50, y: 475, width: 300, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 7.5,
-          fontWeight: '600',
-          letterSpacing: 2.5,
-          textAlign: 'center',
-          color: '#3B292D',
+          noWrap: true,
           zIndex: 3
         }
       ],
       back: [
         {
-          id: 'bl-b-title',
-          type: 'text',
-          content: 'WEDDING ITINERARY & GIFTS',
-          x: 40, y: 70, width: 320, height: 25,
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 15,
-          letterSpacing: 3,
-          textAlign: 'center',
-          color: '#8A253A',
-          zIndex: 3
-        },
-        {
-          id: 'bl-b-desc',
-          type: 'text',
-          content: 'Your presence at our celebration is the greatest gift of all. For wishing well & registry details, please scan the code below.',
-          x: 50, y: 110, width: 300, height: 50,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 14,
-          textAlign: 'center',
-          color: '#5A464B',
-          zIndex: 3
-        },
-        {
           id: 'bl-b-qr',
           type: 'qr-code',
           qrValue: 'https://areeb-maha.com/registry',
-          x: 160, y: 180, width: 80, height: 80,
-          zIndex: 4
+          x: 140, y: 180, width: 120, height: 120,
+          zIndex: 2
         },
         {
           id: 'bl-b-rsvp',
           type: 'text',
-          content: 'KINDLY RSVP BY NOVEMBER 15TH',
-          x: 40, y: 280, width: 320, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8.5,
-          letterSpacing: 2,
+          content: 'AREEB & MAHA\nRSVP: +92 300 1234567',
+          x: 40, y: 324, width: 320, height: 52,
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 12.5,
+          fontWeight: '600',
+          letterSpacing: 2.5,
+          lineHeight: 1.7,
           textAlign: 'center',
           color: '#8A253A',
           zIndex: 3
@@ -1225,45 +1094,39 @@
       description: 'Deep royal sapphire velvet with glowing golden crescent moon, constellation accents, and luminous foil typography with refined ceremonial hierarchy.',
       front: [
         {
-          id: 'ce-f-stars',
-          type: 'svg',
-          assetId: 'celestial-stars',
-          x: 130, y: 210, width: 140, height: 36,
-          color: '#F0D78C',
-          opacity: 0.9,
-          zIndex: 3
-        },
-        {
           id: 'ce-f-sub1',
           type: 'text',
-          content: 'request the honour of your presence',
-          x: 50, y: 252, width: 300, height: 18,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontStyle: 'italic',
-          fontSize: 13,
+          content: 'REQUEST THE HONOUR OF YOUR PRESENCE',
+          x: 90, y: 248, width: 220, height: 16,
+          fontFamily: "'Montserrat', sans-serif",
+          fontSize: 7,
+          fontWeight: '500',
+          letterSpacing: 1.8,
           textAlign: 'center',
-          color: '#F2F6FC',
+          color: '#D5E0F0',
+          noWrap: true,
           zIndex: 4
         },
         {
           id: 'ce-f-sub2',
           type: 'text',
-          content: 'at the wedding of',
-          x: 50, y: 272, width: 300, height: 16,
+          content: 'AT THE WEDDING OF',
+          x: 90, y: 268, width: 220, height: 14,
           fontFamily: "'Cormorant Garamond', serif",
           fontStyle: 'italic',
-          fontSize: 12,
+          fontSize: 11.5,
           textAlign: 'center',
-          color: '#D5E0F0',
+          color: '#F0D78C',
+          noWrap: true,
           zIndex: 4
         },
         {
           id: 'ce-f-name1',
           type: 'text',
           content: 'Seraphina',
-          x: 30, y: 292, width: 340, height: 40,
+          x: 90, y: 286, width: 220, height: 38,
           fontFamily: "'Great Vibes', cursive",
-          fontSize: 38,
+          fontSize: 36,
           noWrap: true,
           textAlign: 'center',
           color: '#FFFDF8',
@@ -1274,9 +1137,9 @@
           id: 'ce-f-and',
           type: 'text',
           content: '&',
-          x: 50, y: 330, width: 300, height: 22,
+          x: 90, y: 322, width: 220, height: 18,
           fontFamily: "'Cinzel', serif",
-          fontSize: 15,
+          fontSize: 13,
           textAlign: 'center',
           color: '#F0D78C',
           zIndex: 4
@@ -1285,9 +1148,9 @@
           id: 'ce-f-name2',
           type: 'text',
           content: 'Julian',
-          x: 30, y: 348, width: 340, height: 40,
+          x: 90, y: 338, width: 220, height: 38,
           fontFamily: "'Great Vibes', cursive",
-          fontSize: 38,
+          fontSize: 36,
           noWrap: true,
           textAlign: 'center',
           color: '#FFFDF8',
@@ -1298,7 +1161,7 @@
           id: 'ce-f-rule',
           type: 'svg',
           assetId: 'divider-sapphire-line',
-          x: 100, y: 388, width: 200, height: 14,
+          x: 120, y: 380, width: 160, height: 10,
           color: '#F0D78C',
           opacity: 0.85,
           zIndex: 4
@@ -1307,11 +1170,11 @@
           id: 'ce-f-date',
           type: 'text',
           content: 'SATURDAY  ·  OCTOBER 31, 2026',
-          x: 40, y: 406, width: 320, height: 18,
+          x: 90, y: 396, width: 220, height: 18,
           fontFamily: "'Cinzel', serif",
-          fontSize: 11,
+          fontSize: 9.5,
           fontWeight: '600',
-          letterSpacing: 2,
+          letterSpacing: 1.8,
           noWrap: true,
           textAlign: 'center',
           color: '#F0D78C',
@@ -1321,113 +1184,51 @@
           id: 'ce-f-time',
           type: 'text',
           content: "SIX O'CLOCK IN THE EVENING",
-          x: 70, y: 434, width: 260, height: 20,
-          fontFamily: "'Cinzel', serif",
-          fontSize: 10,
+          x: 90, y: 418, width: 220, height: 16,
+          fontFamily: "'Montserrat', sans-serif",
+          fontSize: 7,
           fontWeight: '500',
-          letterSpacing: 1.8,
+          letterSpacing: 1.6,
           noWrap: true,
           textAlign: 'center',
           color: '#FFF8EC',
-          zIndex: 5
-        },
-        // Decorative design kept at the bottom, below the time
-        {
-          id: 'ce-f-footer-flourish',
-          type: 'svg',
-          assetId: 'flourish-divider',
-          x: 120, y: 470, width: 160, height: 22,
-          color: '#F0D78C',
-          opacity: 0.85,
           zIndex: 4
         },
         {
-          id: 'ce-f-footer-stars',
-          type: 'svg',
-          assetId: 'divider-sapphire-dot',
-          x: 140, y: 500, width: 120, height: 12,
-          color: '#F0D78C',
-          opacity: 0.65,
+          id: 'ce-f-loc',
+          type: 'text',
+          content: "CHÂTEAU DE CHANTILLY  ·  PARIS",
+          x: 90, y: 436, width: 220, height: 14,
+          fontFamily: "'Montserrat', sans-serif",
+          fontSize: 6.5,
+          letterSpacing: 1.5,
+          noWrap: true,
+          textAlign: 'center',
+          color: '#C9D6E8',
           zIndex: 4
         }
       ],
       back: [
         {
-          id: 'ce-b-stars',
-          type: 'svg',
-          assetId: 'celestial-stars',
-          x: 120, y: 48, width: 160, height: 48,
-          color: '#F0D78C',
-          opacity: 0.85,
-          zIndex: 3
-        },
-        {
-          id: 'ce-b-title',
-          type: 'text',
-          content: 'NOCTURNE CEREMONY',
-          x: 40, y: 110, width: 320, height: 26,
-          fontFamily: "'Cinzel', serif",
-          fontSize: 15,
-          fontWeight: '600',
-          letterSpacing: 3.5,
-          noWrap: true,
-          textAlign: 'center',
-          color: '#F0D78C',
-          zIndex: 3
-        },
-        {
-          id: 'ce-b-rule',
-          type: 'svg',
-          assetId: 'divider-sapphire-line',
-          x: 100, y: 148, width: 200, height: 14,
-          color: '#F0D78C',
-          opacity: 0.75,
-          zIndex: 3
-        },
-        {
-          id: 'ce-b-message',
-          type: 'text',
-          content: 'Join us beneath the stars\nfor vows, dinner & dancing.',
-          x: 50, y: 175, width: 300, height: 48,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontStyle: 'italic',
-          fontSize: 17,
-          lineHeight: 1.4,
-          textAlign: 'center',
-          color: '#F2F6FC',
-          zIndex: 3
-        },
-        {
           id: 'ce-b-qr',
           type: 'qr-code',
           qrValue: 'https://chantilly-nocturne.com/rsvp',
-          x: 160, y: 250, width: 80, height: 80,
-          zIndex: 4
+          x: 145, y: 180, width: 110, height: 110,
+          zIndex: 2
         },
         {
           id: 'ce-b-rsvp',
           type: 'text',
-          content: 'RSVP BEFORE THE FULL MOON',
-          x: 40, y: 355, width: 320, height: 20,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8,
+          content: 'SERAPHINA & JULIAN\nRSVP: +1 (555) 234-5678',
+          x: 90, y: 324, width: 220, height: 52,
+          fontFamily: "'Cinzel', serif",
+          fontSize: 10.5,
           fontWeight: '600',
-          letterSpacing: 2.5,
-          noWrap: true,
+          letterSpacing: 1.5,
+          lineHeight: 1.7,
           textAlign: 'center',
           color: '#F0D78C',
-          zIndex: 3
-        },
-        {
-          id: 'ce-b-footer',
-          type: 'text',
-          content: 'Reception to follow at the Château',
-          x: 40, y: 400, width: 320, height: 20,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontStyle: 'italic',
-          fontSize: 13,
-          textAlign: 'center',
-          color: '#C9D6E8',
+          isFoil: true,
           zIndex: 3
         }
       ]
@@ -1446,29 +1247,22 @@
       tags: ['Editorial', 'Didot', 'Vogue', 'Arch Portrait', 'Black & White', 'Couture'],
       description: 'Chic French fashion magazine aesthetic with architectural French arch frame, black sealing wax, Parisian Didot typography, and customizable bridal portrait.',
       front: [
-        // Portrait sits inside the arch only — clears crest above & wax seal below
         {
           id: 'pv-f-photo',
           type: 'image',
           src: 'assets/backgrounds/parisian_couture_bride.jpg',
           mask: 'mask-arch',
-          x: 105, y: 88, width: 190, height: 150,
-          x: 95, y: 72, width: 210, height: 185,
+          x: 110, y: 76, width: 180, height: 160,
           zIndex: 2
         },
-        // All copy begins below the wax seal — never over design
         {
           id: 'pv-f-mag',
           type: 'text',
-          content: 'VOGUE MARIAGE',
-          x: 60, y: 312, width: 280, height: 20,
           content: 'V O G U E   M A R I A G E',
-          x: 50, y: 342, width: 300, height: 20,
+          x: 50, y: 348, width: 300, height: 18,
           fontFamily: "'Bodoni Moda', serif",
-          fontSize: 14,
-          fontSize: 13,
+          fontSize: 12,
           fontWeight: '700',
-          letterSpacing: 6,
           letterSpacing: 4,
           noWrap: true,
           textAlign: 'center',
@@ -1478,69 +1272,35 @@
         {
           id: 'pv-f-edition',
           type: 'text',
-          content: "L'AMOUR ÉDITION  ·  ÉTÉ 2026  ·  PARIS",
-          x: 55, y: 334, width: 290, height: 14,
-          x: 50, y: 364, width: 300, height: 14,
+          content: "L'AMOUR ÉDITION  ·  PARIS",
+          x: 50, y: 368, width: 300, height: 14,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 6.5,
+          fontSize: 6.8,
           fontWeight: '500',
           letterSpacing: 2.2,
-          letterSpacing: 2,
           noWrap: true,
           textAlign: 'center',
           color: '#777777',
-          color: '#666666',
           zIndex: 3
         },
         {
           id: 'pv-f-rule',
           type: 'svg',
           assetId: 'divider-sapphire-dot',
-          x: 140, y: 352, width: 120, height: 10,
+          x: 140, y: 386, width: 120, height: 8,
           color: '#111111',
-          opacity: 0.55,
+          opacity: 0.4,
           zIndex: 3
         },
         {
-          id: 'pv-f-name1',
           id: 'pv-f-names',
           type: 'text',
-          content: 'CHARLOTTE',
-          x: 50, y: 366, width: 300, height: 26,
           content: 'CHARLOTTE  &  ANTOINE',
-          x: 40, y: 388, width: 320, height: 28,
+          x: 40, y: 398, width: 320, height: 26,
           fontFamily: "'Bodoni Moda', serif",
-          fontSize: 22,
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: '700',
-          letterSpacing: 5,
-          letterSpacing: 3.5,
-          noWrap: true,
-          textAlign: 'center',
-          color: '#111111',
-          zIndex: 3
-        },
-        {
-          id: 'pv-f-and',
-          type: 'text',
-          content: '&',
-          x: 50, y: 392, width: 300, height: 18,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontStyle: 'italic',
-          fontSize: 16,
-          textAlign: 'center',
-          color: '#444444',
-          zIndex: 3
-        },
-        {
-          id: 'pv-f-name2',
-          type: 'text',
-          content: 'ANTOINE',
-          x: 50, y: 408, width: 300, height: 26,
-          fontFamily: "'Bodoni Moda', serif",
-          fontSize: 22,
-          fontWeight: '700',
-          letterSpacing: 5,
+          letterSpacing: 3,
           noWrap: true,
           textAlign: 'center',
           color: '#111111',
@@ -1549,14 +1309,11 @@
         {
           id: 'pv-f-invitation',
           type: 'text',
-          content: "sollicitent l'honneur de votre présence",
-          x: 55, y: 440, width: 290, height: 16,
           content: "sollicitent l'honneur de votre présence à leur mariage",
-          x: 45, y: 404, width: 310, height: 18,
+          x: 50, y: 428, width: 300, height: 18,
           fontFamily: "'Cormorant Garamond', serif",
           fontStyle: 'italic',
-          fontSize: 13,
-          fontSize: 12.5,
+          fontSize: 12,
           textAlign: 'center',
           color: '#444444',
           zIndex: 3
@@ -1565,13 +1322,11 @@
           id: 'pv-f-date',
           type: 'text',
           content: 'SAMEDI 24 OCTOBRE 2026',
-          x: 55, y: 464, width: 290, height: 18,
-          x: 50, y: 430, width: 300, height: 18,
+          x: 50, y: 450, width: 300, height: 18,
           fontFamily: "'Bodoni Moda', serif",
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: '600',
           letterSpacing: 2.5,
-          letterSpacing: 3,
           noWrap: true,
           textAlign: 'center',
           color: '#111111',
@@ -1580,15 +1335,11 @@
         {
           id: 'pv-f-venue',
           type: 'text',
-          content: 'HÔTEL DE CRILLON',
-          x: 55, y: 490, width: 290, height: 16,
           content: 'HÔTEL DE CRILLON  ·  PLACE DE LA CONCORDE',
-          x: 40, y: 456, width: 320, height: 16,
+          x: 50, y: 472, width: 300, height: 16,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8.5,
-          fontSize: 8,
+          fontSize: 7.5,
           fontWeight: '600',
-          letterSpacing: 2.5,
           letterSpacing: 1.8,
           noWrap: true,
           textAlign: 'center',
@@ -1596,17 +1347,13 @@
           zIndex: 3
         },
         {
-          id: 'pv-f-loc',
           id: 'pv-f-reception',
           type: 'text',
-          content: 'PLACE DE LA CONCORDE  ·  PARIS',
-          x: 55, y: 508, width: 290, height: 14,
-          content: 'RÉCEPTION & COCKTAIL NOIR AU SALON DES AIGLES',
-          x: 40, y: 480, width: 320, height: 14,
+          content: 'RÉCEPTION & COCKTAIL NOIR  ·  19H00',
+          x: 50, y: 492, width: 300, height: 14,
           fontFamily: "'Montserrat', sans-serif",
-          fontSize: 7,
+          fontSize: 6.8,
           fontWeight: '500',
-          letterSpacing: 2,
           letterSpacing: 1.6,
           noWrap: true,
           textAlign: 'center',
@@ -1617,12 +1364,9 @@
           id: 'pv-f-rsvp',
           type: 'text',
           content: 'TENUE DE SOIRÉE  ·  RSVP AVANT LE 1ER SEPTEMBRE',
-          x: 45, y: 532, width: 310, height: 14,
-          content: 'TENUE DE SOIRÉE EXIGÉE  ·  RSVP AVANT LE 1ER SEPTEMBRE',
-          x: 35, y: 506, width: 330, height: 14,
+          x: 50, y: 512, width: 300, height: 14,
           fontFamily: "'Montserrat', sans-serif",
           fontSize: 6.5,
-          letterSpacing: 1.6,
           letterSpacing: 1.4,
           noWrap: true,
           textAlign: 'center',
@@ -1632,90 +1376,24 @@
       ],
       back: [
         {
-          id: 'pv-b-header',
-          type: 'text',
-          content: 'ITINÉRAIRE & DÉTAILS',
-          x: 40, y: 80, width: 320, height: 28,
-          x: 40, y: 60, width: 320, height: 30,
-          fontFamily: "'Bodoni Moda', serif",
-          fontSize: 16,
-          fontSize: 18,
-          fontWeight: '700',
-          letterSpacing: 4,
-          letterSpacing: 5,
-          noWrap: true,
-          textAlign: 'center',
-          color: '#111111',
-          zIndex: 3
-        },
-        {
-          id: 'pv-b-rule',
-          type: 'svg',
-          assetId: 'divider-sapphire-dot',
-          x: 140, y: 116, width: 120, height: 10,
-          color: '#111111',
-          opacity: 0.5,
-          zIndex: 3
-        },
-        {
-          id: 'pv-b-sub',
-          type: 'text',
-          content: 'HÔTEL DE CRILLON\n10 PLACE DE LA CONCORDE, 75008 PARIS',
-          x: 40, y: 140, width: 320, height: 40,
-          content: 'HÔTEL DE CRILLON  ·  10 PLACE DE LA CONCORDE, 75008 PARIS',
-          x: 30, y: 100, width: 340, height: 18,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8,
-          fontSize: 7.5,
-          letterSpacing: 1.5,
-          lineHeight: 1.6,
-          noWrap: true,
-          textAlign: 'center',
-          color: '#555555',
-          color: '#666666',
-          zIndex: 3
-        },
-        {
           id: 'pv-b-qr',
           type: 'qr-code',
           qrValue: 'https://vogue-weddings.example/charlotte-alexandre',
-          x: 160, y: 220, width: 80, height: 80,
-          x: 160, y: 180, width: 80, height: 80,
-          zIndex: 4
+          x: 155, y: 365, width: 90, height: 90,
+          zIndex: 2
         },
         {
-          id: 'pv-b-rsvp-prompt',
+          id: 'pv-b-rsvp',
           type: 'text',
-          content: 'SCAN POUR CONFIRMER VOTRE PRÉSENCE',
-          x: 40, y: 320, width: 320, height: 18,
-          x: 40, y: 285, width: 320, height: 18,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 8,
-          fontWeight: '600',
-          letterSpacing: 2,
-          letterSpacing: 2.5,
-          noWrap: true,
+          content: 'CHARLOTTE & ANTOINE\nRSVP: +33 6 12 34 56 78',
+          x: 40, y: 468, width: 320, height: 48,
+          fontFamily: "'Bodoni Moda', serif",
+          fontSize: 12,
+          fontWeight: '700',
+          letterSpacing: 2.2,
+          lineHeight: 1.6,
           textAlign: 'center',
           color: '#111111',
-          zIndex: 3
-        },
-        {
-          id: 'pv-b-concierge',
-          type: 'text',
-          content: 'RÉCEPTION & COCKTAIL NOIR AU SALON DES AIGLES',
-          x: 40, y: 360, width: 320, height: 18,
-          fontFamily: "'Cormorant Garamond', serif",
-          fontStyle: 'italic',
-          fontSize: 13,
-          content: 'SERVICE DE CONCIERGERIE & RÉSERVATIONS PRIVÉES',
-          x: 40, y: 315, width: 320, height: 18,
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: 7,
-          letterSpacing: 1.8,
-          noWrap: true,
-          textAlign: 'center',
-          color: '#555555',
-          color: '#777777',
           zIndex: 3
         }
       ]
@@ -4899,8 +4577,7 @@
   /**
    * Advanced WYSIWYG Canvas Editor Engine for Luxury Invitations
    * Handles drag/drop, resize, typography, gold foil, QR codes, photo masks, undo/redo
-   */
-  class CardEditor {
+   */class CardEditor {
     constructor(containerId, options = {}) {
       this.container = document.getElementById(containerId);
       this.options = options;
@@ -4930,6 +4607,15 @@
     loadTemplate(template) {
       // Deep clone template to avoid mutating original source
       this.currentTemplate = JSON.parse(JSON.stringify(template));
+      ['front', 'back'].forEach(side => {
+        if (Array.isArray(this.currentTemplate[side])) {
+          // Stable sort by initial zIndex if specified, then assign normalized layer numbers 1..N
+          this.currentTemplate[side].sort((a, b) => (a.zIndex || 1) - (b.zIndex || 1));
+          this.currentTemplate[side].forEach((el, idx) => {
+            el.zIndex = idx + 1;
+          });
+        }
+      });
       this.activeSide = 'front';
       this.selectedElementId = null;
       this.selectedElementIds = [];
@@ -5083,6 +4769,7 @@
       // Same single selection re-click
       if (!additive && this.selectedElementIds.length === 1 && this.selectedElementId === id) {
         if (forceRefresh) {
+          this.applySelectionVisuals();
           if (this.options.onElementSelect) this.options.onElementSelect(this.getSelectedElement());
           this.updateFloatingToolbar();
         }
@@ -5337,16 +5024,17 @@
     addElement(elementData) {
       this.saveState();
       const id = 'el-' + Date.now();
+      const active = this.getActiveElements();
       const newElement = {
         id,
         x: 60,
         y: 180,
         width: 280,
         height: 40,
-        zIndex: this.getActiveElements().length + 2,
-        ...elementData
+        ...elementData,
+        zIndex: active.length + 1
       };
-      this.getActiveElements().push(newElement);
+      active.push(newElement);
       this.render();
       this.selectElement(id);
     }
@@ -5358,6 +5046,7 @@
       const index = elements.findIndex(el => el.id === id);
       if (index !== -1) {
         elements.splice(index, 1);
+        elements.forEach((el, i) => { el.zIndex = i + 1; });
         this.selectedElementId = null;
         this.selectedElementIds = [];
         this.render();
@@ -5369,37 +5058,94 @@
     }
   
     duplicateElement(id) {
-      const el = this.getActiveElements().find(item => item.id === id);
+      const active = this.getActiveElements();
+      const el = active.find(item => item.id === id);
       if (!el) return;
       this.saveState();
       const clone = JSON.parse(JSON.stringify(el));
       clone.id = 'el-' + Date.now();
       clone.x = Math.min(320, clone.x + 15);
       clone.y = Math.min(480, clone.y + 15);
-      clone.zIndex = this.getActiveElements().length + 2;
-      this.getActiveElements().push(clone);
+      clone.zIndex = active.length + 1;
+      active.push(clone);
       this.render();
       this.selectElement(clone.id);
     }
   
     bringForward(id) {
       const elements = this.getActiveElements();
-      const el = elements.find(item => item.id === id);
-      if (!el) return;
+      const idx = elements.findIndex(item => item.id === id);
+      if (idx === -1 || idx >= elements.length - 1) return;
+  
       this.saveState();
-      el.zIndex = (el.zIndex || 1) + 1;
-      const node = this.getCanvasElementNode(id);
-      if (node) node.style.zIndex = el.zIndex;
+  
+      // Swap element with the one directly above it in the stack
+      const temp = elements[idx];
+      elements[idx] = elements[idx + 1];
+      elements[idx + 1] = temp;
+  
+      // Normalize z-indices to strictly reflect the new stack order
+      elements.forEach((item, i) => {
+        item.zIndex = i + 1;
+      });
+  
+      this.render();
+      this.selectElement(id, { forceRefresh: true });
     }
   
     sendBackward(id) {
       const elements = this.getActiveElements();
-      const el = elements.find(item => item.id === id);
-      if (!el) return;
+      const idx = elements.findIndex(item => item.id === id);
+      if (idx === -1 || idx <= 0) return;
+  
       this.saveState();
-      el.zIndex = Math.max(1, (el.zIndex || 1) - 1);
-      const node = this.getCanvasElementNode(id);
-      if (node) node.style.zIndex = el.zIndex;
+  
+      // Swap element with the one directly below it in the stack
+      const temp = elements[idx];
+      elements[idx] = elements[idx - 1];
+      elements[idx - 1] = temp;
+  
+      // Normalize z-indices to strictly reflect the new stack order
+      elements.forEach((item, i) => {
+        item.zIndex = i + 1;
+      });
+  
+      this.render();
+      this.selectElement(id, { forceRefresh: true });
+    }
+  
+    bringToFront(id) {
+      const elements = this.getActiveElements();
+      const idx = elements.findIndex(item => item.id === id);
+      if (idx === -1 || idx >= elements.length - 1) return;
+  
+      this.saveState();
+      const [item] = elements.splice(idx, 1);
+      elements.push(item);
+  
+      elements.forEach((el, i) => {
+        el.zIndex = i + 1;
+      });
+  
+      this.render();
+      this.selectElement(id, { forceRefresh: true });
+    }
+  
+    sendToBack(id) {
+      const elements = this.getActiveElements();
+      const idx = elements.findIndex(item => item.id === id);
+      if (idx === -1 || idx <= 0) return;
+  
+      this.saveState();
+      const [item] = elements.splice(idx, 1);
+      elements.unshift(item);
+  
+      elements.forEach((el, i) => {
+        el.zIndex = i + 1;
+      });
+  
+      this.render();
+      this.selectElement(id, { forceRefresh: true });
     }
   
     toggleBleed(show) {
@@ -5796,6 +5542,8 @@
       let contentHTML = '';
   
       if (el.type === 'text') {
+        const isSingleLine = !String(el.content).includes('\n');
+        const shouldNoWrap = el.noWrap || (isSingleLine && (el.height <= (el.fontSize || 14) * 2.5));
         const styles = `
           font-family: ${el.fontFamily || "'Cormorant Garamond', serif"};
           font-size: ${el.fontSize || 14}px;
@@ -5805,8 +5553,9 @@
           line-height: ${el.lineHeight || 1.3};
           text-align: ${el.textAlign || 'center'};
           color: ${el.color || '#2C2825'};
-          white-space: ${el.noWrap ? 'nowrap' : 'pre-wrap'};
-          word-break: ${el.noWrap ? 'normal' : 'break-word'};
+          white-space: ${shouldNoWrap ? 'nowrap' : 'pre-wrap'};
+          word-break: ${shouldNoWrap ? 'normal' : 'keep-all'};
+          overflow-wrap: normal;
         `;
         let justifyClass = 'justify-center';
         if (el.textAlign === 'left') justifyClass = 'justify-start';
@@ -5857,7 +5606,7 @@
         `;
       }
   
-      const effectiveZ = el.type === 'text' ? Math.max(el.zIndex || 2, 4) : (el.zIndex || 2);
+      const effectiveZ = el.zIndex !== undefined ? el.zIndex : 1;
   
       return `
         <div id="${domId}" 
@@ -6026,7 +5775,6 @@
                 requestAnimationFrame(() => {
                   document.getElementById('ins-photo-replace-box')?.classList.add('edit-panel-pulse');
                   document.getElementById('dock-photo-box')?.classList.add('edit-panel-pulse');
-                  document.getElementById('live-edit-dock')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 });
               }
             } else if (el.type === 'qr-code') {
@@ -6253,123 +6001,8 @@
         return;
       }
   
-      if (el.type === 'text') {
-        toolbar.innerHTML = `
-          <div class="floating-canvas-toolbar bg-zinc-900/95 backdrop-blur-md border border-amber-500/40 rounded-xl px-2.5 py-1.5 flex items-center gap-2 shadow-2xl z-30">
-            
-            <!-- Font Size Buttons -->
-            <div class="flex items-center gap-1 bg-zinc-950 px-1.5 py-1 rounded-lg border border-zinc-800">
-              <button id="float-fs-down" class="w-5 h-5 rounded hover:bg-zinc-800 text-zinc-300 flex items-center justify-center text-xs font-bold transition">-</button>
-              <span class="text-[11px] font-mono text-amber-300 w-8 text-center">${el.fontSize || 14}px</span>
-              <button id="float-fs-up" class="w-5 h-5 rounded hover:bg-zinc-800 text-zinc-300 flex items-center justify-center text-xs font-bold transition">+</button>
-            </div>
-  
-            <!-- Gold Foil Toggle -->
-            <button id="float-toggle-foil" class="px-2 py-1 rounded-lg text-xs font-serif flex items-center gap-1 transition ${el.isFoil ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 font-bold shadow-sm' : 'bg-zinc-950 text-amber-300 border border-amber-500/40 hover:bg-zinc-800'}">
-              <span>✨ Gold Foil</span>
-            </button>
-  
-            <!-- Color Swatches -->
-            <div class="flex items-center gap-1 bg-zinc-950 p-1 rounded-lg border border-zinc-800">
-              ${['#FFFFFF', '#111111', '#E8D49E', '#4A6B5B', '#5B1E29'].map(c => `
-                <button class="float-color-btn w-4 h-4 rounded-full transition hover:scale-110" 
-                        style="background-color: ${c}; ${el.color === c ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-zinc-950' : 'border: 1px solid rgba(255,255,255,0.2)'}" 
-                        data-color="${c}">
-                </button>
-              `).join('')}
-            </div>
-  
-            <div class="h-4 w-px bg-zinc-700 mx-0.5"></div>
-  
-            <!-- Duplicate -->
-            <button id="float-btn-dup" title="Duplicate (Ctrl+D)" class="p-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition">
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-              </svg>
-            </button>
-  
-            <!-- Delete -->
-            <button id="float-btn-del" title="Delete (Del)" class="p-1.5 rounded-lg bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </button>
-  
-          </div>
-        `;
-  
-        // Bind text toolbar
-        document.getElementById('float-fs-down')?.addEventListener('click', () => {
-          const newSize = Math.max(8, (el.fontSize || 14) - 1);
-          this.updateElement(el.id, { fontSize: newSize });
-        });
-        document.getElementById('float-fs-up')?.addEventListener('click', () => {
-          const newSize = Math.min(80, (el.fontSize || 14) + 1);
-          this.updateElement(el.id, { fontSize: newSize });
-        });
-        document.getElementById('float-toggle-foil')?.addEventListener('click', () => {
-          this.updateElement(el.id, { isFoil: !el.isFoil });
-        });
-        toolbar.querySelectorAll('.float-color-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            this.updateElement(el.id, { color: btn.getAttribute('data-color') });
-          });
-        });
-        document.getElementById('float-btn-dup')?.addEventListener('click', () => this.duplicateElement(el.id));
-        document.getElementById('float-btn-del')?.addEventListener('click', () => this.deleteElement(el.id));
-  
-      } else if (el.type === 'image') {
-        toolbar.innerHTML = `
-          <div class="floating-canvas-toolbar bg-zinc-900/95 backdrop-blur-md border border-amber-500/40 rounded-xl px-3 py-1.5 flex items-center gap-2.5 shadow-2xl z-30">
-            <span class="text-xs font-serif text-amber-300 font-semibold">Photo Frame:</span>
-  
-            <!-- Mask Buttons -->
-            <div class="flex items-center gap-1 bg-zinc-950 p-1 rounded-lg border border-zinc-800">
-              <button id="float-mask-arch" class="px-2 py-1 rounded text-[10px] ${el.mask === 'mask-arch' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'text-zinc-400 hover:text-white'}">Arch</button>
-              <button id="float-mask-oval" class="px-2 py-1 rounded text-[10px] ${el.mask === 'mask-oval' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'text-zinc-400 hover:text-white'}">Oval</button>
-              <button id="float-mask-rect" class="px-2 py-1 rounded text-[10px] ${el.mask === 'mask-rectangle' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'text-zinc-400 hover:text-white'}">Rect</button>
-            </div>
-  
-            <!-- Replace Photo -->
-            <label class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 text-xs font-serif cursor-pointer border border-amber-500/40">
-              <span>Replace Photo</span>
-              <input id="float-photo-input" type="file" accept="image/*" class="hidden" />
-            </label>
-  
-            <button id="float-btn-del" class="p-1.5 rounded-lg bg-red-950/60 hover:bg-red-900 text-red-400 border border-red-800/60">
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </button>
-          </div>
-        `;
-  
-        document.getElementById('float-mask-arch')?.addEventListener('click', () => this.updateElement(el.id, { mask: 'mask-arch' }));
-        document.getElementById('float-mask-oval')?.addEventListener('click', () => this.updateElement(el.id, { mask: 'mask-oval' }));
-        document.getElementById('float-mask-rect')?.addEventListener('click', () => this.updateElement(el.id, { mask: 'mask-rectangle' }));
-        document.getElementById('float-photo-input')?.addEventListener('change', (e) => {
-          const file = e.target.files?.[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-              this.updateElement(el.id, { src: ev.target.result });
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-        document.getElementById('float-btn-del')?.addEventListener('click', () => this.deleteElement(el.id));
-  
-      } else {
-        toolbar.innerHTML = `
-          <div class="floating-canvas-toolbar bg-zinc-900/95 backdrop-blur-md border border-zinc-700 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-2xl z-30">
-            <span class="text-xs font-serif text-zinc-300 capitalize">${el.type || 'Element'}:</span>
-            <button id="float-btn-dup" class="px-2 py-1 rounded bg-zinc-950 text-zinc-300 hover:bg-zinc-800 text-xs border border-zinc-800">Duplicate</button>
-            <button id="float-btn-del" class="px-2 py-1 rounded bg-red-950/60 text-red-400 hover:bg-red-900 text-xs border border-red-800/60">Delete</button>
-          </div>
-        `;
-        document.getElementById('float-btn-dup')?.addEventListener('click', () => this.duplicateElement(el.id));
-        document.getElementById('float-btn-del')?.addEventListener('click', () => this.deleteElement(el.id));
-      }
+      // Single element editing is docked strictly on the LEFT sidebar (#live-edit-dock), keeping the canvas stage completely unobstructed
+      toolbar.innerHTML = '';
     }
   }
   
@@ -6380,14 +6013,15 @@
   // =========================================================================
 
   /**
-   * Professional Export Engine
-   * Print-ready PDF (5×7" + bleed), high-res PNG/JPG, and WhatsApp share.
+   * Professional Multi-Format Export Engine
+   * 100% Live-Preview & Guest-View Fidelity Capture Engine
+   * Exports Front & Back together across WhatsApp, Email JPG, Print PDF, and PNG.
    */
   class CardExporter {
     constructor(editor) {
       this.editor = editor;
       this._busy = false;
-      this._captureState = null;
+      this._toastTimer = null;
     }
   
     getBaseFilename() {
@@ -6439,50 +6073,10 @@
       this._toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 4200);
     }
   
-    async prepareCapture({ resetZoom = true } = {}) {
-      this._captureState = {
-        showBleed: this.editor.showBleed,
-        selectedElementId: this.editor.selectedElementId,
-        selectedElementIds: [...(this.editor.selectedElementIds || [])],
-        zoom: this.editor.zoom,
-        activeSide: this.editor.activeSide,
-        isInlineEditing: this.editor.isInlineEditing
-      };
-  
-      if (this.editor.isInlineEditing && typeof this.editor.finishInlineEdit === 'function') {
-        try { this.editor.finishInlineEdit(); } catch (_) { /* ignore */ }
-      }
-  
-      this.editor.selectedElementId = null;
-      this.editor.selectedElementIds = [];
-      this.editor.showBleed = false;
-      if (resetZoom) this.editor.zoom = 1;
-      this.editor.render();
-  
-      await this.waitForPaint();
-      if (document.fonts?.ready) {
-        try { await document.fonts.ready; } catch (_) { /* ignore */ }
-      }
-      await this.waitForImages(document.getElementById('card-canvas-stage'));
-      await this.waitForPaint();
-    }
-  
-    restoreCapture() {
-      if (!this._captureState) return;
-      const s = this._captureState;
-      this.editor.showBleed = s.showBleed;
-      this.editor.selectedElementId = s.selectedElementId;
-      this.editor.selectedElementIds = s.selectedElementIds || [];
-      this.editor.zoom = s.zoom;
-      this.editor.activeSide = s.activeSide;
-      this._captureState = null;
-      this.editor.render();
-    }
-  
     waitForPaint() {
       return new Promise((resolve) => {
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => setTimeout(resolve, 60));
+          requestAnimationFrame(() => setTimeout(resolve, 80));
         });
       });
     }
@@ -6502,57 +6096,6 @@
           });
         })
       );
-    }
-  
-    getStage() {
-      return document.getElementById('card-canvas-stage');
-    }
-  
-    async captureStage(options = {}) {
-      if (!window.html2canvas) {
-        throw new Error('Export engine is still loading. Please try again in a moment.');
-      }
-      const stage = this.getStage();
-      if (!stage) throw new Error('Invitation canvas not found.');
-  
-      const {
-        scale = 3,
-        backgroundColor = null,
-        type = 'image/png',
-        quality = 0.95
-      } = options;
-  
-      const canvas = await window.html2canvas(stage, {
-        scale,
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor,
-        logging: false,
-        imageTimeout: 8000,
-        onclone: (clonedDoc) => {
-          const clonedStage = clonedDoc.getElementById('card-canvas-stage');
-          if (clonedStage) {
-            clonedStage.style.transform = 'none';
-            clonedStage.classList.remove('bleed-guides');
-          }
-          clonedDoc.querySelectorAll('.resize-handle, .photo-replace-hint, .element-multi-selected')
-            .forEach((node) => node.remove());
-        }
-      });
-  
-      if (type === 'image/jpeg' || type === 'image/jpg') {
-        return {
-          canvas,
-          dataUrl: canvas.toDataURL('image/jpeg', quality),
-          mime: 'image/jpeg'
-        };
-      }
-  
-      return {
-        canvas,
-        dataUrl: canvas.toDataURL('image/png'),
-        mime: 'image/png'
-      };
     }
   
     dataUrlToBlob(dataUrl) {
@@ -6583,64 +6126,501 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
     }
   
     /**
-     * Export as High-Resolution PNG
+     * Spaced sequential downloads to avoid browser popup/download throttling.
+     */
+    async triggerSequentialDownloads(downloads) {
+      for (let i = 0; i < downloads.length; i++) {
+        const item = downloads[i];
+        if (item.blob) {
+          this.downloadBlob(item.blob, item.filename);
+        } else if (item.dataUrl) {
+          this.triggerDownload(item.dataUrl, item.filename);
+        }
+        if (i < downloads.length - 1) {
+          await new Promise((resolve) => setTimeout(resolve, 380));
+        }
+      }
+    }
+  
+    getStage() {
+      return document.getElementById('card-canvas-stage');
+    }
+  
+    /**
+     * Captures an exact card side directly with 100% Live-Preview & Guest-View fidelity.
+     * Uses an isolated 400x560 stage attached directly to body, ensuring zero clipping,
+     * zero white bottom bars, and preserving background artwork on both front and back.
+     */
+    async captureSide(side = 'front', options = {}) {
+      if (!window.html2canvas) {
+        throw new Error('Export engine is still loading. Please try again in a moment.');
+      }
+      const t = this.editor.currentTemplate;
+      if (!t) throw new Error('No invitation template loaded.');
+  
+      if (this.editor.isInlineEditing && typeof this.editor.finishInlineEdit === 'function') {
+        try { this.editor.finishInlineEdit(); } catch (_) { /* ignore */ }
+      }
+  
+      const {
+        scale = 3,
+        backgroundColor = null,
+        type = 'image/png',
+        quality = 0.96
+      } = options;
+  
+      const elements = side === 'front' ? t.front : (t.back || []);
+      const bgTexture = t.bgTexture || 'texture-deckle';
+      const bgColor = t.bgColor || '#FAF7F2';
+      const bgImage = t.bgImage ? this.editor.getEffectiveBg(t.bgImage) : '';
+      const effectiveBg = (type === 'image/jpeg' || type === 'image/jpg')
+        ? (backgroundColor || (bgImage ? '#ffffff' : bgColor))
+        : (backgroundColor !== undefined ? backgroundColor : (bgImage ? null : bgColor));
+  
+      // Create an isolated export stage directly attached to body.
+      // This completely bypasses responsive studio containers (.canvas-stage-shell, #canvas-outer-stage)
+      // and guarantees an exact 400x560 (5"x7") aspect ratio with 0px white space or clipping.
+      const exportCard = document.createElement('div');
+      exportCard.id = 'export-card-stage';
+      exportCard.className = `export-card-stage select-none ${bgImage ? '' : bgTexture}`;
+      exportCard.style.cssText = `
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 400px !important;
+        height: 560px !important;
+        min-width: 400px !important;
+        max-width: 400px !important;
+        min-height: 560px !important;
+        max-height: 560px !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        border-radius: 0px !important;
+        box-shadow: none !important;
+        transform: none !important;
+        overflow: hidden !important;
+        z-index: 100000 !important;
+        pointer-events: none !important;
+        background-color: ${bgColor} !important;
+        ${bgImage ? `background-image: url('${bgImage}') !important; background-size: cover !important; background-position: center !important;` : ''}
+      `;
+  
+      exportCard.innerHTML = `
+        <!-- SVG Definitions for Metallic Foil Shimmer -->
+        <svg width="0" height="0" class="absolute" style="position: absolute; width: 0; height: 0;">
+          <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#BF953F" />
+              <stop offset="25%" stop-color="#FCF6BA" />
+              <stop offset="50%" stop-color="#B38728" />
+              <stop offset="75%" stop-color="#FBF5B7" />
+              <stop offset="100%" stop-color="#AA771C" />
+            </linearGradient>
+            <linearGradient id="roseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#B76E79" />
+              <stop offset="50%" stop-color="#FFD1DC" />
+              <stop offset="100%" stop-color="#8B4513" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div id="export-elements-wrapper" class="absolute inset-0 w-full h-full" style="position: absolute; left: 0; top: 0; width: 400px; height: 560px; overflow: hidden;">
+          ${elements.map(el => this.editor.renderElementHTML(el, { preview: true, previewKey: 'exp-' + side })).join('')}
+        </div>
+      `;
+  
+      // Mount vector QR code if present
+      if (window.QRCode) {
+        elements.forEach(el => {
+          if (el.type === 'qr-code') {
+            const qrBox = exportCard.querySelector(`#qr-box-pv-exp-${side}-${el.id}`);
+            if (qrBox) {
+              try {
+                qrBox.innerHTML = '';
+                new window.QRCode(qrBox, {
+                  text: el.qrValue || 'https://wedbuilder.example/rsvp',
+                  width: Math.max(30, el.width - 12),
+                  height: Math.max(30, el.height - 12),
+                  colorDark: "#111111",
+                  colorLight: "#ffffff",
+                  correctLevel: window.QRCode.CorrectLevel?.M || 0
+                });
+              } catch (qrErr) {
+                console.warn('Vector QR code render fallback in export:', qrErr);
+              }
+            }
+          }
+        });
+      }
+  
+      document.body.appendChild(exportCard);
+  
+      try {
+        // Preload background image & assets
+        if (bgImage) {
+          await new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = resolve;
+            img.onerror = resolve;
+            img.src = bgImage;
+            if (img.complete) resolve();
+          });
+        }
+  
+        if (document.fonts?.ready) {
+          try { await document.fonts.ready; } catch (_) {}
+        }
+  
+        await this.waitForImages(exportCard);
+        await this.waitForPaint();
+  
+        const canvas = await window.html2canvas(exportCard, {
+          scale,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: effectiveBg,
+          logging: false,
+          imageTimeout: 10000,
+          width: 400,
+          height: 560,
+          windowWidth: 1200,
+          windowHeight: 800,
+          onclone: (clonedDoc) => {
+            const overlay = clonedDoc.getElementById('export-busy-overlay');
+            if (overlay) overlay.style.display = 'none';
+  
+            const modal = clonedDoc.getElementById('guest-experience-modal');
+            if (modal) modal.remove();
+  
+            const clonedCard = clonedDoc.getElementById('export-card-stage');
+            if (clonedCard) {
+              clonedCard.style.position = 'fixed';
+              clonedCard.style.left = '0px';
+              clonedCard.style.top = '0px';
+              clonedCard.style.width = '400px';
+              clonedCard.style.height = '560px';
+              clonedCard.style.transform = 'none';
+              clonedCard.style.boxShadow = 'none';
+              clonedCard.style.borderRadius = '0px';
+            }
+  
+            // Strip background gradients from foil elements so html2canvas renders pure elegant metallic text without solid rectangular bars
+            const foilElements = clonedDoc.querySelectorAll('.foil-gold, .foil-rose, .foil-silver, [class*="foil-"]');
+            foilElements.forEach((el) => {
+              el.style.setProperty('background', 'none', 'important');
+              el.style.setProperty('background-image', 'none', 'important');
+              el.style.setProperty('-webkit-background-clip', 'initial', 'important');
+              el.style.setProperty('background-clip', 'initial', 'important');
+              if (el.classList.contains('foil-rose')) {
+                el.style.setProperty('-webkit-text-fill-color', '#E8B4B8', 'important');
+                el.style.setProperty('color', '#E8B4B8', 'important');
+              } else if (el.classList.contains('foil-silver')) {
+                el.style.setProperty('-webkit-text-fill-color', '#E0E4E8', 'important');
+                el.style.setProperty('color', '#E0E4E8', 'important');
+              } else {
+                el.style.setProperty('-webkit-text-fill-color', '#E2C785', 'important');
+                el.style.setProperty('color', '#E2C785', 'important');
+              }
+            });
+  
+            const style = clonedDoc.createElement('style');
+            style.textContent = `
+              * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+              .text-content-inner { overflow: visible !important; }
+              .canvas-element { outline: none !important; box-shadow: none !important; }
+              .foil-gold, [class*="foil-gold"] {
+                background: none !important;
+                background-image: none !important;
+                -webkit-background-clip: initial !important;
+                background-clip: initial !important;
+                -webkit-text-fill-color: #E2C785 !important;
+                color: #E2C785 !important;
+                text-shadow: 0 1px 1px rgba(255, 245, 200, 0.4), 0 0 2px rgba(212, 175, 55, 0.6) !important;
+              }
+              .foil-rose, [class*="foil-rose"] {
+                background: none !important;
+                background-image: none !important;
+                -webkit-background-clip: initial !important;
+                background-clip: initial !important;
+                -webkit-text-fill-color: #E8B4B8 !important;
+                color: #E8B4B8 !important;
+                text-shadow: 0 1px 1px rgba(255, 230, 235, 0.4), 0 0 2px rgba(183, 110, 121, 0.6) !important;
+              }
+              .foil-silver, [class*="foil-silver"] {
+                background: none !important;
+                background-image: none !important;
+                -webkit-background-clip: initial !important;
+                background-clip: initial !important;
+                -webkit-text-fill-color: #E0E4E8 !important;
+                color: #E0E4E8 !important;
+                text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 2px rgba(190, 195, 200, 0.6) !important;
+              }
+            `;
+            clonedDoc.head.appendChild(style);
+          }
+        });
+  
+        if (type === 'image/jpeg' || type === 'image/jpg') {
+          return {
+            canvas,
+            dataUrl: canvas.toDataURL('image/jpeg', quality),
+            mime: 'image/jpeg'
+          };
+        }
+  
+        return {
+          canvas,
+          dataUrl: canvas.toDataURL('image/png'),
+          mime: 'image/png'
+        };
+      } finally {
+        if (exportCard.parentNode) {
+          exportCard.parentNode.removeChild(exportCard);
+        }
+      }
+    }
+  
+    /**
+     * Fallback for single-stage capture (delegates to captureSide)
+     */
+    async captureStage(options = {}) {
+      return this.captureSide(this.editor.activeSide || 'front', options);
+    }
+  
+    /**
+     * Creates a luxury side-by-side presentation canvas displaying Front and Back cards together.
+     */
+    createCompositeCanvas(frontCanvas, backCanvas) {
+      const t = this.editor.currentTemplate || {};
+      const title = t.title || 'Invitation Card';
+  
+      const cardW = frontCanvas.width || 1200;
+      const cardH = frontCanvas.height || 1680;
+      const gap = Math.round(cardW * 0.1);
+      const padX = Math.round(cardW * 0.12);
+      const padTop = Math.round(cardH * 0.13);
+      const padBottom = Math.round(cardH * 0.1);
+  
+      const compositeW = (padX * 2) + (cardW * 2) + gap;
+      const compositeH = padTop + cardH + padBottom;
+  
+      const canvas = document.createElement('canvas');
+      canvas.width = compositeW;
+      canvas.height = compositeH;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return frontCanvas;
+  
+      // 1. Rich Obsidian Backdrop
+      const bgGrad = ctx.createRadialGradient(
+        compositeW / 2, compositeH / 2, 250,
+        compositeW / 2, compositeH / 2, compositeW * 0.75
+      );
+      bgGrad.addColorStop(0, '#1c1a20');
+      bgGrad.addColorStop(0.55, '#121115');
+      bgGrad.addColorStop(1, '#080709');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, compositeW, compositeH);
+  
+      // 2. Subtle Gold Ambient Center Light
+      const glowGrad = ctx.createRadialGradient(
+        compositeW / 2, padTop + (cardH * 0.45), 100,
+        compositeW / 2, padTop + (cardH * 0.45), compositeW * 0.55
+      );
+      glowGrad.addColorStop(0, 'rgba(212, 175, 55, 0.08)');
+      glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = glowGrad;
+      ctx.fillRect(0, 0, compositeW, compositeH);
+  
+      // 3. Header Presentation Typography
+      ctx.save();
+      ctx.textAlign = 'center';
+  
+      // Suite Tagline
+      ctx.font = '500 24px "Montserrat", sans-serif';
+      ctx.fillStyle = '#C5A059';
+      ctx.fillText('✦  EXCLUSIVE INVITATION SUITE  ✦', compositeW / 2, Math.round(padTop * 0.38));
+  
+      // Main Card Title
+      ctx.font = '600 46px "Cinzel", "Cormorant Garamond", serif';
+      ctx.fillStyle = '#F5EFE6';
+      const displayTitle = String(title).toUpperCase();
+      ctx.fillText(displayTitle, compositeW / 2, Math.round(padTop * 0.65));
+  
+      // Section Labels
+      const frontX = padX;
+      const backX = padX + cardW + gap;
+      const cardY = padTop;
+  
+      ctx.font = '600 22px "Montserrat", sans-serif';
+      ctx.fillStyle = '#E8D5A3';
+      ctx.fillText('FRONT INVITATION', frontX + (cardW / 2), cardY - 24);
+      ctx.fillText('EVENT DETAILS & RSVP', backX + (cardW / 2), cardY - 24);
+      ctx.restore();
+  
+      // Helper: Draw card with clean shadow and border
+      const drawCard = (srcCanvas, x, y) => {
+        // 1. Soft realistic drop shadow
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+        ctx.shadowBlur = 40;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 20;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x, y, cardW, cardH);
+        ctx.restore();
+  
+        // 2. Draw card canvas image
+        ctx.drawImage(srcCanvas, x, y, cardW, cardH);
+  
+        // 3. Subtle gold border around card
+        ctx.save();
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, cardW, cardH);
+        ctx.restore();
+      };
+  
+      drawCard(frontCanvas, frontX, cardY);
+      drawCard(backCanvas, backX, cardY);
+  
+      // 4. Footer Details
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.font = '400 20px "Montserrat", sans-serif';
+      ctx.fillStyle = '#8E8880';
+      ctx.fillText('5" × 7" Standard Dimension  ·  300 DPI High-Definition Print & Digital Suite', compositeW / 2, compositeH - 50);
+      ctx.restore();
+  
+      return canvas;
+    }
+  
+    /**
+     * Export as High-Resolution PNG (Front + Back + Complete Suite)
      */
     async exportPNG(filename) {
       if (this._busy) return;
-      const name = filename || `${this.getBaseFilename()}-digital.png`;
-      this.setBusy(true, 'Creating crisp PNG…');
+      const base = this.getBaseFilename();
+      this.setBusy(true, 'Rendering Front side (Lossless PNG)…');
+  
+      const initialState = {
+        side: this.editor.activeSide,
+        zoom: this.editor.zoom,
+        selectedElementId: this.editor.selectedElementId,
+        selectedElementIds: [...(this.editor.selectedElementIds || [])],
+        showBleed: this.editor.showBleed
+      };
   
       try {
-        await this.prepareCapture();
-        const { dataUrl } = await this.captureStage({
+        // 1. Capture Front Side
+        const front = await this.captureSide('front', {
           scale: 3,
-          backgroundColor: null,
           type: 'image/png'
         });
-        this.triggerDownload(dataUrl, name);
-        this.showToast('PNG downloaded — ready for WhatsApp & Instagram.');
+  
+        // 2. Capture Back Side
+        this.setBusy(true, 'Rendering Back side (Lossless PNG)…');
+        const back = await this.captureSide('back', {
+          scale: 3,
+          type: 'image/png'
+        });
+  
+        // 3. Create Complete Side-by-Side Suite
+        this.setBusy(true, 'Assembling complete suite presentation…');
+        const compositeCanvas = this.createCompositeCanvas(front.canvas, back.canvas);
+        const suiteDataUrl = compositeCanvas.toDataURL('image/png');
+  
+        // 4. Trigger sequential downloads
+        await this.triggerSequentialDownloads([
+          { dataUrl: front.dataUrl, filename: `${base}-front.png` },
+          { dataUrl: back.dataUrl, filename: `${base}-back.png` },
+          { dataUrl: suiteDataUrl, filename: `${base}-complete-suite.png` }
+        ]);
+  
+        this.showToast('✓ Front, Back & Complete Suite PNGs exported.');
       } catch (err) {
         console.error('Export PNG failed:', err);
         this.showToast(err.message || 'PNG export failed. Please try again.', 'error');
       } finally {
-        this.restoreCapture();
+        this.editor.activeSide = initialState.side;
+        this.editor.zoom = initialState.zoom;
+        this.editor.selectedElementId = initialState.selectedElementId;
+        this.editor.selectedElementIds = initialState.selectedElementIds;
+        this.editor.showBleed = initialState.showBleed;
+        this.editor.render();
         this.setBusy(false);
       }
     }
   
     /**
-     * Export as High-Resolution JPG
+     * Export as High-Resolution JPG (Front + Back + Complete Suite)
      */
     async exportJPG(filename) {
       if (this._busy) return;
-      const name = filename || `${this.getBaseFilename()}-invite.jpg`;
-      this.setBusy(true, 'Creating email-ready JPG…');
+      const base = this.getBaseFilename();
+      this.setBusy(true, 'Rendering Front side (Email JPG)…');
+  
+      const initialState = {
+        side: this.editor.activeSide,
+        zoom: this.editor.zoom,
+        selectedElementId: this.editor.selectedElementId,
+        selectedElementIds: [...(this.editor.selectedElementIds || [])],
+        showBleed: this.editor.showBleed
+      };
   
       try {
-        await this.prepareCapture();
-        const { dataUrl } = await this.captureStage({
+        // 1. Capture Front Side
+        const front = await this.captureSide('front', {
           scale: 3,
-          backgroundColor: '#ffffff',
           type: 'image/jpeg',
-          quality: 0.95
+          backgroundColor: '#ffffff',
+          quality: 0.96
         });
-        this.triggerDownload(dataUrl, name);
-        this.showToast('JPG downloaded — perfect for email invites.');
+  
+        // 2. Capture Back Side
+        this.setBusy(true, 'Rendering Back side (Email JPG)…');
+        const back = await this.captureSide('back', {
+          scale: 3,
+          type: 'image/jpeg',
+          backgroundColor: '#ffffff',
+          quality: 0.96
+        });
+  
+        // 3. Create Complete Suite
+        this.setBusy(true, 'Assembling complete suite presentation…');
+        const compositeCanvas = this.createCompositeCanvas(front.canvas, back.canvas);
+        const suiteDataUrl = compositeCanvas.toDataURL('image/jpeg', 0.96);
+  
+        // 4. Trigger sequential downloads
+        await this.triggerSequentialDownloads([
+          { dataUrl: front.dataUrl, filename: `${base}-front.jpg` },
+          { dataUrl: back.dataUrl, filename: `${base}-back.jpg` },
+          { dataUrl: suiteDataUrl, filename: `${base}-complete-suite.jpg` }
+        ]);
+  
+        this.showToast('✓ Front, Back & Complete Suite JPGs downloaded for email.');
       } catch (err) {
         console.error('Export JPG failed:', err);
         this.showToast(err.message || 'JPG export failed. Please try again.', 'error');
       } finally {
-        this.restoreCapture();
+        this.editor.activeSide = initialState.side;
+        this.editor.zoom = initialState.zoom;
+        this.editor.selectedElementId = initialState.selectedElementId;
+        this.editor.selectedElementIds = initialState.selectedElementIds;
+        this.editor.showBleed = initialState.showBleed;
+        this.editor.render();
         this.setBusy(false);
       }
     }
   
     /**
-     * Export Print-Ready PDF (Standard 5" × 7" with Bleed and Trim Marks)
+     * Export Print-Ready PDF (Standard 5" × 7" with Bleed and Crop Marks)
+     * 2-Page Document: Page 1 = Front, Page 2 = Back
      */
     async exportPrintPDF(options = { includeBleed: true, cropMarks: true, bothSides: true }) {
       if (this._busy) return;
@@ -6651,11 +6631,17 @@
       }
   
       const { jsPDF } = window.jspdf;
-      this.setBusy(true, 'Building print-ready PDF…');
+      this.setBusy(true, 'Rendering Front side for PDF (300 DPI)…');
+  
+      const initialState = {
+        side: this.editor.activeSide,
+        zoom: this.editor.zoom,
+        selectedElementId: this.editor.selectedElementId,
+        selectedElementIds: [...(this.editor.selectedElementIds || [])],
+        showBleed: this.editor.showBleed
+      };
   
       try {
-        await this.prepareCapture();
-  
         const cardW = 127;
         const cardH = 177.8;
         const bleed = options.includeBleed ? 3.175 : 0;
@@ -6669,16 +6655,11 @@
           compress: true
         });
   
-        // Front
-        this.editor.activeSide = 'front';
-        this.editor.render();
-        await this.waitForPaint();
-        await this.waitForImages(this.getStage());
-  
-        const front = await this.captureStage({
+        // Front Page
+        const front = await this.captureSide('front', {
           scale: 3.5,
-          backgroundColor: '#ffffff',
           type: 'image/jpeg',
+          backgroundColor: '#ffffff',
           quality: 0.98
         });
         pdf.addImage(front.dataUrl, 'JPEG', 0, 0, docW, docH, undefined, 'FAST');
@@ -6686,21 +6667,13 @@
           this.drawCropMarks(pdf, bleed, cardW, cardH);
         }
   
-        // Back
-        const hasBack = Array.isArray(this.editor.currentTemplate?.back)
-          && this.editor.currentTemplate.back.length > 0;
-  
-        if (options.bothSides && hasBack) {
-          this.setBusy(true, 'Adding back side…');
-          this.editor.activeSide = 'back';
-          this.editor.render();
-          await this.waitForPaint();
-          await this.waitForImages(this.getStage());
-  
-          const back = await this.captureStage({
+        // Back Page
+        if (options.bothSides) {
+          this.setBusy(true, 'Rendering Back side for PDF (300 DPI)…');
+          const back = await this.captureSide('back', {
             scale: 3.5,
-            backgroundColor: '#ffffff',
             type: 'image/jpeg',
+            backgroundColor: '#ffffff',
             quality: 0.98
           });
           pdf.addPage([docW, docH], 'portrait');
@@ -6711,12 +6684,17 @@
         }
   
         pdf.save(`${this.getBaseFilename()}-print-ready-300dpi.pdf`);
-        this.showToast('Print-ready PDF downloaded (300 DPI).');
+        this.showToast('✓ Print-ready 2-page PDF downloaded (Front & Back — 300 DPI).');
       } catch (err) {
         console.error('Export PDF failed:', err);
         this.showToast(err.message || 'PDF export failed. Please try again.', 'error');
       } finally {
-        this.restoreCapture();
+        this.editor.activeSide = initialState.side;
+        this.editor.zoom = initialState.zoom;
+        this.editor.selectedElementId = initialState.selectedElementId;
+        this.editor.selectedElementIds = initialState.selectedElementIds;
+        this.editor.showBleed = initialState.showBleed;
+        this.editor.render();
         this.setBusy(false);
       }
     }
@@ -6741,76 +6719,140 @@
   
     buildWhatsAppCaption() {
       const t = this.editor.currentTemplate || {};
-      const title = t.title || 'Invitation';
-      return [
-        `✨ You're invited`,
+      const title = t.title || 'Wedding Invitation';
+  
+      const dateEl = (t.front || []).find(e => e.type === 'text' && (e.id.includes('date') || e.content.includes('202')));
+      const venueEl = (t.front || []).find(e => e.type === 'text' && (e.id.includes('venue') || e.id.includes('loc')));
+      const rsvpEl = (t.back || []).find(e => e.type === 'text' && (e.id.includes('rsvp') || e.content.includes('RSVP')));
+  
+      const lines = [
+        `✨ *YOU'RE CORDIALLY INVITED* ✨`,
         ``,
-        title,
+        `*${String(title).toUpperCase()}*`,
+        ``
+      ];
+  
+      if (dateEl) {
+        lines.push(`📅 *Date:* ${dateEl.content.replace(/\n/g, ' · ')}`);
+      }
+      if (venueEl) {
+        lines.push(`📍 *Venue:* ${venueEl.content.replace(/\n/g, ' · ')}`);
+      }
+      if (rsvpEl) {
+        lines.push(`✉️ *RSVP:* ${rsvpEl.content.replace(/\n/g, ' · ')}`);
+      }
+  
+      lines.push(
         ``,
-        `We would be honoured by your presence.`,
-        `Please save this invitation card.`
-      ].join('\n');
+        `We would be deeply honored by your gracious presence.`,
+        `*(Please find both Front & Back invitation cards attached)*`
+      );
+  
+      return lines.join('\n');
     }
   
     /**
-     * Share invitation image directly to WhatsApp when the browser allows it.
-     * Falls back to download + WhatsApp open with a ready caption.
+     * Share invitation images (Front + Back) directly to WhatsApp.
+     * On mobile/supported platforms: shares both Front & Back images in 1 share sheet.
+     * On desktop: downloads Front, Back & Complete Suite + copies caption + opens WhatsApp Web.
      */
     async shareToWhatsApp() {
       if (this._busy) return;
-      this.setBusy(true, 'Preparing WhatsApp invite…');
+      this.setBusy(true, 'Preparing WhatsApp invite (Front & Back)…');
   
-      const filename = `${this.getBaseFilename()}-whatsapp.jpg`;
+      const base = this.getBaseFilename();
       const caption = this.buildWhatsAppCaption();
   
+      const initialState = {
+        side: this.editor.activeSide,
+        zoom: this.editor.zoom,
+        selectedElementId: this.editor.selectedElementId,
+        selectedElementIds: [...(this.editor.selectedElementIds || [])],
+        showBleed: this.editor.showBleed
+      };
+  
       try {
-        await this.prepareCapture();
-        const { dataUrl } = await this.captureStage({
-          scale: 2.5,
-          backgroundColor: '#ffffff',
+        // 1. Capture Front Side
+        const front = await this.captureSide('front', {
+          scale: 3,
           type: 'image/jpeg',
-          quality: 0.92
+          backgroundColor: '#ffffff',
+          quality: 0.95
         });
-        this.restoreCapture();
   
-        const blob = this.dataUrlToBlob(dataUrl);
-        const file = new File([blob], filename, { type: 'image/jpeg' });
+        // 2. Capture Back Side
+        this.setBusy(true, 'Rendering Back side for WhatsApp…');
+        const back = await this.captureSide('back', {
+          scale: 3,
+          type: 'image/jpeg',
+          backgroundColor: '#ffffff',
+          quality: 0.95
+        });
   
-        // Best path: native share sheet → user picks WhatsApp (mobile + some desktop)
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        // 3. Assemble Complete Suite
+        this.setBusy(true, 'Assembling Complete Suite…');
+        const compositeCanvas = this.createCompositeCanvas(front.canvas, back.canvas);
+        const suiteDataUrl = compositeCanvas.toDataURL('image/jpeg', 0.95);
+  
+        const frontBlob = this.dataUrlToBlob(front.dataUrl);
+        const backBlob = this.dataUrlToBlob(back.dataUrl);
+        const suiteBlob = this.dataUrlToBlob(suiteDataUrl);
+  
+        const frontFile = new File([frontBlob], `${base}-front.jpg`, { type: 'image/jpeg' });
+        const backFile = new File([backBlob], `${base}-back.jpg`, { type: 'image/jpeg' });
+        const suiteFile = new File([suiteBlob], `${base}-complete-suite.jpg`, { type: 'image/jpeg' });
+  
+        // Native share sheet (Mobile & supported desktop)
+        if (navigator.canShare && navigator.canShare({ files: [frontFile, backFile] })) {
           this.setBusy(false);
-          await navigator.share({
-            files: [file],
-            title: this.editor.currentTemplate?.title || 'Invitation',
-            text: caption
-          });
-          this.showToast('Shared — choose WhatsApp to send your invite.');
-          return;
+          try {
+            await navigator.share({
+              files: [frontFile, backFile],
+              title: this.editor.currentTemplate?.title || 'Invitation',
+              text: caption
+            });
+            this.showToast('✓ Shared — choose WhatsApp to send both Front & Back cards.');
+            return;
+          } catch (shareErr) {
+            if (shareErr && (shareErr.name === 'AbortError' || shareErr.name === 'NotAllowedError')) {
+              this.showToast('Share cancelled.');
+              return;
+            }
+            console.warn('Native share failed, falling back to download:', shareErr);
+          }
         }
   
-        // Desktop fallback: download image, copy caption, open WhatsApp
-        this.downloadBlob(blob, filename);
+        // Desktop fallback: download all 3 images, copy caption, open WhatsApp Web
+        await this.triggerSequentialDownloads([
+          { blob: frontBlob, filename: `${base}-front.jpg` },
+          { blob: backBlob, filename: `${base}-back.jpg` },
+          { blob: suiteBlob, filename: `${base}-complete-suite.jpg` }
+        ]);
   
         try {
           if (navigator.clipboard?.writeText) {
             await navigator.clipboard.writeText(caption);
           }
-        } catch (_) { /* ignore clipboard failures */ }
+        } catch (_) { /* ignore clipboard errors */ }
   
         const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(caption)}`;
         window.open(waUrl, '_blank', 'noopener,noreferrer');
   
-        this.showToast('Invite saved. In WhatsApp, attach the downloaded image to send.');
+        this.showToast('✓ Front, Back & Suite saved to downloads! In WhatsApp, paste caption and attach your cards.');
       } catch (err) {
-        // User cancel on share sheet
         if (err && (err.name === 'AbortError' || err.name === 'NotAllowedError')) {
           this.showToast('Share cancelled.');
         } else {
           console.error('WhatsApp share failed:', err);
-          this.showToast(err.message || 'Could not share to WhatsApp. Try PNG export instead.', 'error');
+          this.showToast(err.message || 'Could not prepare WhatsApp cards. Please try again.', 'error');
         }
-        this.restoreCapture();
       } finally {
+        this.editor.activeSide = initialState.side;
+        this.editor.zoom = initialState.zoom;
+        this.editor.selectedElementId = initialState.selectedElementId;
+        this.editor.selectedElementIds = initialState.selectedElementIds;
+        this.editor.showBleed = initialState.showBleed;
+        this.editor.render();
         this.setBusy(false);
       }
     }
@@ -6823,7 +6865,7 @@
 
   /**
    * Interactive Guest Experience & Digital Mobile Invite Module
-   * 3D Envelope opening animation, card flip, RSVP actions, and Google Calendar / Maps integration.
+   * 3D Envelope opening animation, card flip, bespoke luxury RSVP modal, and Google Calendar / Maps integration.
    */
   class GuestExperienceModal {
     constructor(editor) {
@@ -6850,6 +6892,21 @@
       document.body.style.overflow = '';
     }
   
+    getStoredRsvp(templateId) {
+      try {
+        const raw = localStorage.getItem(`invitation_guest_rsvp_${templateId}`);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+  
+    saveRsvp(templateId, data) {
+      try {
+        localStorage.setItem(`invitation_guest_rsvp_${templateId}`, JSON.stringify(data));
+      } catch (e) {}
+    }
+  
     render() {
       const existing = document.getElementById('guest-experience-modal');
       if (existing) existing.remove();
@@ -6858,31 +6915,38 @@
       const bgTexture = t.bgTexture || 'texture-deckle';
       const bgColor = t.bgColor || '#FAF7F2';
   
-      // Extract key details from front template elements
+      // Extract key details from template elements
       const titleEl = t.front.find(e => e.type === 'text' && (e.fontSize >= 20 || e.id.includes('name')));
       const dateEl = t.front.find(e => e.type === 'text' && (e.id.includes('date') || e.content.includes('202')));
       const venueEl = t.front.find(e => e.type === 'text' && (e.id.includes('venue') || e.id.includes('loc')));
+      const rsvpEl = (t.back || []).find(e => e.type === 'text' && (e.id.includes('rsvp') || e.content.includes('RSVP')));
   
-      const eventTitle = titleEl ? titleEl.content : t.title;
-      const eventDate = dateEl ? dateEl.content : 'Upcoming Event';
-      const eventVenue = venueEl ? venueEl.content : 'Private Location';
+      const eventTitle = titleEl ? titleEl.content.replace(/\n/g, ' & ') : t.title;
+      const eventDate = dateEl ? dateEl.content.replace(/\n/g, ' · ') : 'Upcoming Celebration';
+      const eventVenue = venueEl ? venueEl.content.replace(/\n/g, ' · ') : 'Private Location';
+      const rsvpContactText = rsvpEl ? rsvpEl.content.replace(/\n/g, ' · ') : '';
+  
+      const savedRsvp = this.getStoredRsvp(t.id);
+      const rsvpBtnLabel = savedRsvp 
+        ? (savedRsvp.status === 'attending' ? `✓ Attending (${savedRsvp.name})` : `Declined (${savedRsvp.name})`)
+        : 'Respond to RSVP';
   
       const modalHTML = `
-        <div id="guest-experience-modal" class="fixed inset-0 z-[999] bg-zinc-950/90 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div id="guest-experience-modal" class="fixed inset-0 z-[999] bg-zinc-950/92 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           
           <!-- Close Button -->
-          <button id="close-guest-modal" class="absolute top-6 right-6 z-50 p-2.5 rounded-full bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-zinc-700 transition">
+          <button id="close-guest-modal" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 p-2.5 rounded-full bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-zinc-700 transition shadow-lg">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
   
-          <div class="relative w-full max-w-xl flex flex-col items-center py-6">
+          <div class="relative w-full max-w-xl flex flex-col items-center py-4">
             
             <!-- Top Badge & Digital Product Hint -->
-            <div class="mb-4 flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-serif tracking-widest uppercase">
+            <div class="mb-3 flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-300 text-[11px] font-serif tracking-widest uppercase shadow-sm">
               <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-              Guest Experience • Interactive Digital Invite
+              Guest View • Interactive Digital Invitation
             </div>
   
             <!-- 3D Envelope & Card Container -->
@@ -6894,13 +6958,14 @@
                 <!-- Envelope Liner Pattern -->
                 <div class="absolute top-0 inset-x-0 h-44 bg-[#e8decf] opacity-40 border-b border-[#d8ccb8]"></div>
   
-                <!-- Wax Seal Button (Click to Open) -->
+                <!-- Royal Wax Seal Button (Click to Open) -->
                 <div id="envelope-seal-btn" class="absolute top-36 z-30 cursor-pointer flex flex-col items-center group">
-                  <div class="wax-seal wax-red transform group-hover:scale-110 transition duration-300">
-                    <span style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700;">RSVP</span>
+                  <div class="wax-seal wax-gold transform group-hover:scale-105 transition duration-300 shadow-xl border border-amber-300/40">
+                    <div class="absolute inset-1 rounded-full border border-amber-950/20 pointer-events-none"></div>
+                    <span class="font-serif text-lg font-bold text-amber-950 tracking-wider">✦</span>
                   </div>
-                  <span class="mt-2 text-[11px] uppercase tracking-widest text-zinc-600 font-serif font-semibold group-hover:text-amber-700 transition">
-                    Tap to Open Envelope
+                  <span class="mt-2.5 px-3.5 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-amber-500/25 text-[11px] uppercase tracking-widest text-amber-200/90 font-serif font-medium group-hover:text-amber-100 transition shadow-sm">
+                    Tap to Open Invitation
                   </span>
                 </div>
   
@@ -6916,18 +6981,22 @@
                   <div id="guest-card-flipper" class="card-flipper relative w-full h-full">
                     
                     <!-- Card Front -->
-                    <div class="card-front absolute inset-0 rounded-sm ${t.bgImage ? '' : bgTexture} overflow-hidden shadow-lg border border-black/5" 
+                    <div class="card-front absolute inset-0 rounded-md ${t.bgImage ? '' : bgTexture} overflow-hidden shadow-xl border border-black/5" 
                          style="background-color: ${bgColor}; ${t.bgImage ? `background-image: url('${this.editor.getEffectiveBg(t.bgImage)}'); background-size: cover; background-position: center;` : ''}">
-                      <div class="w-full h-full transform scale-[0.8] sm:scale-[0.87] origin-top-left p-2">
-                        ${t.front.map(el => this.editor.renderElementHTML(el, { preview: true, previewKey: 'guest-front' })).join('')}
+                      <div class="guest-card-viewport">
+                        <div class="guest-card-stage">
+                          ${t.front.map(el => this.editor.renderElementHTML(el, { preview: true, previewKey: 'guest-front' })).join('')}
+                        </div>
                       </div>
                     </div>
   
                     <!-- Card Back -->
-                    <div class="card-back absolute inset-0 rounded-sm ${bgTexture} overflow-hidden shadow-lg border border-black/5" 
-                         style="background-color: ${bgColor};">
-                      <div class="w-full h-full transform scale-[0.8] sm:scale-[0.87] origin-top-left p-2">
-                        ${(t.back || []).map(el => this.editor.renderElementHTML(el, { preview: true, previewKey: 'guest-back' })).join('')}
+                    <div class="card-back absolute inset-0 rounded-md ${t.bgImage ? '' : bgTexture} overflow-hidden shadow-xl border border-black/5" 
+                         style="background-color: ${bgColor}; ${t.bgImage ? `background-image: url('${this.editor.getEffectiveBg(t.bgImage)}'); background-size: cover; background-position: center;` : ''}">
+                      <div class="guest-card-viewport">
+                        <div class="guest-card-stage">
+                          ${(t.back || []).map(el => this.editor.renderElementHTML(el, { preview: true, previewKey: 'guest-back' })).join('')}
+                        </div>
                       </div>
                     </div>
   
@@ -6940,82 +7009,259 @@
             </div>
   
             <!-- Interaction Controls (Flip card & RSVP actions) -->
-            <div class="mt-6 w-full max-w-md flex flex-col gap-3 px-4">
-              <div class="flex items-center justify-between gap-3">
-                <button id="btn-flip-card" class="flex-1 py-2.5 px-4 rounded-lg bg-zinc-900 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 text-xs font-serif tracking-widest uppercase transition flex items-center justify-center gap-2">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="mt-5 w-full max-w-md flex flex-col gap-2.5 px-3 sm:px-4">
+              
+              <!-- Primary Action Buttons -->
+              <div class="flex items-center justify-between gap-2.5">
+                <button id="btn-flip-card" type="button" class="flex-1 py-2.5 px-3 sm:px-4 rounded-xl bg-zinc-900/90 border border-zinc-700/80 hover:border-amber-500/50 hover:bg-zinc-800 text-zinc-200 text-xs font-serif tracking-widest uppercase transition flex items-center justify-center gap-2 shadow-md">
+                  <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
-                  Flip Front / Back
+                  <span id="flip-btn-label">Flip to Details</span>
                 </button>
   
-                <button id="btn-guest-rsvp" class="flex-1 py-2.5 px-4 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs tracking-widest uppercase shadow-lg shadow-amber-900/30 transition flex items-center justify-center gap-2">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                <button id="btn-guest-rsvp" type="button" class="flex-1 py-2.5 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs tracking-widest uppercase shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 transition flex items-center justify-center gap-2">
+                  <svg class="w-4 h-4 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  RSVP Acceptance
+                  <span id="guest-rsvp-btn-text">${rsvpBtnLabel}</span>
                 </button>
               </div>
   
               <!-- Quick Action Links: Calendar & Maps -->
               <div class="grid grid-cols-2 gap-2 text-center text-[11px] font-sans">
-                <button id="btn-add-calendar" class="py-2 px-3 rounded bg-zinc-900/60 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 border border-zinc-800 transition flex items-center justify-center gap-1.5">
-                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button id="btn-add-calendar" type="button" class="py-2.5 px-3 rounded-lg bg-zinc-900/70 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition flex items-center justify-center gap-1.5 shadow-sm">
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  Add to Google Calendar
+                  Add to Calendar
                 </button>
                 
-                <button id="btn-open-maps" class="py-2 px-3 rounded bg-zinc-900/60 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 border border-zinc-800 transition flex items-center justify-center gap-1.5">
-                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button id="btn-open-maps" type="button" class="py-2.5 px-3 rounded-lg bg-zinc-900/70 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition flex items-center justify-center gap-1.5 shadow-sm">
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  Open in Google Maps
+                  View Venue Map
                 </button>
               </div>
   
-              <div class="text-center text-[10px] text-zinc-500 font-serif tracking-wider">
-                ${eventTitle} • ${eventVenue}
+              <!-- Event Meta Footer -->
+              <div class="text-center text-[11px] text-zinc-400 font-serif tracking-wider pt-1 flex items-center justify-center gap-2">
+                <span class="text-amber-400/80">✦</span>
+                <span>${eventTitle}</span>
+                <span class="text-zinc-600">•</span>
+                <span>${eventDate}</span>
+                <span class="text-amber-400/80">✦</span>
               </div>
   
             </div>
   
           </div>
+  
+          <!-- ===================================================================
+               BESPOKE LUXURY RSVP MODAL DRAWER
+               =================================================================== -->
+          <div id="guest-rsvp-drawer" class="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+            <div class="relative w-full max-w-md bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-950 border border-amber-500/30 rounded-2xl p-6 shadow-2xl text-left guest-rsvp-card">
+              
+              <!-- Close RSVP Drawer -->
+              <button id="close-rsvp-drawer" type="button" class="absolute top-4 right-4 p-1.5 text-zinc-400 hover:text-white rounded-full bg-zinc-800/60 hover:bg-zinc-800 transition">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+  
+              <!-- RSVP Form Container -->
+              <div id="rsvp-form-container">
+                <!-- Header -->
+                <div class="text-center mb-5">
+                  <span class="text-[10px] font-serif uppercase tracking-widest text-amber-400 font-semibold block mb-1">✦ Kindly Respond ✦</span>
+                  <h3 class="font-serif text-2xl font-bold text-zinc-100 tracking-wide">RSVP</h3>
+                  <p class="text-xs text-zinc-400 mt-1 font-serif italic">${eventTitle}</p>
+                  <p class="text-[11px] text-zinc-500 mt-0.5">${eventDate}</p>
+                </div>
+  
+                <!-- Form Body -->
+                <form id="guest-rsvp-form" class="space-y-4">
+                  <!-- Guest Name -->
+                  <div>
+                    <label class="block text-[11px] font-serif uppercase tracking-wider text-zinc-300 mb-1.5 font-semibold">Your Full Name(s) <span class="text-amber-400">*</span></label>
+                    <input type="text" id="rsvp-guest-name" required value="${savedRsvp ? savedRsvp.name : ''}" placeholder="e.g. Katherine & Julian" class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-800/80 border border-zinc-700 focus:border-amber-500 text-zinc-100 placeholder-zinc-500 text-sm focus:outline-none transition" />
+                  </div>
+  
+                  <!-- Attendance Options -->
+                  <div>
+                    <label class="block text-[11px] font-serif uppercase tracking-wider text-zinc-300 mb-2 font-semibold">Will You Attend? <span class="text-amber-400">*</span></label>
+                    <div class="grid grid-cols-2 gap-2.5">
+                      <button type="button" class="rsvp-attend-btn ${(!savedRsvp || savedRsvp.status === 'attending') ? 'is-active' : ''} py-2.5 px-3 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-300 text-xs font-serif font-bold tracking-wide flex items-center justify-center gap-2" data-status="attending">
+                        <span class="text-base">✨</span> Joyfully Accepts
+                      </button>
+                      <button type="button" class="rsvp-attend-btn ${savedRsvp && savedRsvp.status === 'declining' ? 'is-active' : ''} py-2.5 px-3 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-400 hover:text-zinc-200 text-xs font-serif font-bold tracking-wide flex items-center justify-center gap-2" data-status="declining">
+                        <span class="text-base">🕊️</span> Regretfully Declines
+                      </button>
+                    </div>
+                  </div>
+  
+                  <!-- Guest Count -->
+                  <div id="rsvp-guests-wrap" class="${savedRsvp && savedRsvp.status === 'declining' ? 'hidden' : ''}">
+                    <label class="block text-[11px] font-serif uppercase tracking-wider text-zinc-300 mb-1.5 font-semibold">Total Guests Attending</label>
+                    <div class="flex items-center gap-2">
+                      <button type="button" class="rsvp-count-btn ${(!savedRsvp || savedRsvp.count === 1) ? 'is-active' : ''} flex-1 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-300 text-xs font-semibold" data-count="1">1</button>
+                      <button type="button" class="rsvp-count-btn ${savedRsvp && savedRsvp.count === 2 ? 'is-active' : ''} flex-1 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-300 text-xs font-semibold" data-count="2">2</button>
+                      <button type="button" class="rsvp-count-btn ${savedRsvp && savedRsvp.count === 3 ? 'is-active' : ''} flex-1 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-300 text-xs font-semibold" data-count="3">3</button>
+                      <button type="button" class="rsvp-count-btn ${savedRsvp && savedRsvp.count >= 4 ? 'is-active' : ''} flex-1 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-300 text-xs font-semibold" data-count="4">4+</button>
+                    </div>
+                  </div>
+  
+                  <!-- Dietary / Message -->
+                  <div>
+                    <label class="block text-[11px] font-serif uppercase tracking-wider text-zinc-300 mb-1.5 font-semibold">Dietary Preferences or Wishes</label>
+                    <textarea id="rsvp-guest-note" rows="2" placeholder="e.g. Vegetarian, allergies, or a message to the couple..." class="w-full px-3.5 py-2 rounded-lg bg-zinc-800/80 border border-zinc-700 focus:border-amber-500 text-zinc-100 placeholder-zinc-500 text-xs focus:outline-none transition resize-none">${savedRsvp ? (savedRsvp.note || '') : ''}</textarea>
+                  </div>
+  
+                  ${rsvpContactText ? `
+                    <div class="p-2.5 rounded-lg bg-zinc-800/40 border border-zinc-700/60 text-[11px] text-zinc-400 font-serif leading-relaxed">
+                      <span class="text-amber-400 font-semibold block mb-0.5">Host Contact & Inquiries:</span>
+                      <span>${rsvpContactText}</span>
+                    </div>
+                  ` : ''}
+  
+                  <!-- Submit Button -->
+                  <button type="submit" id="btn-submit-rsvp" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-zinc-950 font-serif font-bold text-sm tracking-widest uppercase shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 mt-2 cursor-pointer">
+                    <span>Confirm RSVP</span>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </button>
+                </form>
+              </div>
+  
+              <!-- RSVP Confirmation Screen (Shown upon submission) -->
+              <div id="rsvp-success-screen" class="hidden text-center py-4 space-y-3.5">
+                <div class="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto text-2xl shadow-lg shadow-emerald-500/20">
+                  ✓
+                </div>
+                <h4 class="font-serif text-2xl font-bold text-zinc-100">RSVP Confirmed</h4>
+                <p id="rsvp-success-msg" class="text-xs text-zinc-300 font-serif leading-relaxed px-2">
+                  Thank you! Your response has been recorded. We look forward to celebrating together.
+                </p>
+                
+                <div class="p-3 rounded-xl bg-zinc-800/60 border border-zinc-700 text-left text-xs space-y-1.5 my-2">
+                  <div class="flex justify-between text-zinc-400">
+                    <span>Guest:</span>
+                    <span id="conf-guest-name" class="font-bold text-zinc-200"></span>
+                  </div>
+                  <div class="flex justify-between text-zinc-400">
+                    <span>Response:</span>
+                    <span id="conf-guest-status" class="font-bold text-amber-300"></span>
+                  </div>
+                  <div class="flex justify-between text-zinc-400" id="conf-guest-count-row">
+                    <span>Seats:</span>
+                    <span id="conf-guest-count" class="font-bold text-zinc-200"></span>
+                  </div>
+                </div>
+  
+                <div class="pt-2 flex flex-col gap-2">
+                  <button type="button" id="btn-done-rsvp" class="w-full py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-serif tracking-wider uppercase transition">
+                    Back to Invitation
+                  </button>
+                  <button type="button" id="btn-edit-rsvp" class="text-[11px] text-amber-400/80 hover:text-amber-300 underline font-serif">
+                    Edit Response
+                  </button>
+                </div>
+              </div>
+  
+            </div>
+          </div>
+  
         </div>
       `;
   
       document.body.insertAdjacentHTML('beforeend', modalHTML);
-      this.attachEvents(eventTitle, eventDate, eventVenue);
+      this.attachEvents(eventTitle, eventDate, eventVenue, t);
     }
   
-    attachEvents(eventTitle, eventDate, eventVenue) {
+    attachEvents(eventTitle, eventDate, eventVenue, template) {
       const modalEl = document.getElementById('guest-experience-modal');
       const closeBtn = document.getElementById('close-guest-modal');
       const sealBtn = document.getElementById('envelope-seal-btn');
       const envelopeBody = document.getElementById('envelope-body');
       const flipper = document.getElementById('guest-card-flipper');
       const flipBtn = document.getElementById('btn-flip-card');
+      const flipBtnLabel = document.getElementById('flip-btn-label');
       const rsvpBtn = document.getElementById('btn-guest-rsvp');
+      const rsvpBtnText = document.getElementById('guest-rsvp-btn-text');
       const calBtn = document.getElementById('btn-add-calendar');
       const mapsBtn = document.getElementById('btn-open-maps');
+  
+      // RSVP Drawer Elements
+      const rsvpDrawer = document.getElementById('guest-rsvp-drawer');
+      const closeRsvpDrawerBtn = document.getElementById('close-rsvp-drawer');
+      const rsvpForm = document.getElementById('guest-rsvp-form');
+      const rsvpFormContainer = document.getElementById('rsvp-form-container');
+      const rsvpSuccessScreen = document.getElementById('rsvp-success-screen');
+      const rsvpNameInput = document.getElementById('rsvp-guest-name');
+      const rsvpNoteInput = document.getElementById('rsvp-guest-note');
+      const rsvpGuestsWrap = document.getElementById('rsvp-guests-wrap');
+      const doneRsvpBtn = document.getElementById('btn-done-rsvp');
+      const editRsvpBtn = document.getElementById('btn-edit-rsvp');
+  
+      let currentAttendance = 'attending';
+      let currentGuestCount = 1;
+  
+      // Check pre-saved values
+      const existingRsvp = this.getStoredRsvp(template.id);
+      if (existingRsvp) {
+        currentAttendance = existingRsvp.status || 'attending';
+        currentGuestCount = existingRsvp.count || 1;
+      }
   
       closeBtn.addEventListener('click', () => this.close());
       modalEl.addEventListener('click', (e) => {
         if (e.target === modalEl) this.close();
       });
   
-      // Open Envelope
+      // Mount vector QR code on card back using easy.qrcode if available
+      if (window.QRCode) {
+        (template.back || []).forEach(el => {
+          if (el.type === 'qr-code') {
+            const qrBox = document.getElementById(`qr-box-pv-guest-back-${el.id}`);
+            if (qrBox) {
+              try {
+                qrBox.innerHTML = '';
+                new window.QRCode(qrBox, {
+                  text: el.qrValue || 'https://wedbuilder.example/rsvp',
+                  width: Math.max(30, el.width - 12),
+                  height: Math.max(30, el.height - 12),
+                  colorDark: "#111111",
+                  colorLight: "#ffffff"
+                });
+                // Make QR box clickable to open RSVP modal
+                qrBox.style.cursor = 'pointer';
+                qrBox.title = 'Click to open RSVP';
+                qrBox.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  openRsvpDrawer();
+                });
+              } catch (err) {
+                console.warn('Vector QR code render fallback:', err);
+              }
+            }
+          }
+        });
+      }
+  
+      // Open Envelope Action
       const openEnvelope = () => {
         if (this.isEnvelopeOpen) return;
         this.isEnvelopeOpen = true;
         envelopeBody.classList.add('envelope-open');
         if (sealBtn) sealBtn.style.display = 'none';
   
-        // Trigger soft celebratory sound or feedback
         if (window.confetti) {
           window.confetti({
-            particleCount: 40,
+            particleCount: 45,
             spread: 60,
             origin: { y: 0.7 },
             colors: ['#D4AF37', '#FAF7F2', '#AA771C']
@@ -7032,29 +7278,124 @@
           setTimeout(() => {
             this.isCardFlipped = !this.isCardFlipped;
             flipper.classList.toggle('flipped', this.isCardFlipped);
+            if (flipBtnLabel) {
+              flipBtnLabel.textContent = this.isCardFlipped ? 'Flip to Front' : 'Flip to Details';
+            }
           }, 600);
         } else {
           this.isCardFlipped = !this.isCardFlipped;
           flipper.classList.toggle('flipped', this.isCardFlipped);
+          if (flipBtnLabel) {
+            flipBtnLabel.textContent = this.isCardFlipped ? 'Flip to Front' : 'Flip to Details';
+          }
         }
       };
   
       flipBtn.addEventListener('click', toggleFlip);
       flipper.addEventListener('click', toggleFlip);
   
-      // RSVP Action
-      rsvpBtn.addEventListener('click', () => {
-        const guestName = prompt('Please enter your name to confirm attendance:');
-        if (guestName) {
-          if (window.confetti) {
-            window.confetti({
-              particleCount: 100,
-              spread: 80,
-              origin: { y: 0.6 }
-            });
+      // Open & Close RSVP Drawer
+      const openRsvpDrawer = () => {
+        rsvpDrawer.classList.remove('hidden');
+        setTimeout(() => rsvpNameInput?.focus(), 150);
+      };
+  
+      const closeRsvpDrawer = () => {
+        rsvpDrawer.classList.add('hidden');
+      };
+  
+      rsvpBtn.addEventListener('click', openRsvpDrawer);
+      closeRsvpDrawerBtn.addEventListener('click', closeRsvpDrawer);
+      rsvpDrawer.addEventListener('click', (e) => {
+        if (e.target === rsvpDrawer) closeRsvpDrawer();
+      });
+  
+      // Attendance Toggle (Joyfully Accepts vs Regretfully Declines)
+      const attendBtns = rsvpDrawer.querySelectorAll('.rsvp-attend-btn');
+      attendBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          attendBtns.forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          currentAttendance = btn.dataset.status;
+  
+          if (currentAttendance === 'declining') {
+            rsvpGuestsWrap.classList.add('hidden');
+          } else {
+            rsvpGuestsWrap.classList.remove('hidden');
           }
-          alert(`Thank you, ${guestName}! Your RSVP has been noted. We look forward to celebrating together!`);
+        });
+      });
+  
+      // Guest Count Selector
+      const countBtns = rsvpDrawer.querySelectorAll('.rsvp-count-btn');
+      countBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          countBtns.forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          currentGuestCount = parseInt(btn.dataset.count, 10) || 1;
+        });
+      });
+  
+      // RSVP Form Submission
+      rsvpForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const guestName = rsvpNameInput.value.trim();
+        if (!guestName) return;
+  
+        const rsvpData = {
+          name: guestName,
+          status: currentAttendance,
+          count: currentAttendance === 'attending' ? currentGuestCount : 0,
+          note: rsvpNoteInput.value.trim(),
+          timestamp: new Date().toISOString()
+        };
+  
+        this.saveRsvp(template.id, rsvpData);
+  
+        // Trigger Celebration Confetti
+        if (window.confetti && currentAttendance === 'attending') {
+          window.confetti({
+            particleCount: 110,
+            spread: 85,
+            origin: { y: 0.55 },
+            colors: ['#D4AF37', '#FAF7F2', '#34D399', '#AA771C']
+          });
         }
+  
+        // Update Confirmation Screen Content
+        document.getElementById('conf-guest-name').textContent = guestName;
+        document.getElementById('conf-guest-status').textContent = currentAttendance === 'attending' ? 'Joyfully Attending' : 'Regretfully Declining';
+        const countRow = document.getElementById('conf-guest-count-row');
+        if (currentAttendance === 'attending') {
+          countRow.classList.remove('hidden');
+          document.getElementById('conf-guest-count').textContent = `${currentGuestCount} ${currentGuestCount === 1 ? 'Guest' : 'Guests'}`;
+        } else {
+          countRow.classList.add('hidden');
+        }
+  
+        // Transition to Success Screen
+        rsvpFormContainer.classList.add('hidden');
+        rsvpSuccessScreen.classList.remove('hidden');
+  
+        // Update the main RSVP button on the guest view
+        if (rsvpBtnText) {
+          rsvpBtnText.textContent = currentAttendance === 'attending'
+            ? `✓ Attending (${guestName})`
+            : `Declined (${guestName})`;
+        }
+      });
+  
+      doneRsvpBtn.addEventListener('click', () => {
+        closeRsvpDrawer();
+        setTimeout(() => {
+          rsvpFormContainer.classList.remove('hidden');
+          rsvpSuccessScreen.classList.add('hidden');
+        }, 300);
+      });
+  
+      editRsvpBtn.addEventListener('click', () => {
+        rsvpSuccessScreen.classList.add('hidden');
+        rsvpFormContainer.classList.remove('hidden');
       });
   
       // Add to Google Calendar Link
@@ -7071,7 +7412,6 @@
     }
   }
   
-  
 
   // =========================================================================
   // MODULE: js/etsyGuide.js
@@ -7080,8 +7420,7 @@
   /**
    * Etsy Digital Product Seller & Buyer Toolkit
    * Printing guides, paper recommendations, and Etsy order demo simulation.
-   */
-  class EtsyGuideManager {
+   */class EtsyGuideManager {
     constructor() {
       this.init();
     }
@@ -7275,13 +7614,6 @@
    * Main Application Controller for European Luxury Invitation Studio
    * Manages UI interactions, template gallery, left/right sidebars, and export modals.
    */
-  
-  
-  
-  
-  
-  
-  
   class InvitationStudioApp {
     constructor() {
       this.editor = null;
@@ -7553,21 +7885,30 @@
       // Undo / Redo
       document.getElementById('btn-undo')?.addEventListener('click', () => this.editor.undo());
       document.getElementById('btn-redo')?.addEventListener('click', () => this.editor.redo());
+      document.getElementById('btn-reset-card')?.addEventListener('click', () => {
+        this.resetCurrentTemplate({ showConfirm: true });
+      });
   
-      // Zoom
       // Zoom
       document.getElementById('btn-zoom-in')?.addEventListener('click', () => {
         this.editor.zoom = Math.min(1.5, this.editor.zoom + 0.1);
         this.editor.render();
+        const currentSelId = this.editor.selectedElementId;
+        if (currentSelId) this.editor.selectElement(currentSelId, { forceRefresh: true });
         this.syncZoomDisplay();
       });
       document.getElementById('btn-zoom-out')?.addEventListener('click', () => {
         this.editor.zoom = Math.max(0.28, this.editor.zoom - 0.1);
         this.editor.render();
+        const currentSelId = this.editor.selectedElementId;
+        if (currentSelId) this.editor.selectElement(currentSelId, { forceRefresh: true });
         this.syncZoomDisplay();
       });
       document.getElementById('btn-zoom-reset')?.addEventListener('click', () => {
-        this.fitCanvasToViewport({ forceDesktop: window.innerWidth > 900 });
+        this.resetZoom();
+      });
+      document.getElementById('zoom-display')?.addEventListener('click', () => {
+        this.resetZoom();
       });
   
       // Guest 3D Preview Modal
@@ -7625,6 +7966,10 @@
     }
   
     switchLeftTab(tab) {
+      this.hideLiveEditDock();
+      if (this.editor?.selectedElementId) {
+        this.editor.selectElement(null);
+      }
       this.activeLeftTab = tab;
       document.querySelectorAll('.tab-btn').forEach(btn => {
         const isActive = btn.getAttribute('data-tab') === tab;
@@ -7668,6 +8013,64 @@
       this.editor.zoom = Math.max(0.28, Math.min(1, Math.floor(fit * 100) / 100));
       this.editor.render();
       this.syncZoomDisplay();
+    }
+  
+    resetZoom() {
+      if (!this.editor?.currentTemplate) return;
+      const currentSelId = this.editor.selectedElementId;
+      // Toggle: if zoomed away from 100%, reset cleanly to 100%; if already 100%, fit to viewport
+      if (Math.abs(this.editor.zoom - 1) > 0.05) {
+        this.editor.zoom = 1;
+      } else {
+        const stage = document.getElementById('canvas-outer-stage');
+        if (stage) {
+          const padX = 24;
+          const padY = 120;
+          const availW = Math.max(180, stage.clientWidth - padX);
+          const availH = Math.max(220, stage.clientHeight - padY);
+          const fit = Math.min(availW / 400, availH / 560, 1);
+          this.editor.zoom = Math.max(0.28, Math.min(1, Math.floor(fit * 100) / 100));
+        } else {
+          this.editor.zoom = 1;
+        }
+      }
+      this.editor.render();
+      if (currentSelId) {
+        this.editor.selectElement(currentSelId, { forceRefresh: true });
+      }
+      this.syncZoomDisplay();
+      this.exporter?.showToast(`Zoom: ${Math.round(this.editor.zoom * 100)}%`);
+    }
+  
+    resetCurrentTemplate({ showConfirm = true } = {}) {
+      if (!this.editor?.currentTemplate) return;
+      const currentId = this.editor.currentTemplate.id;
+      const orig = TEMPLATES.find(t => t.id === currentId);
+      if (!orig) {
+        this.exporter?.showToast('Original template not found', 'error');
+        return;
+      }
+  
+      if (showConfirm) {
+        const ok = window.confirm('Reset this card back to original template design?\n\nAll text, colors, and layout will be restored to defaults. (You can also press Ctrl+Z / Undo to revert this reset).');
+        if (!ok) return;
+      }
+  
+      // Save current state so the user can easily Undo the reset if desired
+      this.editor.saveState();
+  
+      // Reload template fresh from source definitions
+      this.editor.loadTemplate(orig);
+  
+      // Keep active section and lobby in sync
+      this.activeSection = orig.section;
+      this.lobbySectionId = orig.section;
+  
+      // Refresh UI components
+      this.renderLeftSidebar();
+      this.renderInspector(null);
+      this.fitCanvasToViewport();
+      this.exporter?.showToast('Card restored to original template design.');
     }
   
     openStudioDrawer(which) {
@@ -8652,13 +9055,17 @@
     }
   
     // =========================================================================
-    // RIGHT SIDEBAR: ELEMENT INSPECTOR & CONTROLS
+    // LEFT SIDEBAR: DOCKED ELEMENT EDITOR MODAL (NEVER COVERS THE TEMPLATE CARD)
     // =========================================================================
     hideLiveEditDock() {
       const dock = document.getElementById('live-edit-dock');
       if (dock) {
         dock.classList.add('is-hidden');
         dock.innerHTML = '';
+      }
+      const leftContent = document.getElementById('sidebar-left-content');
+      if (leftContent) {
+        leftContent.classList.remove('hidden');
       }
       document.getElementById('sidebar-right')?.classList.remove('inspector-spotlight');
     }
@@ -8671,100 +9078,379 @@
       }
   
       dock.classList.remove('is-hidden');
-      document.getElementById('sidebar-right')?.classList.add('inspector-spotlight');
+      const leftContent = document.getElementById('sidebar-left-content');
+      if (leftContent) {
+        leftContent.classList.add('hidden');
+      }
+  
+      // Automatically highlight the appropriate tab icon on the left rail
+      let targetTab = 'text';
+      if (element.type === 'text') targetTab = 'text';
+      else if (element.type === 'image') targetTab = 'photos';
+      else if (element.type === 'qr-code') targetTab = 'qr';
+      else if (element.type === 'svg' || element.type === 'wax-seal') targetTab = 'elements';
+  
+      this.activeLeftTab = targetTab;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        const isActive = btn.getAttribute('data-tab') === targetTab;
+        btn.classList.toggle('text-amber-400', isActive);
+        btn.classList.toggle('bg-zinc-800/80', isActive);
+        btn.classList.toggle('text-zinc-400', !isActive);
+      });
+  
+      if (window.innerWidth <= 900) {
+        this.openStudioDrawer('tools');
+      }
+  
+      const luxuryColors = [
+        { name: 'Classic Noir', hex: '#111111' },
+        { name: 'Pure White', hex: '#FFFFFF' },
+        { name: 'Ivory Vellum', hex: '#FAF7F2' },
+        { name: 'Gold Leaf', hex: '#C79B4B' },
+        { name: 'Royal Emerald', hex: '#09231B' },
+        { name: 'Bordeaux Red', hex: '#5B1E29' },
+        { name: 'Cotswolds Sage', hex: '#4A6B5B' },
+        { name: 'Tuscan Ochre', hex: '#C05C3D' }
+      ];
+  
+      const quickFonts = [
+        { name: 'Garamond', family: "'Cormorant Garamond', serif" },
+        { name: 'Bodoni', family: "'Bodoni Moda', serif" },
+        { name: 'Playfair', family: "'Playfair Display', serif" },
+        { name: 'Cinzel', family: "'Cinzel', serif" },
+        { name: 'Great Vibes', family: "'Great Vibes', cursive" },
+        { name: 'Pinyon', family: "'Pinyon Script', cursive" }
+      ];
   
       if (element.type === 'text') {
         dock.innerHTML = `
+          <!-- Done / Back Button -->
+          <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <span>Done • Back to Suite</span>
+          </button>
+  
+          <!-- Header -->
           <div class="live-edit-dock-header">
             <div>
-              <p class="live-edit-dock-sub">Selected text · live preview</p>
-              <h3 class="live-edit-dock-title">Edit this text</h3>
+              <p class="live-edit-dock-sub">Selected text layer</p>
+              <h3 class="live-edit-dock-title">Edit Typography</h3>
             </div>
-            <button type="button" class="live-edit-dock-close" id="dock-close-btn" title="Close">×</button>
+            <div class="flex items-center gap-1">
+              <button type="button" id="dock-dup-btn" title="Duplicate Text (Ctrl+D)" class="p-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
+              </button>
+              <button type="button" id="dock-del-btn" title="Delete Text (Del)" class="p-1.5 rounded bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+              </button>
+            </div>
           </div>
-          <textarea id="dock-text-content" rows="3" placeholder="Type your text…">${this.editor.escapeHtml(element.content || '')}</textarea>
-          <div class="live-edit-dock-actions">
-            <button type="button" class="live-edit-dock-btn" id="dock-fs-down">− Size</button>
-            <button type="button" class="live-edit-dock-btn" id="dock-fs-val">${element.fontSize || 14}px</button>
-            <button type="button" class="live-edit-dock-btn" id="dock-fs-up">+ Size</button>
-            <button type="button" class="live-edit-dock-btn" id="dock-type-on-card">Type on card</button>
-            <button type="button" class="live-edit-dock-btn live-edit-dock-btn--primary" id="dock-more-styles">More styles →</button>
+  
+          <!-- Text Content Area -->
+          <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5 mb-3">
+            <div class="flex items-center justify-between">
+              <label class="text-amber-300 font-serif font-bold uppercase tracking-wider text-[10px]">Change text content</label>
+              <span class="text-[9px] text-zinc-400">Live sync</span>
+            </div>
+            <textarea id="dock-text-content" rows="3" placeholder="Type your text…" class="w-full bg-zinc-950 border border-amber-500/50 rounded-lg p-2 text-zinc-100 text-xs focus:outline-none focus:border-amber-400 leading-relaxed shadow-inner font-sans">${this.editor.escapeHtml(element.content || '')}</textarea>
+          </div>
+  
+          <!-- Font Size Controls -->
+          <div class="mb-3">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-[11px] text-zinc-400 font-medium">Font Size:</label>
+              <span id="dock-fs-val" class="font-mono text-amber-300 font-bold text-xs">${element.fontSize || 14}px</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" id="dock-fs-down" class="w-7 h-7 rounded bg-zinc-950 border border-zinc-700 hover:bg-zinc-800 text-zinc-200 font-bold flex items-center justify-center transition text-xs">− Size</button>
+              <input id="dock-fs-slider" type="range" min="8" max="80" value="${element.fontSize || 14}" class="flex-1 accent-amber-500 cursor-pointer" />
+              <button type="button" id="dock-fs-up" class="w-7 h-7 rounded bg-zinc-950 border border-zinc-700 hover:bg-zinc-800 text-zinc-200 font-bold flex items-center justify-center transition text-xs">+ Size</button>
+            </div>
+          </div>
+  
+          <!-- Font Family Selector -->
+          <div class="mb-3">
+            <label class="block text-[11px] text-zinc-400 mb-1 font-medium">European Luxury Fonts:</label>
+            <div class="grid grid-cols-3 gap-1 mb-1.5">
+              ${quickFonts.map(f => `
+                <button type="button" class="dock-font-chip px-1.5 py-1 rounded text-[10px] truncate border ${element.fontFamily === f.family ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold' : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:text-white'}" data-font="${f.family}">
+                  ${f.name}
+                </button>
+              `).join('')}
+            </div>
+            <select id="dock-font-family" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-zinc-200 text-xs focus:outline-none focus:border-amber-500">
+              ${LUXURY_FONTS.map(f => `
+                <option value="${f.family}" ${element.fontFamily === f.family ? 'selected' : ''}>
+                  ${f.name} (${f.category})
+                </option>
+              `).join('')}
+            </select>
+          </div>
+  
+          <!-- Style & Alignment -->
+          <div class="mb-3">
+            <label class="block text-[11px] text-zinc-400 mb-1 font-medium">Style & Alignment:</label>
+            <div class="flex items-center gap-1.5">
+              <button type="button" id="dock-toggle-bold" class="flex-1 py-1 px-2 rounded bg-zinc-950 border ${element.fontWeight === '700' || element.fontWeight === 'bold' ? 'border-amber-500 text-amber-300 bg-amber-500/10 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition">
+                Bold
+              </button>
+              <button type="button" id="dock-toggle-italic" class="flex-1 py-1 px-2 rounded bg-zinc-950 border ${element.fontStyle === 'italic' ? 'border-amber-500 text-amber-300 bg-amber-500/10 italic' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition">
+                Italic
+              </button>
+              <div class="flex items-center bg-zinc-950 rounded border border-zinc-800 p-0.5">
+                <button type="button" id="dock-align-left" class="p-1 rounded ${element.textAlign === 'left' ? 'text-amber-400 bg-zinc-800' : 'text-zinc-400 hover:text-white'} transition" title="Align Left">
+                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h14"/></svg>
+                </button>
+                <button type="button" id="dock-align-center" class="p-1 rounded ${!element.textAlign || element.textAlign === 'center' ? 'text-amber-400 bg-zinc-800' : 'text-zinc-400 hover:text-white'} transition" title="Align Center">
+                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M5 18h14"/></svg>
+                </button>
+                <button type="button" id="dock-align-right" class="p-1 rounded ${element.textAlign === 'right' ? 'text-amber-400 bg-zinc-800' : 'text-zinc-400 hover:text-white'} transition" title="Align Right">
+                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M6 18h14"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Gold Foil Pressed Toggle -->
+          <div class="p-2 rounded-lg bg-zinc-950 border border-amber-500/30 flex items-center justify-between mb-3">
+            <div>
+              <span class="text-xs font-serif font-bold text-amber-300 block flex items-center gap-1">
+                <span>✨ Gold Foil Pressed</span>
+              </span>
+              <span class="text-[9px] text-zinc-500">Metallic gold leaf shimmer</span>
+            </div>
+            <input type="checkbox" id="dock-foil-check" ${element.isFoil ? 'checked' : ''} class="w-4 h-4 accent-amber-500 cursor-pointer" />
+          </div>
+  
+          <!-- Color Palette Swatches & Picker -->
+          <div class="mb-3">
+            <label class="block text-[11px] text-zinc-400 mb-1 font-medium">Text Color:</label>
+            <div class="flex items-center gap-1.5 bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">
+              ${luxuryColors.map(c => `
+                <button type="button" class="dock-swatch-btn w-5 h-5 rounded-full transition hover:scale-110 shrink-0" 
+                        style="background-color: ${c.hex}; ${element.color === c.hex ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-zinc-950' : 'border: 1px solid rgba(255,255,255,0.2)'}" 
+                        data-hex="${c.hex}" title="${c.name}">
+                </button>
+              `).join('')}
+              <div class="h-4 w-px bg-zinc-800 mx-0.5"></div>
+              <input id="dock-color-picker" type="color" value="${element.color || '#2C2825'}" class="w-6 h-6 rounded bg-transparent cursor-pointer shrink-0" title="Custom Color" />
+            </div>
+          </div>
+  
+          <!-- Letter Spacing -->
+          <div class="mb-3">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-[11px] text-zinc-400 font-medium">Letter Spacing:</label>
+              <span id="dock-spacing-val" class="font-mono text-zinc-300 text-xs">${element.letterSpacing !== undefined ? element.letterSpacing : 0}px</span>
+            </div>
+            <input id="dock-letter-spacing" type="range" min="0" max="10" step="0.5" value="${element.letterSpacing || 0}" class="w-full accent-amber-500 cursor-pointer" />
+          </div>
+  
+          <!-- Center Alignment -->
+          <div class="pt-2 border-t border-zinc-800/80">
+            <button type="button" id="dock-center-x" class="w-full py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-[11px] font-serif transition text-center">
+              ⬌ Center Horizontally
+            </button>
+          </div>
+  
+          <!-- Layer Ordering Controls -->
+          <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+              <span>Layer Order:</span>
+              <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="dock-layer-num" class="text-amber-400 font-bold">Layer ${element.zIndex || 1}</strong></span>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" id="dock-bring-fwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+                <span>▲ Bring Forward</span>
+              </button>
+              <button type="button" id="dock-send-bwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+                <span>▼ Send Backward</span>
+              </button>
+            </div>
           </div>
         `;
   
-        const syncLive = (val) => {
-          this.editor.updateElement(element.id, { content: val }, { saveState: true, updateInspector: false });
+        // Event Bindings for Text
+        const textInput = document.getElementById('dock-text-content');
+        textInput?.addEventListener('input', (e) => {
+          this.editor.updateElement(element.id, { content: e.target.value }, { saveState: true, updateInspector: false });
           const sideTa = document.getElementById('ins-text-content');
-          if (sideTa && document.activeElement !== sideTa) sideTa.value = val;
-        };
+          if (sideTa && document.activeElement !== sideTa) sideTa.value = e.target.value;
+        });
   
-        document.getElementById('dock-text-content')?.addEventListener('input', (e) => syncLive(e.target.value));
         document.getElementById('dock-fs-down')?.addEventListener('click', () => {
           const next = Math.max(8, (element.fontSize || 14) - 1);
-          this.editor.updateElement(element.id, { fontSize: next }, { saveState: true, updateInspector: false });
-          const label = document.getElementById('dock-fs-val');
-          if (label) label.textContent = `${next}px`;
-          const slider = document.getElementById('ins-font-size');
+          this.editor.updateElement(element.id, { fontSize: next });
+          const lbl = document.getElementById('dock-fs-val');
+          if (lbl) lbl.textContent = `${next}px`;
+          const slider = document.getElementById('dock-fs-slider');
           if (slider) slider.value = next;
-          const fsVal = document.getElementById('ins-fs-val');
-          if (fsVal) fsVal.textContent = `${next}px`;
-        });
-        document.getElementById('dock-fs-up')?.addEventListener('click', () => {
-          const next = Math.min(80, (element.fontSize || 14) + 1);
-          this.editor.updateElement(element.id, { fontSize: next }, { saveState: true, updateInspector: false });
-          const label = document.getElementById('dock-fs-val');
-          if (label) label.textContent = `${next}px`;
-          const slider = document.getElementById('ins-font-size');
-          if (slider) slider.value = next;
-          const fsVal = document.getElementById('ins-fs-val');
-          if (fsVal) fsVal.textContent = `${next}px`;
-        });
-        document.getElementById('dock-type-on-card')?.addEventListener('click', () => {
-          const node = this.editor.getCanvasElementNode(element.id);
-          if (node) this.editor.startInlineEdit(element, node);
-        });
-        document.getElementById('dock-more-styles')?.addEventListener('click', () => {
-          document.getElementById('sidebar-right')?.scrollTo({ top: 0, behavior: 'smooth' });
-          document.getElementById('ins-edit-spotlight')?.classList.add('edit-panel-pulse');
-          document.getElementById('ins-text-content')?.focus();
-        });
-        document.getElementById('dock-close-btn')?.addEventListener('click', () => {
-          this.editor.selectElement(null);
         });
   
-        requestAnimationFrame(() => {
-          const ta = document.getElementById('dock-text-content');
-          if (ta) {
-            ta.focus();
-            ta.select();
-          }
-          dock.classList.add('edit-panel-pulse');
+        document.getElementById('dock-fs-up')?.addEventListener('click', () => {
+          const next = Math.min(80, (element.fontSize || 14) + 1);
+          this.editor.updateElement(element.id, { fontSize: next });
+          const lbl = document.getElementById('dock-fs-val');
+          if (lbl) lbl.textContent = `${next}px`;
+          const slider = document.getElementById('dock-fs-slider');
+          if (slider) slider.value = next;
         });
+  
+        document.getElementById('dock-fs-slider')?.addEventListener('input', (e) => {
+          const next = parseInt(e.target.value, 10);
+          this.editor.updateElement(element.id, { fontSize: next });
+          const lbl = document.getElementById('dock-fs-val');
+          if (lbl) lbl.textContent = `${next}px`;
+        });
+  
+        dock.querySelectorAll('.dock-font-chip').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const font = btn.getAttribute('data-font');
+            this.editor.updateElement(element.id, { fontFamily: font });
+            this.showLiveEditDock(this.editor.getSelectedElement() || element);
+          });
+        });
+  
+        document.getElementById('dock-font-family')?.addEventListener('change', (e) => {
+          this.editor.updateElement(element.id, { fontFamily: e.target.value });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
+        });
+  
+        document.getElementById('dock-toggle-bold')?.addEventListener('click', () => {
+          const isBold = element.fontWeight === '700' || element.fontWeight === 'bold';
+          this.editor.updateElement(element.id, { fontWeight: isBold ? '400' : '700' });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
+        });
+  
+        document.getElementById('dock-toggle-italic')?.addEventListener('click', () => {
+          const isItalic = element.fontStyle === 'italic';
+          this.editor.updateElement(element.id, { fontStyle: isItalic ? 'normal' : 'italic' });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
+        });
+  
+        document.getElementById('dock-align-left')?.addEventListener('click', () => {
+          this.editor.updateElement(element.id, { textAlign: 'left' });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
+        });
+        document.getElementById('dock-align-center')?.addEventListener('click', () => {
+          this.editor.updateElement(element.id, { textAlign: 'center' });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
+        });
+        document.getElementById('dock-align-right')?.addEventListener('click', () => {
+          this.editor.updateElement(element.id, { textAlign: 'right' });
+          this.showLiveEditDock(this.editor.getSelectedElement() || element);
+        });
+  
+        document.getElementById('dock-foil-check')?.addEventListener('change', (e) => {
+          this.editor.updateElement(element.id, { isFoil: e.target.checked });
+        });
+  
+        dock.querySelectorAll('.dock-swatch-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const hex = btn.getAttribute('data-hex');
+            this.editor.updateElement(element.id, { color: hex, isFoil: false });
+            this.showLiveEditDock(this.editor.getSelectedElement() || element);
+          });
+        });
+  
+        document.getElementById('dock-color-picker')?.addEventListener('input', (e) => {
+          this.editor.updateElement(element.id, { color: e.target.value, isFoil: false });
+        });
+  
+        document.getElementById('dock-letter-spacing')?.addEventListener('input', (e) => {
+          const sp = parseFloat(e.target.value);
+          this.editor.updateElement(element.id, { letterSpacing: sp });
+          const lbl = document.getElementById('dock-spacing-val');
+          if (lbl) lbl.textContent = `${sp}px`;
+        });
+  
+        document.getElementById('dock-center-x')?.addEventListener('click', () => {
+          const newX = Math.round(200 - element.width / 2);
+          this.editor.updateElement(element.id, { x: newX });
+        });
+        document.getElementById('dock-bring-fwd')?.addEventListener('click', () => this.editor.bringForward(element.id));
+        document.getElementById('dock-send-bwd')?.addEventListener('click', () => this.editor.sendBackward(element.id));
+        document.getElementById('dock-dup-btn')?.addEventListener('click', () => this.editor.duplicateElement(element.id));
+        document.getElementById('dock-del-btn')?.addEventListener('click', () => this.editor.deleteElement(element.id));
+        document.getElementById('dock-done-btn')?.addEventListener('click', () => this.editor.selectElement(null));
+  
+        requestAnimationFrame(() => {
+          if (textInput && document.activeElement !== textInput) {
+            textInput.focus();
+          }
+        });
+  
       } else if (element.type === 'image') {
         const src = this.editor.getEffectiveBg(element.src) || element.src || '';
         dock.innerHTML = `
+          <!-- Done / Back Button -->
+          <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <span>Done • Back to Suite</span>
+          </button>
+  
           <div class="live-edit-dock-header">
             <div>
-              <p class="live-edit-dock-sub">Selected photo · live preview</p>
-              <h3 class="live-edit-dock-title">Replace this photo</h3>
+              <p class="live-edit-dock-sub">Selected photo</p>
+              <h3 class="live-edit-dock-title">Edit Photo & Frame</h3>
             </div>
-            <button type="button" class="live-edit-dock-close" id="dock-close-btn" title="Close">×</button>
+            <button type="button" id="dock-del-btn" title="Delete Photo" class="p-1.5 rounded bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
           </div>
-          <div class="live-edit-dock-photo" id="dock-photo-box">
-            <img id="dock-photo-preview" src="${src}" alt="Selected photo" />
-            <div style="flex:1; display:flex; flex-direction:column; gap:0.55rem; justify-content:center;">
-              <p style="margin:0; font-size:0.8rem; color:rgba(244,236,223,0.7); font-family:'Cormorant Garamond', serif;">
-                Upload a new image — the card updates instantly.
-              </p>
-              <div class="live-edit-dock-actions" style="margin:0;">
-                <label class="live-edit-dock-btn live-edit-dock-btn--primary" style="cursor:pointer;">
-                  Choose / Upload Photo
-                  <input id="dock-photo-file" type="file" accept="image/*" class="hidden" />
-                </label>
-                <button type="button" class="live-edit-dock-btn" data-mask="mask-arch">Arch</button>
-                <button type="button" class="live-edit-dock-btn" data-mask="mask-oval">Oval</button>
-                <button type="button" class="live-edit-dock-btn" data-mask="mask-rectangle">Rect</button>
-              </div>
+  
+          <!-- Replace / Upload Custom Photo Card -->
+          <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/40 space-y-2.5 mb-3.5 shadow-sm">
+            <div class="flex items-center gap-2 text-amber-300 font-serif font-bold text-xs">
+              <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>Replace This Photo</span>
+            </div>
+            <div class="w-full h-32 rounded-lg overflow-hidden border border-zinc-700 bg-zinc-950 flex items-center justify-center">
+              <img id="dock-photo-preview" src="${src}" alt="Current photo" class="w-full h-full object-cover" />
+            </div>
+            <p class="text-[10px] text-zinc-400 leading-tight">
+              Upload your couple portrait or venue photo. The card updates instantly.
+            </p>
+            <label class="w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-2 cursor-pointer text-center">
+              <span>Choose / Upload Photo</span>
+              <input id="dock-photo-file" type="file" accept="image/*" class="hidden" />
+            </label>
+          </div>
+  
+          <!-- Silhouette Frame Masks -->
+          <div class="mb-3.5">
+            <label class="block text-[11px] text-zinc-400 mb-1.5 font-medium">Silhouette Mask:</label>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" class="dock-mask-btn p-2 rounded bg-zinc-950 border ${element.mask === 'mask-arch' ? 'border-amber-500 text-amber-300 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition" data-mask="mask-arch">
+                Arch Cutout
+              </button>
+              <button type="button" class="dock-mask-btn p-2 rounded bg-zinc-950 border ${element.mask === 'mask-oval' ? 'border-amber-500 text-amber-300 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition" data-mask="mask-oval">
+                Oval Cameo
+              </button>
+              <button type="button" class="dock-mask-btn p-2 rounded bg-zinc-950 border ${element.mask === 'mask-scallop' ? 'border-amber-500 text-amber-300 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition" data-mask="mask-scallop">
+                Scalloped Frame
+              </button>
+              <button type="button" class="dock-mask-btn p-2 rounded bg-zinc-950 border ${!element.mask || element.mask === 'rounded-sm' || element.mask === 'mask-rectangle' ? 'border-amber-500 text-amber-300 font-bold' : 'border-zinc-800 text-zinc-300'} text-xs text-center transition" data-mask="mask-rectangle">
+                Classic Rectangle
+              </button>
+            </div>
+          </div>
+  
+          <!-- Layer Ordering Controls -->
+          <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+              <span>Layer Order:</span>
+              <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="dock-layer-num" class="text-amber-400 font-bold">Layer ${element.zIndex || 1}</strong></span>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" id="dock-bring-fwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+                <span>▲ Bring Forward</span>
+              </button>
+              <button type="button" id="dock-send-bwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+                <span>▼ Send Backward</span>
+              </button>
             </div>
           </div>
         `;
@@ -8774,71 +9460,165 @@
           if (!file) return;
           const reader = new FileReader();
           reader.onload = (ev) => {
-            this.editor.updateElement(element.id, { src: ev.target.result }, { saveState: true, updateInspector: false });
-            const preview = document.getElementById('dock-photo-preview');
-            if (preview) preview.src = ev.target.result;
-            const sidePreview = document.querySelector('#ins-photo-replace-box img');
-            if (sidePreview) sidePreview.src = ev.target.result;
+            this.editor.updateElement(element.id, { src: ev.target.result });
+            this.showLiveEditDock(this.editor.getSelectedElement() || element);
           };
           reader.readAsDataURL(file);
         });
-        dock.querySelectorAll('[data-mask]').forEach(btn => {
+  
+        dock.querySelectorAll('.dock-mask-btn').forEach(btn => {
           btn.addEventListener('click', () => {
-            this.editor.updateElement(element.id, { mask: btn.getAttribute('data-mask') }, { saveState: true, updateInspector: true });
+            this.editor.updateElement(element.id, { mask: btn.getAttribute('data-mask') });
+            this.showLiveEditDock(this.editor.getSelectedElement() || element);
           });
         });
-        document.getElementById('dock-close-btn')?.addEventListener('click', () => {
-          this.editor.selectElement(null);
-        });
   
-        requestAnimationFrame(() => dock.classList.add('edit-panel-pulse'));
+        document.getElementById('dock-bring-fwd')?.addEventListener('click', () => this.editor.bringForward(element.id));
+        document.getElementById('dock-send-bwd')?.addEventListener('click', () => this.editor.sendBackward(element.id));
+        document.getElementById('dock-del-btn')?.addEventListener('click', () => this.editor.deleteElement(element.id));
+        document.getElementById('dock-done-btn')?.addEventListener('click', () => this.editor.selectElement(null));
+  
       } else if (element.type === 'qr-code') {
         dock.innerHTML = `
+          <!-- Done / Back Button -->
+          <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <span>Done • Back to Suite</span>
+          </button>
+  
           <div class="live-edit-dock-header">
             <div>
-              <p class="live-edit-dock-sub">Selected QR · live preview</p>
-              <h3 class="live-edit-dock-title">Edit QR link</h3>
+              <p class="live-edit-dock-sub">Dynamic RSVP Code</p>
+              <h3 class="live-edit-dock-title">RSVP QR Code</h3>
             </div>
-            <button type="button" class="live-edit-dock-close" id="dock-close-btn" title="Close">×</button>
+            <button type="button" id="dock-del-btn" title="Delete QR Code" class="p-1.5 rounded bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
           </div>
-          <input id="dock-qr-url" type="url" value="${this.editor.escapeHtml(element.qrValue || '')}" placeholder="https://…" />
-          <div class="live-edit-dock-actions">
-            <button type="button" class="live-edit-dock-btn live-edit-dock-btn--primary" id="dock-more-styles">More options →</button>
+  
+          <div class="space-y-3 mb-3.5">
+            <div>
+              <label class="block text-[11px] text-zinc-400 mb-1 font-medium">Destination RSVP URL:</label>
+              <input id="dock-qr-url" type="url" value="${this.editor.escapeHtml(element.qrValue || '')}" placeholder="https://withjoy.com/your-wedding" 
+                     class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-2 text-zinc-200 text-xs focus:outline-none focus:border-amber-500" />
+            </div>
+  
+            <div class="p-3 bg-zinc-950 rounded-lg border border-zinc-800 text-[11px] text-zinc-400 leading-relaxed">
+              Point your smartphone camera at the card on screen to test scan this live QR code!
+            </div>
+          </div>
+  
+          <!-- Layer Ordering Controls -->
+          <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+              <span>Layer Order:</span>
+              <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="dock-layer-num" class="text-amber-400 font-bold">Layer ${element.zIndex || 1}</strong></span>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" id="dock-bring-fwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+                <span>▲ Bring Forward</span>
+              </button>
+              <button type="button" id="dock-send-bwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+                <span>▼ Send Backward</span>
+              </button>
+            </div>
           </div>
         `;
+  
         document.getElementById('dock-qr-url')?.addEventListener('input', (e) => {
-          this.editor.updateElement(element.id, { qrValue: e.target.value }, { saveState: true, updateInspector: false });
-          const side = document.getElementById('ins-qr-url');
-          if (side && document.activeElement !== side) side.value = e.target.value;
+          this.editor.updateElement(element.id, { qrValue: e.target.value });
         });
-        document.getElementById('dock-more-styles')?.addEventListener('click', () => {
-          document.getElementById('sidebar-right')?.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        document.getElementById('dock-close-btn')?.addEventListener('click', () => this.editor.selectElement(null));
-        requestAnimationFrame(() => {
-          document.getElementById('dock-qr-url')?.focus();
-          dock.classList.add('edit-panel-pulse');
-        });
+  
+        document.getElementById('dock-bring-fwd')?.addEventListener('click', () => this.editor.bringForward(element.id));
+        document.getElementById('dock-send-bwd')?.addEventListener('click', () => this.editor.sendBackward(element.id));
+        document.getElementById('dock-del-btn')?.addEventListener('click', () => this.editor.deleteElement(element.id));
+        document.getElementById('dock-done-btn')?.addEventListener('click', () => this.editor.selectElement(null));
+  
       } else {
+        // SVG, Wax Seal, or other elements
         dock.innerHTML = `
+          <!-- Done / Back Button -->
+          <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <span>Done • Back to Suite</span>
+          </button>
+  
           <div class="live-edit-dock-header">
             <div>
-              <p class="live-edit-dock-sub">Selected ${element.type || 'element'} · live preview</p>
-              <h3 class="live-edit-dock-title">Customize in the right panel</h3>
+              <p class="live-edit-dock-sub">Selected artwork</p>
+              <h3 class="live-edit-dock-title">Artwork & Seal</h3>
             </div>
-            <button type="button" class="live-edit-dock-close" id="dock-close-btn" title="Close">×</button>
+            <button type="button" id="dock-del-btn" title="Delete Element" class="p-1.5 rounded bg-red-950/60 hover:bg-red-900 border border-red-800/60 text-red-400 transition">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
           </div>
-          <div class="live-edit-dock-actions">
-            <button type="button" class="live-edit-dock-btn live-edit-dock-btn--primary" id="dock-more-styles">Open style controls →</button>
+  
+          <div class="space-y-3 mb-3.5">
+            <div>
+              <label class="block text-[11px] text-zinc-400 mb-1 font-medium">Element Color:</label>
+              <div class="flex items-center gap-1.5 bg-zinc-950 p-1.5 rounded-lg border border-zinc-800">
+                ${luxuryColors.map(c => `
+                  <button type="button" class="dock-swatch-btn w-5 h-5 rounded-full transition hover:scale-110 shrink-0" 
+                          style="background-color: ${c.hex}; ${element.color === c.hex ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-zinc-950' : 'border: 1px solid rgba(255,255,255,0.2)'}" 
+                          data-hex="${c.hex}" title="${c.name}">
+                  </button>
+                `).join('')}
+                <div class="h-4 w-px bg-zinc-800 mx-0.5"></div>
+                <input id="dock-color-picker" type="color" value="${element.color || '#D4AF37'}" class="w-6 h-6 rounded bg-transparent cursor-pointer shrink-0" />
+              </div>
+            </div>
+  
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-[11px] text-zinc-400 font-medium">Opacity:</label>
+                <span id="dock-opacity-val" class="font-mono text-zinc-300 text-xs">${Math.round((element.opacity !== undefined ? element.opacity : 1) * 100)}%</span>
+              </div>
+              <input id="dock-opacity" type="range" min="0.1" max="1" step="0.05" value="${element.opacity !== undefined ? element.opacity : 1}" class="w-full accent-amber-500 cursor-pointer" />
+            </div>
+          </div>
+  
+          <!-- Layer Ordering Controls -->
+          <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+              <span>Layer Order:</span>
+              <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="dock-layer-num" class="text-amber-400 font-bold">Layer ${element.zIndex || 1}</strong></span>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" id="dock-bring-fwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+                <span>▲ Bring Forward</span>
+              </button>
+              <button type="button" id="dock-send-bwd" class="py-1.5 px-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+                <span>▼ Send Backward</span>
+              </button>
+            </div>
           </div>
         `;
-        document.getElementById('dock-more-styles')?.addEventListener('click', () => {
-          document.getElementById('sidebar-right')?.scrollTo({ top: 0, behavior: 'smooth' });
+  
+        dock.querySelectorAll('.dock-swatch-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            this.editor.updateElement(element.id, { color: btn.getAttribute('data-hex') });
+            this.showLiveEditDock(this.editor.getSelectedElement() || element);
+          });
         });
-        document.getElementById('dock-close-btn')?.addEventListener('click', () => this.editor.selectElement(null));
+  
+        document.getElementById('dock-color-picker')?.addEventListener('input', (e) => {
+          this.editor.updateElement(element.id, { color: e.target.value });
+        });
+  
+        document.getElementById('dock-opacity')?.addEventListener('input', (e) => {
+          const val = parseFloat(e.target.value);
+          this.editor.updateElement(element.id, { opacity: val });
+          const lbl = document.getElementById('dock-opacity-val');
+          if (lbl) lbl.textContent = `${Math.round(val * 100)}%`;
+        });
+  
+        document.getElementById('dock-bring-fwd')?.addEventListener('click', () => this.editor.bringForward(element.id));
+        document.getElementById('dock-send-bwd')?.addEventListener('click', () => this.editor.sendBackward(element.id));
+        document.getElementById('dock-del-btn')?.addEventListener('click', () => this.editor.deleteElement(element.id));
+        document.getElementById('dock-done-btn')?.addEventListener('click', () => this.editor.selectElement(null));
       }
   
-      dock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      dock.scrollTo({ top: 0, behavior: 'smooth' });
     }
   
     renderInspector(element) {
@@ -9175,10 +9955,7 @@
         });
   
         document.getElementById('btn-restore-template-art')?.addEventListener('click', () => {
-          const orig = TEMPLATES.find(t => t.id === this.editor.currentTemplate?.id);
-          if (orig) {
-            this.editor.loadTemplate(orig);
-          }
+          this.resetCurrentTemplate({ showConfirm: true });
         });
         return;
       }
@@ -9253,6 +10030,22 @@
               <button id="btn-nudge-right" class="w-6 h-6 rounded bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 text-zinc-300 hover:text-amber-300 text-xs flex items-center justify-center" title="Nudge Right 5px">▶</button>
             </div>
           </div>
+  
+          <!-- Layer Ordering Controls -->
+          <div class="pt-2 border-t border-zinc-800/80 space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
+              <span>Layer Order:</span>
+              <span class="text-zinc-500 font-mono text-[10px]">Position: <strong id="pos-layer-val" class="text-amber-400 font-bold">Layer ${el.zIndex || 1}</strong></span>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" id="ins-bring-front" class="py-1.5 px-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Bring Forward (1 Layer Up)">
+                <span>▲ Bring Forward</span>
+              </button>
+              <button type="button" id="ins-send-back" class="py-1.5 px-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-amber-500/50 text-zinc-200 hover:text-amber-300 text-[11px] font-medium transition flex items-center justify-center gap-1.5 shadow-sm" title="Send Backward (1 Layer Down)">
+                <span>▼ Send Backward</span>
+              </button>
+            </div>
+          </div>
         </div>
       `;
     }
@@ -9306,6 +10099,17 @@
       document.getElementById('btn-nudge-down')?.addEventListener('click', () => updatePos(undefined, el.y + 5));
       document.getElementById('btn-nudge-left')?.addEventListener('click', () => updatePos(el.x - 5, undefined));
       document.getElementById('btn-nudge-right')?.addEventListener('click', () => updatePos(el.x + 5, undefined));
+  
+      document.getElementById('ins-bring-front')?.addEventListener('click', () => {
+        this.editor.bringForward(el.id);
+        const val = document.getElementById('pos-layer-val');
+        if (val) val.textContent = `Layer ${el.zIndex || 1}`;
+      });
+      document.getElementById('ins-send-back')?.addEventListener('click', () => {
+        this.editor.sendBackward(el.id);
+        const val = document.getElementById('pos-layer-val');
+        if (val) val.textContent = `Layer ${el.zIndex || 1}`;
+      });
     }
   
     renderTextInspector(container, el) {
@@ -9460,16 +10264,6 @@
             <input id="ins-letter-spacing" type="range" min="0" max="12" step="0.5" value="${el.letterSpacing || 0}" 
                    class="w-full accent-amber-500 cursor-pointer" />
           </div>
-  
-          <!-- Layer Ordering -->
-          <div class="pt-2 border-t border-zinc-800 flex gap-2">
-            <button id="ins-bring-front" class="flex-1 py-1.5 rounded bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 text-zinc-300 text-[11px] transition">
-              Bring Forward
-            </button>
-            <button id="ins-send-back" class="flex-1 py-1.5 rounded bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 text-zinc-300 text-[11px] transition">
-              Send Backward
-            </button>
-          </div>
         </div>
       `;
   
@@ -9576,8 +10370,6 @@
       document.getElementById('align-right')?.addEventListener('click', () => this.editor.updateElement(el.id, { textAlign: 'right' }));
       document.getElementById('ins-dup-btn')?.addEventListener('click', () => this.editor.duplicateElement(el.id));
       document.getElementById('ins-del-btn')?.addEventListener('click', () => this.editor.deleteElement(el.id));
-      document.getElementById('ins-bring-front')?.addEventListener('click', () => this.editor.bringForward(el.id));
-      document.getElementById('ins-send-back')?.addEventListener('click', () => this.editor.sendBackward(el.id));
     }
   
     renderSVGInspector(container, el) {
@@ -9617,11 +10409,6 @@
   
           <!-- Position & Alignment Control Panel -->
           ${this.renderPositionControlsHTML(el)}
-  
-          <div class="pt-2 border-t border-zinc-800 flex gap-2">
-            <button id="ins-bring-front" class="flex-1 py-1.5 rounded bg-zinc-900 border border-zinc-700 text-[11px]">Bring Forward</button>
-            <button id="ins-send-back" class="flex-1 py-1.5 rounded bg-zinc-900 border border-zinc-700 text-[11px]">Send Backward</button>
-          </div>
         </div>
       `;
   
@@ -9640,8 +10427,6 @@
         this.editor.updateElement(el.id, { rotation: parseInt(e.target.value, 10) });
       });
       document.getElementById('ins-del-btn')?.addEventListener('click', () => this.editor.deleteElement(el.id));
-      document.getElementById('ins-bring-front')?.addEventListener('click', () => this.editor.bringForward(el.id));
-      document.getElementById('ins-send-back')?.addEventListener('click', () => this.editor.sendBackward(el.id));
     }
   
     renderWaxSealInspector(container, el) {
