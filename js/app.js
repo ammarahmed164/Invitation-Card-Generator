@@ -387,7 +387,7 @@ class InvitationStudioApp {
       btn.classList.toggle('text-zinc-400', !isActive);
     });
     this.renderLeftSidebar();
-    if (window.innerWidth <= 900) {
+    if (window.innerWidth <= 1024) {
       this.openStudioDrawer('tools');
     }
   }
@@ -398,7 +398,7 @@ class InvitationStudioApp {
   }
 
   isMobileStudio() {
-    return window.innerWidth <= 900;
+    return window.innerWidth <= 1024;
   }
 
   fitCanvasToViewport({ forceDesktop = false } = {}) {
@@ -414,12 +414,12 @@ class InvitationStudioApp {
     const stage = document.getElementById('canvas-outer-stage');
     if (!stage) return;
 
-    const padX = 24;
-    const padY = 120; // toolbar + meta + mobile bar breathing room
-    const availW = Math.max(180, stage.clientWidth - padX);
-    const availH = Math.max(220, stage.clientHeight - padY);
+    const padX = 20;
+    const padY = window.innerWidth <= 640 ? 140 : 128;
+    const availW = Math.max(160, stage.clientWidth - padX);
+    const availH = Math.max(200, stage.clientHeight - padY);
     const fit = Math.min(availW / 400, availH / 560, 1);
-    this.editor.zoom = Math.max(0.28, Math.min(1, Math.floor(fit * 100) / 100));
+    this.editor.zoom = Math.max(0.22, Math.min(1, Math.floor(fit * 100) / 100));
     this.editor.render();
     this.syncZoomDisplay();
   }
@@ -1507,7 +1507,7 @@ class InvitationStudioApp {
       btn.classList.toggle('text-zinc-400', !isActive);
     });
 
-    if (window.innerWidth <= 900) {
+    if (window.innerWidth <= 1024) {
       this.openStudioDrawer('tools');
     }
 

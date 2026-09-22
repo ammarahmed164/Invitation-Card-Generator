@@ -1169,7 +1169,7 @@ body.mode-lobby {
   text-transform: uppercase;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .studio-whatsapp-btn-label {
     display: none;
   }
@@ -1286,7 +1286,7 @@ body.mode-lobby {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .studio-nav-hide-sm {
     display: none !important;
   }
@@ -1978,7 +1978,7 @@ body.mode-lobby {
   display: none;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   body.mode-studio {
     overflow: hidden;
   }
@@ -2070,7 +2070,7 @@ body.mode-lobby {
     top: auto;
     width: 100% !important;
     max-width: none !important;
-    height: min(68vh, 520px);
+    height: min(78vh, 640px);
     z-index: 80 !important;
     border: 0 !important;
     border-top: 1px solid rgba(226, 208, 170, 0.2) !important;
@@ -2225,10 +2225,19 @@ body.mode-lobby {
     width: 100%;
     height: 100%;
     padding: 0.85rem;
+    min-height: 0;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   .live-edit-dock-actions {
     flex-wrap: wrap;
+  }
+
+  #sidebar-left > .flex-1 {
+    min-height: 0;
+    overflow: hidden;
   }
 
   #canvas-quick-toolbar {
@@ -2288,7 +2297,7 @@ body.mode-lobby {
 
   #sidebar-left.studio-sidebar-left,
   #sidebar-right.studio-sidebar-right {
-    height: min(74vh, 580px);
+    height: min(82vh, 700px);
   }
 
   .lobby-templates-grid {
@@ -3042,6 +3051,271 @@ body.theme-wedding #guest-rsvp-drawer #rsvp-submit-btn {
   background: linear-gradient(145deg, #8c7548, #b59a68) !important;
   color: #fffaf2 !important;
   border: none !important;
+}
+
+/* ==========================================================================
+   Wedding — full responsive (phone / tablet / desktop)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  body.theme-wedding.mode-studio {
+    overflow: hidden;
+  }
+
+  /* Keep header usable; Guest View lives in mobile bar on small phones */
+  body.theme-wedding .studio-header {
+    flex-shrink: 0;
+  }
+  body.theme-wedding .studio-nav-shell {
+    height: auto;
+    min-height: 3.1rem;
+    align-items: center;
+  }
+  body.theme-wedding .studio-preview-btn .studio-nav-chip-label {
+    display: none !important;
+  }
+  body.theme-wedding #btn-guest-preview,
+  body.theme-wedding .studio-preview-btn {
+    width: 2.25rem;
+    min-width: 2.25rem;
+    padding: 0 !important;
+    justify-content: center;
+  }
+
+  /* Paper drawers — tall enough for full customization */
+  body.theme-wedding #sidebar-left.studio-sidebar-left,
+  body.theme-wedding #sidebar-right.studio-sidebar-right {
+    background: #fffcf7 !important;
+    border-top: 1px solid rgba(28, 25, 23, 0.12) !important;
+    box-shadow: 0 -20px 48px rgba(28, 25, 23, 0.18) !important;
+    height: min(80vh, 680px) !important;
+    max-height: calc(100dvh - 3.7rem - env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  body.theme-wedding .studio-drawer-close {
+    border-color: rgba(28, 25, 23, 0.16) !important;
+    background: #fff !important;
+    color: #3d3832 !important;
+  }
+  body.theme-wedding .studio-drawer-handle span {
+    background: rgba(28, 25, 23, 0.22) !important;
+  }
+
+  body.theme-wedding #studio-drawer-backdrop.studio-drawer-backdrop {
+    background: rgba(28, 25, 23, 0.4) !important;
+  }
+
+  /* Customization column: dock fills drawer and scrolls */
+  body.theme-wedding #sidebar-left > .flex-1.flex.flex-col,
+  body.theme-wedding #sidebar-left > div.flex-1 {
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+  }
+
+  body.theme-wedding #live-edit-dock:not(.is-hidden) {
+    display: block !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 0.85rem 0.9rem 2.5rem !important;
+    touch-action: pan-y;
+  }
+
+  body.theme-wedding #sidebar-left-content {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 2.5rem 0.9rem 2rem !important;
+    touch-action: pan-y;
+  }
+
+  body.theme-wedding #sidebar-right-content {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.75rem 0.9rem 2rem !important;
+    touch-action: pan-y;
+  }
+
+  body.theme-wedding .studio-tab-rail {
+    background: #ebe7e0 !important;
+  }
+  body.theme-wedding .studio-tab-rail .tab-btn {
+    min-height: 3rem;
+    min-width: 2.75rem;
+  }
+
+  /* Touch-friendly controls inside customization */
+  body.theme-wedding #live-edit-dock :is(button, .dock-font-chip, .dock-mask-btn),
+  body.theme-wedding #sidebar-left-content :is(button, label),
+  body.theme-wedding #sidebar-right-content :is(button, label) {
+    min-height: 2.4rem;
+  }
+  body.theme-wedding #live-edit-dock :is(input, select, textarea),
+  body.theme-wedding #sidebar-left-content :is(input, select, textarea),
+  body.theme-wedding #sidebar-right-content :is(input, select, textarea) {
+    min-height: 2.5rem;
+    font-size: 16px !important; /* prevent iOS zoom */
+  }
+  body.theme-wedding #live-edit-dock textarea {
+    min-height: 5.5rem;
+  }
+
+  /* Canvas stage breathing room above mobile bar */
+  body.theme-wedding #canvas-outer-stage {
+    padding: 0.45rem 0.45rem 5rem !important;
+  }
+  body.theme-wedding .canvas-viewport-dock {
+    bottom: 4.6rem !important;
+    right: 0.55rem !important;
+    max-width: calc(100vw - 1.1rem);
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  /* Mobile action bar — all features reachable */
+  body.theme-wedding #studio-mobile-bar.studio-mobile-bar {
+    display: grid !important;
+    background: rgba(255, 252, 247, 0.98) !important;
+    border-top: 1px solid rgba(28, 25, 23, 0.12) !important;
+    box-shadow: 0 -8px 24px rgba(28, 25, 23, 0.08);
+    z-index: 95 !important;
+  }
+  body.theme-wedding .studio-mobile-bar-btn {
+    color: #3d3832 !important;
+    min-height: 3.1rem;
+    gap: 0.2rem;
+    font-size: 0.56rem;
+  }
+  body.theme-wedding .studio-mobile-bar-btn svg {
+    color: #7a6844 !important;
+    stroke: #7a6844 !important;
+    width: 18px;
+    height: 18px;
+  }
+  body.theme-wedding body.drawer-tools-open #btn-mobile-tools,
+  body.theme-wedding.drawer-tools-open #btn-mobile-tools,
+  body.theme-wedding.drawer-inspector-open #btn-mobile-inspector {
+    color: #1c1917 !important;
+    background: rgba(154, 132, 88, 0.16);
+    border-radius: 0.55rem;
+  }
+  body.theme-wedding #btn-mobile-guest {
+    color: #1c1917 !important;
+    background: linear-gradient(145deg, #fffdf9, #ebe0ce) !important;
+    border: 1px solid rgba(154, 132, 88, 0.35);
+    border-radius: 0.55rem;
+  }
+  body.theme-wedding #btn-mobile-whatsapp,
+  body.theme-wedding .studio-mobile-bar-btn--wa {
+    color: #15803d !important;
+  }
+
+  /* Lobby templates */
+  body.theme-wedding .lobby-stage {
+    padding: 0.25rem 1.1rem 1.75rem;
+  }
+  body.theme-wedding .lobby-templates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 0.85rem;
+  }
+  body.theme-wedding .lobby-template-preview {
+    min-height: 190px;
+    height: 200px;
+  }
+  body.theme-wedding .lobby-templates-head {
+    margin-bottom: 1.15rem;
+    padding-bottom: 0.95rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Phone: use bottom bar for Guest View; free header space */
+  body.theme-wedding .studio-nav-actions .studio-nav-chip {
+    display: none !important;
+  }
+  body.theme-wedding #btn-guest-preview {
+    display: none !important;
+  }
+
+  body.theme-wedding .studio-suite-title {
+    max-width: 38vw;
+    font-size: 0.78rem;
+  }
+  body.theme-wedding .studio-suite-badge {
+    max-width: 38vw;
+    font-size: 0.58rem;
+  }
+  body.theme-wedding .studio-export-btn {
+    padding: 0 0.7rem;
+    font-size: 0.72rem;
+  }
+
+  body.theme-wedding #sidebar-left.studio-sidebar-left,
+  body.theme-wedding #sidebar-right.studio-sidebar-right {
+    height: min(84vh, 720px) !important;
+  }
+
+  body.theme-wedding .lobby-header,
+  body.theme-wedding .lobby-stage {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+  body.theme-wedding .lobby-templates-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+  }
+  body.theme-wedding .lobby-template-preview {
+    height: 175px;
+    min-height: 175px;
+  }
+  body.theme-wedding .lobby-template-preview-scale {
+    transform: scale(0.3);
+    transform-origin: top center;
+  }
+  body.theme-wedding .lobby-template-title {
+    font-size: 0.95rem;
+    line-height: 1.2;
+  }
+  body.theme-wedding .lobby-template-style {
+    font-size: 0.7rem;
+  }
+  body.theme-wedding .lobby-title {
+    font-size: clamp(1.55rem, 7vw, 2.1rem);
+  }
+  body.theme-wedding .lobby-lead {
+    font-size: 0.95rem;
+  }
+
+  body.theme-wedding #guest-experience-modal {
+    padding: 0.65rem !important;
+    align-items: flex-start;
+  }
+  body.theme-wedding #guest-experience-modal .mt-5 {
+    margin-top: 0.85rem;
+  }
+}
+
+@media (max-width: 420px) {
+  body.theme-wedding .lobby-templates-grid {
+    grid-template-columns: 1fr;
+  }
+  body.theme-wedding .lobby-template-preview {
+    height: 220px;
+    min-height: 220px;
+  }
+  body.theme-wedding .studio-nav-center .studio-tool-cluster {
+    display: none;
+  }
 }
 
 
