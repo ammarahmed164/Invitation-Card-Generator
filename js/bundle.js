@@ -7883,6 +7883,7 @@
       this.inStudio = false;
       document.body.classList.add('mode-lobby');
       document.body.classList.remove('mode-studio');
+      this.hideMobileEditHint();
   
       const lobby = document.getElementById('atelier-lobby');
       const header = document.getElementById('studio-header');
@@ -7902,6 +7903,22 @@
         this.applySectionTheme(null);
         this.renderLobbySections();
       }
+    }
+  
+    showMobileEditHint() {
+      const hint = document.getElementById('studio-mobile-hint');
+      if (!hint || !this.isMobileStudio()) {
+        hint?.classList.add('is-hidden');
+        return;
+      }
+      hint.classList.remove('is-hidden');
+      clearTimeout(this._mobileHintTimer);
+      this._mobileHintTimer = setTimeout(() => this.hideMobileEditHint(), 10000);
+    }
+  
+    hideMobileEditHint() {
+      clearTimeout(this._mobileHintTimer);
+      document.getElementById('studio-mobile-hint')?.classList.add('is-hidden');
     }
   
     enterStudio(template) {
@@ -7924,6 +7941,7 @@
       this.renderInspector(null);
       this.closeStudioDrawers();
       requestAnimationFrame(() => this.fitCanvasToViewport());
+      this.showMobileEditHint();
     }
   
     renderLobbySections() {
@@ -8273,6 +8291,7 @@
       document.body.classList.toggle('drawer-tools-open', which === 'tools');
       document.body.classList.toggle('drawer-inspector-open', which === 'inspector');
       document.body.classList.toggle('studio-drawer-open', which === 'tools' || which === 'inspector');
+      if (which === 'tools' || which === 'inspector') this.hideMobileEditHint();
     }
   
     closeStudioDrawers() {
@@ -8314,12 +8333,22 @@
         this.closeStudioDrawers();
         this.exporter.shareToWhatsApp();
       });
+      document.getElementById('btn-mobile-hint-tools')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.switchLeftTab('text');
+        this.openStudioDrawer('tools');
+      });
   
       let resizeTimer = null;
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-          if (!this.isMobileStudio()) this.closeStudioDrawers();
+          if (!this.isMobileStudio()) {
+            this.closeStudioDrawers();
+            this.hideMobileEditHint();
+          } else if (this.inStudio) {
+            this.showMobileEditHint();
+          }
           if (this.inStudio) this.fitCanvasToViewport();
         }, 120);
       });
@@ -9296,6 +9325,7 @@
   
       if (window.innerWidth <= 1024) {
         this.openStudioDrawer('tools');
+        this.hideMobileEditHint();
       }
   
       const luxuryColors = [
@@ -9323,7 +9353,7 @@
           <!-- Done / Back Button -->
           <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            <span>Done • Back to Suite</span>
+            <span>${this.isMobileStudio() ? 'Done' : 'Done • Back to Suite'}</span>
           </button>
   
           <!-- Header -->
@@ -9582,7 +9612,7 @@
           <!-- Done / Back Button -->
           <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            <span>Done • Back to Suite</span>
+            <span>${this.isMobileStudio() ? 'Done' : 'Done • Back to Suite'}</span>
           </button>
   
           <div class="live-edit-dock-header">
@@ -9679,7 +9709,7 @@
           <!-- Done / Back Button -->
           <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            <span>Done • Back to Suite</span>
+            <span>${this.isMobileStudio() ? 'Done' : 'Done • Back to Suite'}</span>
           </button>
   
           <div class="live-edit-dock-header">
@@ -9736,7 +9766,7 @@
           <!-- Done / Back Button -->
           <button type="button" id="dock-done-btn" class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-zinc-950 font-serif font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 mb-3 cursor-pointer">
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            <span>Done • Back to Suite</span>
+            <span>${this.isMobileStudio() ? 'Done' : 'Done • Back to Suite'}</span>
           </button>
   
           <div class="live-edit-dock-header">
