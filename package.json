@@ -7,7 +7,10 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "build": "node build.js"
+    "build": "node build.js",
+    "build:wedding": "node build.js --section=wedding",
+    "pack:wedding": "node scripts/pack-etsy-section.mjs wedding",
+    "pack:section": "node scripts/pack-etsy-section.mjs"
   },
   "engines": {
     "node": ">=18"

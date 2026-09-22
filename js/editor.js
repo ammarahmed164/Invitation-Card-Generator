@@ -1015,26 +1015,30 @@ export class CardEditor {
       if (align === 'left') justifyClass = 'justify-start';
       else if (align === 'right') justifyClass = 'justify-end';
 
-      // Single-line names use block + line-height centering (html2canvas-stable).
-      // Multi-line keeps flex. Foil class lives on inner span so it never kills layout display.
+      // Keep Guest-View / Studio fidelity: flex center + visible overflow so script
+      // name glyphs (Great Vibes ascenders/descenders) are never clipped.
+      const justifyContent = align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center';
       const layoutStyles = shouldNoWrap
         ? `
-          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: ${justifyContent};
           width: 100%;
           height: 100%;
-          line-height: ${Math.max(1, el.height || (el.fontSize || 14))}px;
           white-space: nowrap;
-          overflow: hidden;
-          text-overflow: clip;
+          overflow: visible;
+          line-height: ${el.lineHeight || 1.15};
         `
         : `
           display: flex;
           align-items: center;
+          justify-content: ${justifyContent};
           width: 100%;
           height: 100%;
           white-space: pre-wrap;
           word-break: keep-all;
           overflow-wrap: normal;
+          overflow: visible;
           line-height: ${el.lineHeight || 1.3};
         `;
 
@@ -1050,11 +1054,10 @@ export class CardEditor {
         ${layoutStyles}
       `;
 
-      const nowrapClass = shouldNoWrap ? 'is-text-nowrap' : justifyClass;
       const textHtml = this.formatTextHtml(el.content, { allowBreaks: !shouldNoWrap });
 
       contentHTML = `
-        <div class="text-content-inner w-full h-full ${nowrapClass}" style="${styles}">
+        <div class="text-content-inner w-full h-full ${justifyClass}${shouldNoWrap ? ' is-text-nowrap' : ''}" style="${styles}">
           <span class="text-foil-run ${foilClass}">${textHtml}</span>
         </div>
       `;

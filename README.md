@@ -94,22 +94,29 @@ Then open [http://localhost:3000](http://localhost:3000) in your web browser.
 
 ---
 
-## ☁️ Deploy on Vercel (recommended)
+## ☁️ Deploy on Vercel (Wedding only)
 
 This app is a **static** studio (HTML/CSS/JS). Do **not** choose the Node.js framework preset.
 
+Vercel is configured to deploy **only the Wedding section**.
+
 1. Import the GitHub repo on [Vercel](https://vercel.com/new)
 2. Set **Framework Preset** → **Other**
-3. **Build Command** → `node build.js` (already in `vercel.json`)
-4. Leave **Output Directory** empty (project root)
+3. **Build Command** → `node build.js --section=wedding` (already in `vercel.json`)
+4. **Output Directory** → `public`
 5. Deploy
 
-`vercel.json` is already configured so Vercel serves `index.html` + assets correctly (no `server.js` on production).
+Local commands:
+- Full studio (all sections): `npm run build`
+- Wedding-only (same as Vercel): `npm run build:wedding`
+
+Master source files still keep **all** sections for later Etsy packs.
 
 ---
 
 ## 💼 How to Sell on Etsy
 
-1. **Instant PDF Delivery**: Provide a branded PDF in your Etsy digital download containing your studio link (e.g. hosted on GitHub Pages, Vercel, or your custom domain).
-2. **Zero Maintenance**: 100% client-side HTML5/CSS/Tailwind/ES Modules architecture — zero complex server dependencies or recurring software costs.
+1. **ZIP delivery (recommended)**: Run `npm run pack:wedding` to generate a Wedding-only buyer ZIP at `etsy-releases/Wedding-Invitation-Builder.zip`. Upload that ZIP to Etsy. The master project keeps **all** sections for later packs (`npm run pack:section soiree`, etc.).
+2. **Instant PDF Delivery (optional)**: Provide a branded PDF containing a hosted studio link if you prefer link delivery instead of ZIP.
+3. **Zero Maintenance**: 100% client-side HTML5/CSS — buyers open `index.html` (double-click); no server required.
 

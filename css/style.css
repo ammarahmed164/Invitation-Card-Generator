@@ -85,20 +85,21 @@
   box-sizing: border-box;
   min-width: 0;
   max-width: 100%;
+  overflow: visible !important;
 }
 
 .text-content-inner.is-text-nowrap {
-  /* Single-line names: html2canvas-stable block centering */
-  display: block !important;
-  overflow: hidden;
-  text-overflow: clip;
+  white-space: nowrap;
+  overflow: visible !important;
 }
 
 .text-foil-run {
   display: inline-block;
-  max-width: 100%;
+  max-width: none;
   vertical-align: middle;
   box-sizing: border-box;
+  overflow: visible;
+  line-height: inherit;
 }
 
 .foil-gold {
@@ -2399,6 +2400,648 @@ body.mode-lobby {
   #guest-experience-modal > div {
     max-width: 100%;
   }
+}
+
+/* ==========================================================================
+   Wedding Atelier — professional off-white theme (Wedding section ONLY)
+   Activated via body.theme-wedding from app.js — other sections unchanged
+   ========================================================================== */
+body.theme-wedding {
+  --wed-paper: #f5f3ef;
+  --wed-paper-deep: #ebe7e0;
+  --wed-ink: #1c1917;
+  --wed-ink-soft: #3d3832;
+  --wed-muted: #6e675e;
+  --wed-line: rgba(28, 25, 23, 0.12);
+  --wed-line-strong: rgba(28, 25, 23, 0.18);
+  --wed-accent: #9a8458;
+  --wed-accent-deep: #7a6844;
+  --wed-accent-soft: rgba(154, 132, 88, 0.14);
+  --wed-card: #fffcf7;
+  --wed-field: #ffffff;
+  --wed-shadow: 0 16px 40px rgba(28, 25, 23, 0.07);
+  --wed-shadow-lg: 0 24px 56px rgba(28, 25, 23, 0.1);
+  color: var(--wed-ink);
+  background-color: var(--wed-paper);
+}
+
+body.theme-wedding.mode-lobby,
+body.theme-wedding.mode-studio {
+  background-color: var(--wed-paper);
+}
+
+body.theme-wedding ::-webkit-scrollbar-track { background: #e6e2da; }
+body.theme-wedding ::-webkit-scrollbar-thumb { background: #bdb6ab; }
+body.theme-wedding ::-webkit-scrollbar-thumb:hover { background: #9a9286; }
+
+/* Hide “All collections” in wedding — avoids empty/broken back view */
+body.theme-wedding #btn-lobby-back,
+body.theme-wedding .lobby-back-btn {
+  display: none !important;
+}
+
+/* —— Lobby —— */
+body.theme-wedding .atelier-lobby {
+  color: var(--wed-ink);
+  background: var(--wed-paper);
+}
+
+body.theme-wedding .lobby-atmosphere {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(154, 132, 88, 0.12), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 100% 80%, rgba(235, 231, 224, 0.95), transparent 55%),
+    linear-gradient(165deg, #faf8f4 0%, #f2efe9 48%, #ebe6de 100%);
+}
+
+body.theme-wedding .lobby-grain {
+  opacity: 0.1;
+  mix-blend-mode: multiply;
+}
+
+body.theme-wedding .lobby-pill {
+  border-color: var(--wed-line-strong);
+  color: var(--wed-accent-deep);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+body.theme-wedding .lobby-eyebrow {
+  color: var(--wed-accent-deep);
+  letter-spacing: 0.32em;
+}
+
+body.theme-wedding .lobby-title {
+  color: var(--wed-ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+body.theme-wedding .lobby-lead {
+  color: var(--wed-muted);
+  font-style: normal;
+  max-width: 36rem;
+}
+
+body.theme-wedding .lobby-templates-head {
+  border-bottom: 1px solid var(--wed-line);
+  padding-bottom: 1.35rem;
+  margin-bottom: 1.85rem;
+}
+
+body.theme-wedding .lobby-template-card {
+  border: 1px solid var(--wed-line);
+  background: var(--wed-card);
+  box-shadow: var(--wed-shadow);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+body.theme-wedding .lobby-template-card::before {
+  background: linear-gradient(135deg, rgba(154, 132, 88, 0.4), transparent 42%, transparent 70%, rgba(154, 132, 88, 0.15));
+  opacity: 0.5;
+}
+
+body.theme-wedding .lobby-template-card:hover,
+body.theme-wedding .lobby-template-card:focus-visible {
+  transform: translateY(-6px);
+  border-color: rgba(154, 132, 88, 0.4);
+  box-shadow: var(--wed-shadow-lg);
+}
+
+body.theme-wedding .lobby-template-preview {
+  background: linear-gradient(180deg, #f0ebe3, #e8e2d8);
+  border-bottom: 1px solid var(--wed-line);
+  min-height: 210px;
+}
+
+body.theme-wedding .lobby-template-badge {
+  background: rgba(255, 252, 247, 0.95);
+  color: var(--wed-accent-deep);
+  border: 1px solid var(--wed-line);
+  font-weight: 600;
+}
+
+body.theme-wedding .lobby-template-meta {
+  background: var(--wed-card);
+  padding: 1rem 1.05rem 1.15rem;
+}
+
+body.theme-wedding .lobby-template-title {
+  color: var(--wed-ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+body.theme-wedding .lobby-template-style {
+  color: var(--wed-muted);
+}
+
+body.theme-wedding .lobby-template-action {
+  color: var(--wed-accent-deep);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+/* Wedding card on dark home lobby */
+.lobby-section-card--wedding {
+  border-color: rgba(247, 246, 243, 0.4);
+  background: linear-gradient(165deg, rgba(255, 252, 248, 0.16), transparent 42%), #141210;
+}
+.lobby-section-card--wedding .lobby-section-veil {
+  background: linear-gradient(180deg, rgba(20, 18, 16, 0.12) 0%, rgba(20, 18, 16, 0.4) 40%, rgba(245, 243, 239, 0.94) 100%);
+}
+.lobby-section-card--wedding .lobby-section-index { color: #9a8458; }
+.lobby-section-card--wedding .lobby-section-name { color: #1c1917; }
+.lobby-section-card--wedding .lobby-section-tag { color: rgba(28, 25, 23, 0.62); }
+.lobby-section-card--wedding .lobby-section-count {
+  color: rgba(28, 25, 23, 0.55);
+  border-color: rgba(28, 25, 23, 0.12);
+  background: rgba(255, 255, 255, 0.6);
+}
+.lobby-section-card--wedding .lobby-section-cta { color: #7a6844; }
+
+/* —— Studio header —— */
+body.theme-wedding .studio-header {
+  background: linear-gradient(180deg, #fffcf7 0%, #f5f3ef 100%);
+  border-bottom: 1px solid var(--wed-line);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 10px 28px rgba(28, 25, 23, 0.04);
+}
+body.theme-wedding .studio-header::before {
+  background: linear-gradient(90deg, transparent, rgba(154, 132, 88, 0.45) 25%, rgba(154, 132, 88, 0.65) 50%, rgba(154, 132, 88, 0.45) 75%, transparent);
+}
+body.theme-wedding .studio-header::after {
+  background: radial-gradient(ellipse 40% 120% at 10% 0%, rgba(154, 132, 88, 0.07), transparent 55%);
+}
+body.theme-wedding .studio-collections-btn {
+  border-color: var(--wed-line-strong);
+  background: #fff;
+  color: var(--wed-ink-soft);
+}
+body.theme-wedding .studio-collections-btn:hover {
+  border-color: var(--wed-accent);
+  color: var(--wed-ink);
+  background: var(--wed-paper);
+}
+body.theme-wedding .studio-brand-rule { background: var(--wed-line); }
+body.theme-wedding .studio-brand-mark {
+  background: var(--wed-ink);
+  color: var(--wed-paper);
+}
+body.theme-wedding .studio-suite-title { color: var(--wed-ink); }
+body.theme-wedding .studio-suite-badge { color: var(--wed-muted); }
+body.theme-wedding .studio-side-toggle {
+  background: rgba(28, 25, 23, 0.05);
+  border: 1px solid var(--wed-line);
+}
+body.theme-wedding .studio-side-btn { color: var(--wed-muted); }
+body.theme-wedding .studio-side-btn.is-active {
+  background: #fff;
+  color: var(--wed-ink);
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.08);
+}
+body.theme-wedding .studio-tool-divider { background: var(--wed-line); }
+body.theme-wedding .studio-icon-btn {
+  border-color: var(--wed-line);
+  background: #fff;
+  color: var(--wed-ink-soft);
+}
+body.theme-wedding .studio-icon-btn:hover {
+  border-color: var(--wed-accent);
+  color: var(--wed-ink);
+}
+body.theme-wedding .studio-nav-actions .studio-icon-btn,
+body.theme-wedding #btn-export-menu {
+  border-color: var(--wed-line-strong);
+  color: var(--wed-ink-soft);
+}
+
+/* Guest View nav button — fully visible on off-white header */
+body.theme-wedding #btn-guest-preview,
+body.theme-wedding .studio-preview-btn {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: 2.15rem;
+  padding: 0 0.95rem;
+  border: 1px solid rgba(154, 132, 88, 0.45) !important;
+  background: linear-gradient(145deg, #fffdf9 0%, #f3ebe0 55%, #e8dcc8 100%) !important;
+  color: #1c1917 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em;
+  box-shadow: 0 2px 10px rgba(28, 25, 23, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+body.theme-wedding #btn-guest-preview svg,
+body.theme-wedding .studio-preview-btn svg {
+  color: #7a6844 !important;
+  stroke: #7a6844 !important;
+  flex-shrink: 0;
+}
+body.theme-wedding #btn-guest-preview .studio-nav-chip-label,
+body.theme-wedding .studio-preview-btn .studio-nav-chip-label {
+  color: #1c1917 !important;
+  display: inline !important;
+}
+body.theme-wedding #btn-guest-preview:hover,
+body.theme-wedding .studio-preview-btn:hover {
+  background: linear-gradient(145deg, #fff9f0 0%, #ebe0ce 50%, #dcc9a8 100%) !important;
+  border-color: #9a8458 !important;
+  color: #1c1917 !important;
+  box-shadow: 0 4px 16px rgba(154, 132, 88, 0.22);
+  transform: translateY(-1px);
+}
+
+body.theme-wedding .studio-export-btn {
+  background: var(--wed-ink);
+  color: #faf8f4;
+  border-color: var(--wed-ink);
+}
+body.theme-wedding .studio-export-btn:hover { background: #2f2a26; }
+
+/* —— Sidebars + canvas —— */
+body.theme-wedding #sidebar-left.studio-sidebar-left,
+body.theme-wedding #sidebar-right.studio-sidebar-right {
+  background: #fffcf7 !important;
+  border-color: var(--wed-line) !important;
+  color: var(--wed-ink) !important;
+}
+body.theme-wedding .studio-tab-rail {
+  background: #ebe7e0 !important;
+  border-color: var(--wed-line) !important;
+}
+body.theme-wedding .studio-tab-rail .tab-btn { color: var(--wed-muted) !important; }
+body.theme-wedding .studio-tab-rail .tab-btn:hover {
+  color: var(--wed-ink) !important;
+  background: rgba(255, 255, 255, 0.75);
+}
+body.theme-wedding .studio-tab-rail .tab-btn.text-amber-400 {
+  color: var(--wed-ink) !important;
+  background: #fff !important;
+  box-shadow: 0 1px 4px rgba(28, 25, 23, 0.08);
+}
+
+body.theme-wedding #canvas-outer-stage {
+  background: linear-gradient(180deg, #efebe4 0%, #e5e0d7 100%) !important;
+}
+body.theme-wedding #canvas-outer-stage > .absolute.inset-0 {
+  background-image: radial-gradient(rgba(28, 25, 23, 0.055) 1px, transparent 1px) !important;
+  background-size: 22px 22px !important;
+  opacity: 0.65 !important;
+}
+body.theme-wedding .canvas-viewport-dock {
+  background: rgba(255, 252, 247, 0.96);
+  border: 1px solid var(--wed-line);
+  box-shadow: var(--wed-shadow);
+}
+body.theme-wedding .dock-btn,
+body.theme-wedding .dock-zoom-btn,
+body.theme-wedding .dock-zoom-reset { color: var(--wed-ink-soft); }
+body.theme-wedding .dock-btn.is-on {
+  color: var(--wed-ink);
+  background: var(--wed-accent-soft);
+}
+body.theme-wedding .dock-zoom-val { color: var(--wed-ink); }
+body.theme-wedding .studio-mobile-bar {
+  background: rgba(255, 252, 247, 0.97);
+  border-top: 1px solid var(--wed-line);
+}
+body.theme-wedding .studio-mobile-bar-btn { color: var(--wed-ink-soft); }
+body.theme-wedding #btn-mobile-guest {
+  color: #1c1917 !important;
+  background: linear-gradient(145deg, #fffdf9, #ebe0ce) !important;
+  border: 1px solid rgba(154, 132, 88, 0.35);
+  border-radius: 0.65rem;
+}
+body.theme-wedding #btn-mobile-guest svg {
+  color: #7a6844 !important;
+  stroke: #7a6844 !important;
+}
+
+/* —— Customization dock + panels: FORCE readable contrast —— */
+body.theme-wedding .live-edit-dock {
+  background: linear-gradient(180deg, #fffcf7 0%, #f7f4ef 100%) !important;
+  color: var(--wed-ink) !important;
+  border-bottom: 1px solid var(--wed-line) !important;
+}
+body.theme-wedding .live-edit-dock-header {
+  border-bottom-color: var(--wed-line) !important;
+}
+body.theme-wedding .live-edit-dock-title {
+  color: var(--wed-ink) !important;
+  font-family: 'Cormorant Garamond', serif;
+}
+body.theme-wedding .live-edit-dock-sub {
+  color: var(--wed-muted) !important;
+}
+body.theme-wedding .live-edit-dock-close {
+  border-color: var(--wed-line-strong) !important;
+  background: #fff !important;
+  color: var(--wed-ink-soft) !important;
+}
+body.theme-wedding .live-edit-dock-close:hover {
+  background: #f5ebe8 !important;
+  border-color: #c45c4a !important;
+  color: #9b2c1f !important;
+}
+body.theme-wedding .live-edit-dock textarea,
+body.theme-wedding .live-edit-dock input[type="text"],
+body.theme-wedding .live-edit-dock input[type="url"],
+body.theme-wedding .live-edit-dock input[type="number"],
+body.theme-wedding .live-edit-dock select {
+  background: var(--wed-field) !important;
+  color: var(--wed-ink) !important;
+  border: 1px solid var(--wed-line-strong) !important;
+  box-shadow: none !important;
+}
+body.theme-wedding .live-edit-dock textarea:focus,
+body.theme-wedding .live-edit-dock input:focus,
+body.theme-wedding .live-edit-dock select:focus {
+  border-color: var(--wed-accent) !important;
+  box-shadow: 0 0 0 3px var(--wed-accent-soft) !important;
+}
+body.theme-wedding .live-edit-dock-btn {
+  background: var(--wed-accent-soft) !important;
+  border-color: rgba(154, 132, 88, 0.35) !important;
+  color: var(--wed-accent-deep) !important;
+}
+body.theme-wedding .live-edit-dock-btn:hover {
+  background: rgba(154, 132, 88, 0.22) !important;
+}
+body.theme-wedding .live-edit-dock-btn--primary {
+  background: linear-gradient(135deg, #8c7548, #b59a68) !important;
+  color: #fffaf2 !important;
+  border-color: transparent !important;
+}
+
+/* Shared panel text / field readability (left, right, dock) */
+body.theme-wedding #sidebar-left-content,
+body.theme-wedding #sidebar-right-content,
+body.theme-wedding #live-edit-dock {
+  color: var(--wed-ink-soft) !important;
+}
+body.theme-wedding #sidebar-left-content :is(h1, h2, h3, h4, h5, p, label, li, strong, small, span, div, button),
+body.theme-wedding #sidebar-right-content :is(h1, h2, h3, h4, h5, p, label, li, strong, small, span, div, button),
+body.theme-wedding #live-edit-dock :is(h1, h2, h3, h4, h5, p, label, li, strong, small, span, div, button) {
+  color: inherit;
+}
+body.theme-wedding #sidebar-left .text-white,
+body.theme-wedding #sidebar-right .text-white,
+body.theme-wedding #live-edit-dock .text-white,
+body.theme-wedding #sidebar-left .text-zinc-100,
+body.theme-wedding #sidebar-right .text-zinc-100,
+body.theme-wedding #live-edit-dock .text-zinc-100,
+body.theme-wedding #sidebar-left .text-zinc-200,
+body.theme-wedding #sidebar-right .text-zinc-200,
+body.theme-wedding #live-edit-dock .text-zinc-200,
+body.theme-wedding #sidebar-left .text-zinc-300,
+body.theme-wedding #sidebar-right .text-zinc-300,
+body.theme-wedding #live-edit-dock .text-zinc-300,
+body.theme-wedding #sidebar-left .text-amber-300,
+body.theme-wedding #sidebar-right .text-amber-300,
+body.theme-wedding #live-edit-dock .text-amber-300,
+body.theme-wedding #sidebar-left .text-amber-400,
+body.theme-wedding #sidebar-right .text-amber-400,
+body.theme-wedding #live-edit-dock .text-amber-400,
+body.theme-wedding #sidebar-left .text-amber-200,
+body.theme-wedding #sidebar-right .text-amber-200,
+body.theme-wedding #live-edit-dock .text-amber-200 {
+  color: var(--wed-ink) !important;
+}
+body.theme-wedding #sidebar-left .text-zinc-400,
+body.theme-wedding #sidebar-right .text-zinc-400,
+body.theme-wedding #live-edit-dock .text-zinc-400,
+body.theme-wedding #sidebar-left .text-zinc-500,
+body.theme-wedding #sidebar-right .text-zinc-500,
+body.theme-wedding #live-edit-dock .text-zinc-500,
+body.theme-wedding #sidebar-left .text-zinc-600,
+body.theme-wedding #sidebar-right .text-zinc-600,
+body.theme-wedding #live-edit-dock .text-zinc-600 {
+  color: var(--wed-muted) !important;
+}
+
+body.theme-wedding #sidebar-left :is(input, select, textarea),
+body.theme-wedding #sidebar-right :is(input, select, textarea),
+body.theme-wedding #live-edit-dock :is(input, select, textarea) {
+  background-color: var(--wed-field) !important;
+  color: var(--wed-ink) !important;
+  border-color: var(--wed-line-strong) !important;
+}
+body.theme-wedding #sidebar-left :is(input, select, textarea)::placeholder,
+body.theme-wedding #sidebar-right :is(input, select, textarea)::placeholder,
+body.theme-wedding #live-edit-dock :is(input, select, textarea)::placeholder {
+  color: #9a938a !important;
+}
+
+body.theme-wedding #sidebar-left [class*="bg-zinc-"],
+body.theme-wedding #sidebar-right [class*="bg-zinc-"],
+body.theme-wedding #live-edit-dock [class*="bg-zinc-"],
+body.theme-wedding #sidebar-left [class*="bg-black"],
+body.theme-wedding #sidebar-right [class*="bg-black"],
+body.theme-wedding #live-edit-dock [class*="bg-black"] {
+  background-color: #fff !important;
+}
+body.theme-wedding #sidebar-left [class*="border-zinc-"],
+body.theme-wedding #sidebar-right [class*="border-zinc-"],
+body.theme-wedding #live-edit-dock [class*="border-zinc-"],
+body.theme-wedding #sidebar-left [class*="border-amber-"],
+body.theme-wedding #sidebar-right [class*="border-amber-"],
+body.theme-wedding #live-edit-dock [class*="border-amber-"] {
+  border-color: var(--wed-line-strong) !important;
+}
+
+body.theme-wedding .section-pill {
+  background: #fff !important;
+  color: var(--wed-muted) !important;
+  border-color: var(--wed-line) !important;
+}
+body.theme-wedding .section-pill.bg-amber-500\/20,
+body.theme-wedding .section-pill.text-amber-300 {
+  background: var(--wed-accent-soft) !important;
+  color: var(--wed-ink) !important;
+  border-color: rgba(154, 132, 88, 0.35) !important;
+}
+body.theme-wedding #btn-sidebar-open-lobby {
+  background: var(--wed-accent-soft) !important;
+  color: var(--wed-ink) !important;
+  border-color: rgba(154, 132, 88, 0.3) !important;
+}
+
+/* Active chips / selected controls stay clear on light UI */
+body.theme-wedding #live-edit-dock .bg-amber-500\/20,
+body.theme-wedding #live-edit-dock .bg-amber-500\/10,
+body.theme-wedding #sidebar-left .bg-amber-500\/20,
+body.theme-wedding #sidebar-right .bg-amber-500\/20 {
+  background-color: var(--wed-accent-soft) !important;
+}
+body.theme-wedding #live-edit-dock .border-amber-500,
+body.theme-wedding #live-edit-dock .border-amber-500\/50,
+body.theme-wedding #sidebar-left .border-amber-500,
+body.theme-wedding #sidebar-right .border-amber-500 {
+  border-color: rgba(154, 132, 88, 0.55) !important;
+}
+
+/* ==========================================================================
+   Wedding — Guest View modal (professional off-white atelier)
+   ========================================================================== */
+body.theme-wedding #guest-experience-modal {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(154, 132, 88, 0.14), transparent 55%),
+    linear-gradient(165deg, rgba(245, 243, 239, 0.97) 0%, rgba(232, 226, 216, 0.96) 100%) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+body.theme-wedding #guest-experience-modal #close-guest-modal {
+  background: #fffcf7 !important;
+  color: #3d3832 !important;
+  border: 1px solid rgba(28, 25, 23, 0.14) !important;
+  box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+}
+body.theme-wedding #guest-experience-modal #close-guest-modal:hover {
+  background: #fff !important;
+  color: #1c1917 !important;
+  border-color: rgba(154, 132, 88, 0.45) !important;
+}
+
+body.theme-wedding #guest-experience-modal > .relative > .mb-3 {
+  background: rgba(255, 252, 247, 0.95) !important;
+  border: 1px solid rgba(154, 132, 88, 0.35) !important;
+  color: #7a6844 !important;
+  box-shadow: 0 2px 12px rgba(28, 25, 23, 0.05);
+}
+body.theme-wedding #guest-experience-modal > .relative > .mb-3 .bg-amber-400 {
+  background-color: #9a8458 !important;
+}
+
+body.theme-wedding #guest-experience-modal #btn-flip-card {
+  background: #fffcf7 !important;
+  border: 1px solid rgba(28, 25, 23, 0.14) !important;
+  color: #1c1917 !important;
+  box-shadow: 0 4px 14px rgba(28, 25, 23, 0.06);
+}
+body.theme-wedding #guest-experience-modal #btn-flip-card:hover {
+  background: #fff !important;
+  border-color: rgba(154, 132, 88, 0.45) !important;
+}
+body.theme-wedding #guest-experience-modal #btn-flip-card svg {
+  color: #9a8458 !important;
+  stroke: #9a8458 !important;
+}
+
+body.theme-wedding #guest-experience-modal #btn-guest-rsvp {
+  background: linear-gradient(145deg, #8c7548 0%, #b59a68 45%, #9a8458 100%) !important;
+  color: #fffaf2 !important;
+  border: none !important;
+  box-shadow: 0 8px 22px rgba(154, 132, 88, 0.28) !important;
+}
+body.theme-wedding #guest-experience-modal #btn-guest-rsvp:hover {
+  filter: brightness(1.05);
+}
+body.theme-wedding #guest-experience-modal #btn-guest-rsvp svg,
+body.theme-wedding #guest-experience-modal #btn-guest-rsvp span {
+  color: #fffaf2 !important;
+  stroke: #fffaf2 !important;
+}
+
+body.theme-wedding #guest-experience-modal #btn-add-calendar,
+body.theme-wedding #guest-experience-modal #btn-open-maps {
+  background: #fffcf7 !important;
+  border: 1px solid rgba(28, 25, 23, 0.12) !important;
+  color: #3d3832 !important;
+  box-shadow: 0 2px 10px rgba(28, 25, 23, 0.04);
+}
+body.theme-wedding #guest-experience-modal #btn-add-calendar:hover,
+body.theme-wedding #guest-experience-modal #btn-open-maps:hover {
+  background: #fff !important;
+  color: #1c1917 !important;
+  border-color: rgba(154, 132, 88, 0.4) !important;
+}
+body.theme-wedding #guest-experience-modal #btn-add-calendar svg,
+body.theme-wedding #guest-experience-modal #btn-open-maps svg {
+  color: #9a8458 !important;
+  stroke: #9a8458 !important;
+}
+
+body.theme-wedding #guest-experience-modal .text-zinc-400.font-serif,
+body.theme-wedding #guest-experience-modal .text-center.text-\[11px\].text-zinc-400 {
+  color: #6e675e !important;
+}
+body.theme-wedding #guest-experience-modal .text-amber-400\/80,
+body.theme-wedding #guest-experience-modal .text-zinc-600 {
+  color: #9a8458 !important;
+}
+
+body.theme-wedding #guest-experience-modal #envelope-seal-btn > span {
+  background: rgba(255, 252, 247, 0.92) !important;
+  border: 1px solid rgba(154, 132, 88, 0.35) !important;
+  color: #7a6844 !important;
+}
+
+/* RSVP drawer — wedding paper card */
+body.theme-wedding #guest-rsvp-drawer {
+  background: rgba(28, 25, 23, 0.35) !important;
+  backdrop-filter: blur(10px);
+}
+body.theme-wedding #guest-rsvp-drawer .guest-rsvp-card,
+body.theme-wedding #guest-rsvp-drawer > div {
+  background: linear-gradient(180deg, #fffcf7 0%, #f5f1ea 100%) !important;
+  border: 1px solid rgba(154, 132, 88, 0.3) !important;
+  box-shadow: 0 24px 60px rgba(28, 25, 23, 0.18) !important;
+  color: #1c1917 !important;
+}
+body.theme-wedding #guest-rsvp-drawer #close-rsvp-drawer {
+  background: #fff !important;
+  color: #3d3832 !important;
+  border: 1px solid rgba(28, 25, 23, 0.12);
+}
+body.theme-wedding #guest-rsvp-drawer #close-rsvp-drawer:hover {
+  color: #1c1917 !important;
+  background: #f5f1ea !important;
+}
+body.theme-wedding #guest-rsvp-drawer h3,
+body.theme-wedding #guest-rsvp-drawer label,
+body.theme-wedding #guest-rsvp-drawer .text-zinc-100,
+body.theme-wedding #guest-rsvp-drawer .text-zinc-300 {
+  color: #1c1917 !important;
+}
+body.theme-wedding #guest-rsvp-drawer .text-amber-400,
+body.theme-wedding #guest-rsvp-drawer .text-amber-400 font-semibold {
+  color: #7a6844 !important;
+}
+body.theme-wedding #guest-rsvp-drawer .text-zinc-400,
+body.theme-wedding #guest-rsvp-drawer .text-zinc-500,
+body.theme-wedding #guest-rsvp-drawer p {
+  color: #6e675e !important;
+}
+body.theme-wedding #guest-rsvp-drawer input,
+body.theme-wedding #guest-rsvp-drawer textarea,
+body.theme-wedding #guest-rsvp-drawer select {
+  background: #fff !important;
+  color: #1c1917 !important;
+  border-color: rgba(28, 25, 23, 0.16) !important;
+}
+body.theme-wedding #guest-rsvp-drawer input::placeholder,
+body.theme-wedding #guest-rsvp-drawer textarea::placeholder {
+  color: #9a938a !important;
+}
+body.theme-wedding #guest-rsvp-drawer .rsvp-attend-btn,
+body.theme-wedding #guest-rsvp-drawer .rsvp-count-btn {
+  background: #fff !important;
+  border-color: rgba(28, 25, 23, 0.14) !important;
+  color: #3d3832 !important;
+}
+body.theme-wedding #guest-rsvp-drawer .rsvp-attend-btn.is-active,
+body.theme-wedding #guest-rsvp-drawer .rsvp-count-btn.is-active {
+  background: rgba(154, 132, 88, 0.16) !important;
+  border-color: rgba(154, 132, 88, 0.55) !important;
+  color: #1c1917 !important;
+}
+body.theme-wedding #guest-rsvp-drawer button[type="submit"],
+body.theme-wedding #guest-rsvp-drawer #rsvp-submit-btn {
+  background: linear-gradient(145deg, #8c7548, #b59a68) !important;
+  color: #fffaf2 !important;
+  border: none !important;
 }
 
 

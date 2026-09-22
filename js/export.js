@@ -138,9 +138,169 @@ export class CardExporter {
   }
 
   /**
-   * Captures an exact card side directly with 100% Live-Preview & Guest-View fidelity.
-   * Uses an isolated 400x560 stage attached directly to body, ensuring zero clipping,
-   * zero white bottom bars, and preserving background artwork on both front and back.
+   * Rasterize text nodes to images so export matches Guest View
+   * (avoids html2canvas clipping/mis-aligning script + foil fonts).
+   */
+  async rasterizeTextsForExport(stage) {
+    const textNodes = [...stage.querySelectorAll('.canvas-element[data-el-type="text"]')];
+    const dpr = 3;
+
+    for (const elNode of textNodes) {
+      const inner = elNode.querySelector('.text-content-inner');
+      const run = elNode.querySelector('.text-foil-run') || inner;
+      if (!inner || !run) continue;
+
+      const raw = (run.innerText || run.textContent || '').replace(/\r\n/g, '\n');
+      if (!raw.trim()) continue;
+
+      const lines = raw.split('\n');
+      const cs = window.getComputedStyle(run);
+      const parentCs = window.getComputedStyle(inner);
+      const boxW = Math.max(1, elNode.offsetWidth || parseFloat(elNode.style.width) || 100);
+      const boxH = Math.max(1, elNode.offsetHeight || parseFloat(elNode.style.height) || 40);
+      const fontSize = parseFloat(cs.fontSize) || 16;
+      const font = `${cs.fontStyle || 'normal'} ${cs.fontWeight || '400'} ${fontSize}px ${cs.fontFamily || 'serif'}`;
+      const align = (parentCs.textAlign || cs.textAlign || 'center').toLowerCase();
+      const letterSpacing = cs.letterSpacing;
+      const lineHeightRaw = parentCs.lineHeight;
+      const lineHeight = (!lineHeightRaw || lineHeightRaw === 'normal')
+        ? fontSize * 1.2
+        : (parseFloat(lineHeightRaw) || fontSize * 1.2);
+      const isFoilGold = run.classList.contains('foil-gold');
+      const isFoilRose = run.classList.contains('foil-rose');
+      const isFoilSilver = run.classList.contains('foil-silver');
+
+      const measureCanvas = document.createElement('canvas');
+      const measureCtx = measureCanvas.getContext('2d');
+      measureCtx.font = font;
+      if (letterSpacing && letterSpacing !== 'normal' && 'letterSpacing' in measureCtx) {
+        measureCtx.letterSpacing = letterSpacing;
+      }
+
+      let maxLineW = 0;
+      let totalAscent = 0;
+      let totalDescent = 0;
+      lines.forEach((line, idx) => {
+        const m = measureCtx.measureText(line || ' ');
+        maxLineW = Math.max(maxLineW, m.width || 0);
+        const ascent = m.actualBoundingBoxAscent ?? fontSize * 0.85;
+        const descent = m.actualBoundingBoxDescent ?? fontSize * 0.35;
+        if (idx === 0) totalAscent = ascent;
+        if (idx === lines.length - 1) totalDescent = descent;
+      });
+
+      const padX = Math.ceil(fontSize * 0.4);
+      const padY = Math.ceil(fontSize * 0.65);
+      const textBlockH = lines.length <= 1
+        ? (totalAscent + totalDescent)
+        : ((lines.length - 1) * lineHeight + totalAscent + totalDescent);
+
+      // Keep authored box width (alignment), allow taller bitmap for script flourishes
+      const canvasW = Math.max(boxW, Math.ceil(maxLineW + padX * 2));
+      const canvasH = Math.max(boxH, Math.ceil(textBlockH + padY * 2));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(canvasW * dpr);
+      canvas.height = Math.ceil(canvasH * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, canvasW, canvasH);
+      ctx.font = font;
+      if (letterSpacing && letterSpacing !== 'normal' && 'letterSpacing' in ctx) {
+        ctx.letterSpacing = letterSpacing;
+      }
+      ctx.textBaseline = 'alphabetic';
+
+      if (isFoilGold) {
+        const grad = ctx.createLinearGradient(0, 0, canvasW, canvasH);
+        grad.addColorStop(0, '#BF953F');
+        grad.addColorStop(0.25, '#FCF6BA');
+        grad.addColorStop(0.5, '#D4AF37');
+        grad.addColorStop(0.75, '#FBF5B7');
+        grad.addColorStop(1, '#AA771C');
+        ctx.fillStyle = grad;
+      } else if (isFoilRose) {
+        const grad = ctx.createLinearGradient(0, 0, canvasW, canvasH);
+        grad.addColorStop(0, '#B76E79');
+        grad.addColorStop(0.5, '#FFD1DC');
+        grad.addColorStop(1, '#8B4513');
+        ctx.fillStyle = grad;
+      } else if (isFoilSilver) {
+        const grad = ctx.createLinearGradient(0, 0, canvasW, canvasH);
+        grad.addColorStop(0, '#BDC3C7');
+        grad.addColorStop(0.5, '#FFFFFF');
+        grad.addColorStop(1, '#7F8C8D');
+        ctx.fillStyle = grad;
+      } else {
+        // Prefer authored color (same as Guest View non-foil text)
+        ctx.fillStyle = cs.color || parentCs.color || '#D4AF37';
+      }
+
+      const blockTop = (canvasH - textBlockH) / 2;
+      let x = canvasW / 2;
+      ctx.textAlign = 'center';
+      if (align === 'left' || align === 'start') {
+        ctx.textAlign = 'left';
+        x = padX;
+      } else if (align === 'right' || align === 'end') {
+        ctx.textAlign = 'right';
+        x = canvasW - padX;
+      }
+
+      lines.forEach((line, idx) => {
+        const m = ctx.measureText(line || ' ');
+        const ascent = m.actualBoundingBoxAscent ?? fontSize * 0.85;
+        const baselineY = blockTop + ascent + idx * lineHeight;
+        ctx.fillText(line, x, baselineY);
+      });
+
+      const img = new Image();
+      img.alt = raw;
+      img.decoding = 'sync';
+      img.src = canvas.toDataURL('image/png');
+
+      // Center the (possibly taller) glyph bitmap on the authored text box
+      elNode.style.overflow = 'visible';
+      inner.className = 'text-content-inner w-full h-full';
+      inner.style.cssText = `
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      `;
+      img.style.cssText = `
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: ${canvasW}px;
+        height: ${canvasH}px;
+        max-width: none;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        user-select: none;
+      `;
+      inner.innerHTML = '';
+      inner.appendChild(img);
+    }
+
+    await Promise.all(
+      [...stage.querySelectorAll('img')].map((img) => {
+        if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+        return new Promise((resolve) => {
+          img.addEventListener('load', resolve, { once: true });
+          img.addEventListener('error', resolve, { once: true });
+          setTimeout(resolve, 2000);
+        });
+      })
+    );
+  }
+
+  /**
+   * Captures an exact card side with Guest-View fidelity.
+   * Builds the same stage Guest View uses, then rasterizes text before html2canvas.
    */
   async captureSide(side = 'front', options = {}) {
     if (!window.html2canvas) {
@@ -160,7 +320,7 @@ export class CardExporter {
       quality = 0.96
     } = options;
 
-    const elements = side === 'front' ? t.front : (t.back || []);
+    const elements = side === 'front' ? (t.front || []) : (t.back || []);
     const bgTexture = t.bgTexture || 'texture-deckle';
     const bgColor = t.bgColor || '#FAF7F2';
     const bgImage = t.bgImage ? this.editor.getEffectiveBg(t.bgImage) : '';
@@ -168,15 +328,13 @@ export class CardExporter {
       ? (backgroundColor || (bgImage ? '#ffffff' : bgColor))
       : (backgroundColor !== undefined ? backgroundColor : (bgImage ? null : bgColor));
 
-    // Create an isolated export stage directly attached to body.
-    // This completely bypasses responsive studio containers (.canvas-stage-shell, #canvas-outer-stage)
-    // and guarantees an exact 400x560 (5"x7") aspect ratio with 0px white space or clipping.
+    // Guest-View identical stage (400×560), mounted off-screen for capture
     const exportCard = document.createElement('div');
     exportCard.id = 'export-card-stage';
-    exportCard.className = `export-card-stage select-none ${bgImage ? '' : bgTexture}`;
+    exportCard.className = `guest-card-stage export-card-stage select-none ${bgImage ? '' : bgTexture}`;
     exportCard.style.cssText = `
       position: fixed !important;
-      left: 0 !important;
+      left: -10000px !important;
       top: 0 !important;
       width: 400px !important;
       height: 560px !important;
@@ -188,7 +346,7 @@ export class CardExporter {
       margin: 0 !important;
       padding: 0 !important;
       border: none !important;
-      border-radius: 0px !important;
+      border-radius: 0 !important;
       box-shadow: none !important;
       transform: none !important;
       overflow: hidden !important;
@@ -199,8 +357,7 @@ export class CardExporter {
     `;
 
     exportCard.innerHTML = `
-      <!-- SVG Definitions for Metallic Foil Shimmer -->
-      <svg width="0" height="0" class="absolute" style="position: absolute; width: 0; height: 0;">
+      <svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
         <defs>
           <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#BF953F" />
@@ -216,31 +373,28 @@ export class CardExporter {
           </linearGradient>
         </defs>
       </svg>
-      <div id="export-elements-wrapper" class="absolute inset-0 w-full h-full" style="position: absolute; left: 0; top: 0; width: 400px; height: 560px; overflow: hidden;">
+      <div class="absolute inset-0 w-full h-full" style="position:absolute;inset:0;width:400px;height:560px;overflow:hidden;">
         ${elements.map(el => this.editor.renderElementHTML(el, { preview: true, previewKey: 'exp-' + side })).join('')}
       </div>
     `;
 
-    // Mount vector QR code if present
     if (window.QRCode) {
-      elements.forEach(el => {
-        if (el.type === 'qr-code') {
-          const qrBox = exportCard.querySelector(`#qr-box-pv-exp-${side}-${el.id}`);
-          if (qrBox) {
-            try {
-              qrBox.innerHTML = '';
-              new window.QRCode(qrBox, {
-                text: el.qrValue || 'https://wedbuilder.example/rsvp',
-                width: Math.max(30, el.width - 12),
-                height: Math.max(30, el.height - 12),
-                colorDark: "#111111",
-                colorLight: "#ffffff",
-                correctLevel: window.QRCode.CorrectLevel?.M || 0
-              });
-            } catch (qrErr) {
-              console.warn('Vector QR code render fallback in export:', qrErr);
-            }
-          }
+      elements.forEach((el) => {
+        if (el.type !== 'qr-code') return;
+        const qrBox = exportCard.querySelector(`#qr-box-pv-exp-${side}-${el.id}`);
+        if (!qrBox) return;
+        try {
+          qrBox.innerHTML = '';
+          new window.QRCode(qrBox, {
+            text: el.qrValue || 'https://wedbuilder.example/rsvp',
+            width: Math.max(30, el.width - 12),
+            height: Math.max(30, el.height - 12),
+            colorDark: '#111111',
+            colorLight: '#ffffff',
+            correctLevel: window.QRCode.CorrectLevel?.M || 0
+          });
+        } catch (qrErr) {
+          console.warn('QR render fallback in export:', qrErr);
         }
       });
     }
@@ -248,7 +402,6 @@ export class CardExporter {
     document.body.appendChild(exportCard);
 
     try {
-      // Preload background image & assets
       if (bgImage) {
         await new Promise((resolve) => {
           const img = new Image();
@@ -261,10 +414,9 @@ export class CardExporter {
       }
 
       if (document.fonts?.ready) {
-        try { await document.fonts.ready; } catch (_) {}
+        try { await document.fonts.ready; } catch (_) { /* ignore */ }
       }
 
-      // Explicitly load fonts used by this side so name glyphs measure correctly
       try {
         const fontLoads = [];
         elements.forEach((el) => {
@@ -273,15 +425,17 @@ export class CardExporter {
           if (!family) return;
           const size = Math.max(12, el.fontSize || 16);
           fontLoads.push(document.fonts.load(`${el.fontWeight || 400} ${size}px "${family}"`));
-          fontLoads.push(document.fonts.load(`italic ${size}px "${family}"`));
         });
         await Promise.all(fontLoads.map((p) => p.catch(() => null)));
       } catch (_) { /* ignore */ }
 
       await this.waitForImages(exportCard);
       await this.waitForPaint();
-      // Extra settle time for script fonts (Great Vibes / Pinyon) after load
-      await new Promise((r) => setTimeout(r, 120));
+      await new Promise((r) => setTimeout(r, 80));
+
+      // Guest-View exact text look via canvas glyphs (no html2canvas text bugs)
+      await this.rasterizeTextsForExport(exportCard);
+      await this.waitForPaint();
 
       const canvas = await window.html2canvas(exportCard, {
         scale,
@@ -292,127 +446,24 @@ export class CardExporter {
         imageTimeout: 10000,
         width: 400,
         height: 560,
-        windowWidth: 1200,
-        windowHeight: 800,
+        windowWidth: 400,
+        windowHeight: 560,
+        x: 0,
+        y: 0,
+        scrollX: 0,
+        scrollY: 0,
         onclone: (clonedDoc) => {
           const overlay = clonedDoc.getElementById('export-busy-overlay');
           if (overlay) overlay.style.display = 'none';
-
-          const modal = clonedDoc.getElementById('guest-experience-modal');
-          if (modal) modal.remove();
+          clonedDoc.getElementById('guest-experience-modal')?.remove();
 
           const clonedCard = clonedDoc.getElementById('export-card-stage');
           if (clonedCard) {
-            clonedCard.style.position = 'fixed';
             clonedCard.style.left = '0px';
             clonedCard.style.top = '0px';
-            clonedCard.style.width = '400px';
-            clonedCard.style.height = '560px';
             clonedCard.style.transform = 'none';
-            clonedCard.style.boxShadow = 'none';
-            clonedCard.style.borderRadius = '0px';
+            clonedCard.style.position = 'fixed';
           }
-
-          // Preserve name / text alignment exactly as designed
-          clonedDoc.querySelectorAll('.text-content-inner').forEach((node) => {
-            const align = (node.style.textAlign || 'center').toLowerCase();
-            const isNowrap = node.classList.contains('is-text-nowrap')
-              || (node.style.whiteSpace || '').includes('nowrap');
-
-            if (isNowrap) {
-              node.style.setProperty('display', 'block', 'important');
-              node.style.setProperty('width', '100%', 'important');
-              node.style.setProperty('height', '100%', 'important');
-              node.style.setProperty('text-align', align, 'important');
-              node.style.setProperty('white-space', 'nowrap', 'important');
-              node.style.setProperty('overflow', 'hidden', 'important');
-              // Keep authored line-height (equals box height for vertical center)
-              if (!node.style.lineHeight) {
-                const h = parseFloat(node.style.height) || node.parentElement?.offsetHeight || 0;
-                if (h) node.style.setProperty('line-height', `${h}px`, 'important');
-              }
-            } else {
-              const justify = align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center';
-              node.style.setProperty('display', 'flex', 'important');
-              node.style.setProperty('align-items', 'center', 'important');
-              node.style.setProperty('justify-content', justify, 'important');
-              node.style.setProperty('width', '100%', 'important');
-              node.style.setProperty('height', '100%', 'important');
-              node.style.setProperty('text-align', align, 'important');
-            }
-            node.style.setProperty('box-sizing', 'border-box', 'important');
-          });
-
-          clonedDoc.querySelectorAll('.text-foil-run').forEach((run) => {
-            run.style.setProperty('display', 'inline', 'important');
-            run.style.setProperty('max-width', '100%', 'important');
-            run.style.setProperty('vertical-align', 'baseline', 'important');
-          });
-
-          // Strip background gradients from foil elements so html2canvas renders pure elegant metallic text without solid rectangular bars
-          const foilElements = clonedDoc.querySelectorAll('.foil-gold, .foil-rose, .foil-silver, [class*="foil-"]');
-          foilElements.forEach((el) => {
-            el.style.setProperty('background', 'none', 'important');
-            el.style.setProperty('background-image', 'none', 'important');
-            el.style.setProperty('-webkit-background-clip', 'initial', 'important');
-            el.style.setProperty('background-clip', 'initial', 'important');
-            if (el.classList.contains('foil-rose')) {
-              el.style.setProperty('-webkit-text-fill-color', '#E8B4B8', 'important');
-              el.style.setProperty('color', '#E8B4B8', 'important');
-            } else if (el.classList.contains('foil-silver')) {
-              el.style.setProperty('-webkit-text-fill-color', '#E0E4E8', 'important');
-              el.style.setProperty('color', '#E0E4E8', 'important');
-            } else {
-              el.style.setProperty('-webkit-text-fill-color', '#E2C785', 'important');
-              el.style.setProperty('color', '#E2C785', 'important');
-            }
-          });
-
-          const style = clonedDoc.createElement('style');
-          style.textContent = `
-            * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: geometricPrecision; }
-            .text-content-inner {
-              box-sizing: border-box !important;
-            }
-            .text-content-inner.is-text-nowrap {
-              display: block !important;
-              overflow: hidden !important;
-              white-space: nowrap !important;
-            }
-            .text-foil-run {
-              display: inline !important;
-              max-width: 100% !important;
-            }
-            .canvas-element { outline: none !important; box-shadow: none !important; }
-            .foil-gold, .text-foil-run.foil-gold, [class*="foil-gold"] {
-              background: none !important;
-              background-image: none !important;
-              -webkit-background-clip: initial !important;
-              background-clip: initial !important;
-              -webkit-text-fill-color: #E2C785 !important;
-              color: #E2C785 !important;
-              text-shadow: 0 1px 1px rgba(255, 245, 200, 0.4), 0 0 2px rgba(212, 175, 55, 0.6) !important;
-            }
-            .foil-rose, [class*="foil-rose"] {
-              background: none !important;
-              background-image: none !important;
-              -webkit-background-clip: initial !important;
-              background-clip: initial !important;
-              -webkit-text-fill-color: #E8B4B8 !important;
-              color: #E8B4B8 !important;
-              text-shadow: 0 1px 1px rgba(255, 230, 235, 0.4), 0 0 2px rgba(183, 110, 121, 0.6) !important;
-            }
-            .foil-silver, [class*="foil-silver"] {
-              background: none !important;
-              background-image: none !important;
-              -webkit-background-clip: initial !important;
-              background-clip: initial !important;
-              -webkit-text-fill-color: #E0E4E8 !important;
-              color: #E0E4E8 !important;
-              text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 2px rgba(190, 195, 200, 0.6) !important;
-            }
-          `;
-          clonedDoc.head.appendChild(style);
         }
       });
 

@@ -70,6 +70,11 @@ class InvitationStudioApp {
     };
   }
 
+  /** Off-white atelier chrome — Wedding section only; other sections stay default. */
+  applySectionTheme(sectionId) {
+    document.body.classList.toggle('theme-wedding', sectionId === 'wedding');
+  }
+
   // =========================================================================
   // LOBBY: Section cards → section templates → studio
   // =========================================================================
@@ -104,7 +109,10 @@ class InvitationStudioApp {
 
     if (sectionId) {
       this.openLobbySection(sectionId);
+    } else if (SECTIONS.length === 1) {
+      this.openLobbySection(SECTIONS[0].id);
     } else {
+      this.applySectionTheme(null);
       this.renderLobbySections();
     }
   }
@@ -115,6 +123,7 @@ class InvitationStudioApp {
     this.activeSection = template.section;
     this.lobbySectionId = template.section;
     this.inStudio = true;
+    this.applySectionTheme(template.section);
 
     document.body.classList.remove('mode-lobby');
     document.body.classList.add('mode-studio');
@@ -132,6 +141,7 @@ class InvitationStudioApp {
 
   renderLobbySections() {
     this.lobbySectionId = null;
+    this.applySectionTheme(null);
     const sectionsView = document.getElementById('lobby-view-sections');
     const templatesView = document.getElementById('lobby-view-templates');
     const grid = document.getElementById('lobby-sections-grid');
@@ -147,9 +157,10 @@ class InvitationStudioApp {
         ? `background-image: url('${cover.bgImage}'); background-color: ${cover.bgColor};`
         : `background-color: ${cover.bgColor};`;
       const n = String(index + 1).padStart(2, '0');
+      const weddingClass = section.id === 'wedding' ? ' lobby-section-card--wedding' : '';
 
       return `
-        <button type="button" class="lobby-section-card" data-section="${section.id}">
+        <button type="button" class="lobby-section-card${weddingClass}" data-section="${section.id}">
           <div class="lobby-section-media" style="${mediaStyle}"></div>
           <div class="lobby-section-veil"></div>
           <div class="lobby-section-body">
@@ -178,6 +189,7 @@ class InvitationStudioApp {
 
     this.lobbySectionId = sectionId;
     this.activeSection = sectionId;
+    this.applySectionTheme(sectionId);
 
     const sectionsView = document.getElementById('lobby-view-sections');
     const templatesView = document.getElementById('lobby-view-templates');
@@ -194,7 +206,7 @@ class InvitationStudioApp {
     const eyebrow = document.getElementById('lobby-section-eyebrow');
     const title = document.getElementById('lobby-section-title');
     const tagline = document.getElementById('lobby-section-tagline');
-    if (eyebrow) eyebrow.textContent = 'Collection';
+    if (eyebrow) eyebrow.textContent = sectionId === 'wedding' ? 'Wedding Atelier' : 'Collection';
     if (title) title.textContent = section.name;
     if (tagline) tagline.textContent = section.tagline;
 
