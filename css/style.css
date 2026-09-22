@@ -78,14 +78,36 @@
   position: relative;
 }
 
-/* Foil Shimmer Effects */
+/* Foil Shimmer Effects — apply on .text-foil-run (never on flex container) */
+.text-content-inner {
+  display: flex !important;
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.text-content-inner.is-text-nowrap {
+  /* Single-line names: html2canvas-stable block centering */
+  display: block !important;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.text-foil-run {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
 .foil-gold {
   background: var(--gold-gradient) !important;
   -webkit-background-clip: text !important;
+  background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   text-shadow: 0 0 1px rgba(212, 175, 55, 0.4);
   position: relative;
-  display: inline-block;
 }
 
 .foil-gold-svg {
@@ -96,18 +118,22 @@
 .foil-rose {
   background: var(--rose-gold-gradient) !important;
   -webkit-background-clip: text !important;
+  background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
 }
 
 .foil-silver {
   background: var(--silver-gradient) !important;
   -webkit-background-clip: text !important;
+  background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
 }
 
 /* Export Stage High-Fidelity Foil Overrides (Eliminates html2canvas solid rectangular gradient blocks) */
 #export-card-stage .foil-gold,
-.export-card-stage .foil-gold {
+.export-card-stage .foil-gold,
+#export-card-stage .text-foil-run.foil-gold,
+.export-card-stage .text-foil-run.foil-gold {
   background: none !important;
   background-image: none !important;
   -webkit-background-clip: initial !important;

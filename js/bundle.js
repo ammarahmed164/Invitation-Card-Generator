@@ -15,7 +15,8 @@
   /**
    * Curated European Luxury Fonts Collection
    * Used for high-end wedding, soirée, baby shower & gala invitation typography
-   */const LUXURY_FONTS = [
+   */
+  const LUXURY_FONTS = [
     {
       name: 'Cormorant Garamond',
       family: "'Cormorant Garamond', serif",
@@ -100,7 +101,8 @@
       weights: ['400', '500', '600', '700'],
       description: 'Contemporary European sans-serif'
     }
-  ];const FONT_PAIRINGS = [
+  ];
+  const FONT_PAIRINGS = [
     {
       name: 'Parisian Editorial',
       heading: 'Bodoni Moda',
@@ -136,7 +138,8 @@
   /**
    * Vector Artwork, Luxury Badges, Frames & Wax Seals
    * Handcrafted SVG assets for European invitation card styling
-   */const ASSET_LIBRARY = {
+   */
+  const ASSET_LIBRARY = {
     // Wax Seals
     waxSeals: [
       {
@@ -4836,6 +4839,41 @@
         .replace(/"/g, '&quot;');
     }
   
+    formatTextHtml(content, { allowBreaks = false } = {}) {
+      const escaped = this.escapeHtml(content);
+      if (!allowBreaks) return escaped;
+      return escaped.replace(/\r\n|\r|\n/g, '<br>');
+    }
+  
+    getTextFoilRun(textInner) {
+      if (!textInner) return null;
+      return textInner.querySelector('.text-foil-run');
+    }
+  
+    setTextElementContent(textInner, content) {
+      if (!textInner) return;
+      const run = this.getTextFoilRun(textInner);
+      if (run) run.textContent = content ?? '';
+      else textInner.textContent = content ?? '';
+    }
+  
+    syncTextFoilClass(textInner, element) {
+      if (!textInner || !element) return;
+      let run = this.getTextFoilRun(textInner);
+      if (!run) {
+        run = document.createElement('span');
+        run.className = 'text-foil-run';
+        run.textContent = element.content ?? textInner.innerText ?? '';
+        textInner.textContent = '';
+        textInner.appendChild(run);
+      }
+      run.classList.toggle('foil-gold', !!element.isFoil);
+      if (!element.isFoil && element.color) {
+        run.style.color = element.color;
+        textInner.style.color = element.color;
+      }
+    }
+  
     openImageFilePicker(onDataUrl) {
       const existing = document.getElementById('ins-photo-file-input') || document.getElementById('float-photo-input');
       if (existing) {
@@ -4914,8 +4952,8 @@
         if (element.type === 'text') {
           const textInner = elNode.querySelector('.text-content-inner');
           if (textInner) {
-            if (updates.content !== undefined && document.activeElement !== textInner) {
-              textInner.textContent = element.content;
+            if (updates.content !== undefined && document.activeElement !== textInner && !textInner.contains(document.activeElement)) {
+              this.setTextElementContent(textInner, element.content);
             }
             if (updates.fontFamily !== undefined) textInner.style.fontFamily = element.fontFamily;
             if (updates.fontSize !== undefined) textInner.style.fontSize = `${element.fontSize}px`;
@@ -4937,17 +4975,19 @@
             if (updates.color !== undefined) {
               element.color = updates.color;
               textInner.style.color = element.color;
+              const run = this.getTextFoilRun(textInner);
+              if (run && !element.isFoil) run.style.color = element.color;
               // Explicit color choice removes gold foil override so the picked color is 100% visible live!
               if (updates.isFoil === undefined && element.isFoil) {
                 element.isFoil = false;
-                textInner.classList.remove('foil-gold');
+                this.syncTextFoilClass(textInner, element);
                 const foilCheck = document.getElementById('ins-foil-check');
                 if (foilCheck) foilCheck.checked = false;
               }
             }
             if (updates.isFoil !== undefined) {
               element.isFoil = !!updates.isFoil;
-              textInner.classList.toggle('foil-gold', element.isFoil);
+              this.syncTextFoilClass(textInner, element);
               if (!element.isFoil && element.color) {
                 textInner.style.color = element.color;
               }
@@ -5536,34 +5576,60 @@
       const previewKey = options.previewKey || 'pv';
       const domId = isPreview ? `pv-${previewKey}-${el.id}` : el.id;
       const isSelected = !isPreview && (this.selectedElementIds || []).includes(el.id);
-      const isFoil = el.isFoil ? 'foil-gold' : '';
       const rotation = el.rotation ? `transform: rotate(${el.rotation}deg);` : '';
   
       let contentHTML = '';
   
       if (el.type === 'text') {
-        const isSingleLine = !String(el.content).includes('\n');
+        const align = el.textAlign || 'center';
+        const isSingleLine = !String(el.content ?? '').includes('\n');
         const shouldNoWrap = el.noWrap || (isSingleLine && (el.height <= (el.fontSize || 14) * 2.5));
+        const foilClass = el.isFoil ? 'foil-gold' : '';
+        let justifyClass = 'justify-center';
+        if (align === 'left') justifyClass = 'justify-start';
+        else if (align === 'right') justifyClass = 'justify-end';
+  
+        // Single-line names use block + line-height centering (html2canvas-stable).
+        // Multi-line keeps flex. Foil class lives on inner span so it never kills layout display.
+        const layoutStyles = shouldNoWrap
+          ? `
+            display: block;
+            width: 100%;
+            height: 100%;
+            line-height: ${Math.max(1, el.height || (el.fontSize || 14))}px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: clip;
+          `
+          : `
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            white-space: pre-wrap;
+            word-break: keep-all;
+            overflow-wrap: normal;
+            line-height: ${el.lineHeight || 1.3};
+          `;
+  
         const styles = `
           font-family: ${el.fontFamily || "'Cormorant Garamond', serif"};
           font-size: ${el.fontSize || 14}px;
           font-weight: ${el.fontWeight || '400'};
           font-style: ${el.fontStyle || 'normal'};
           letter-spacing: ${el.letterSpacing !== undefined ? el.letterSpacing + 'px' : 'normal'};
-          line-height: ${el.lineHeight || 1.3};
-          text-align: ${el.textAlign || 'center'};
+          text-align: ${align};
           color: ${el.color || '#2C2825'};
-          white-space: ${shouldNoWrap ? 'nowrap' : 'pre-wrap'};
-          word-break: ${shouldNoWrap ? 'normal' : 'keep-all'};
-          overflow-wrap: normal;
+          box-sizing: border-box;
+          ${layoutStyles}
         `;
-        let justifyClass = 'justify-center';
-        if (el.textAlign === 'left') justifyClass = 'justify-start';
-        else if (el.textAlign === 'right') justifyClass = 'justify-end';
+  
+        const nowrapClass = shouldNoWrap ? 'is-text-nowrap' : justifyClass;
+        const textHtml = this.formatTextHtml(el.content, { allowBreaks: !shouldNoWrap });
   
         contentHTML = `
-          <div class="text-content-inner w-full h-full flex items-center ${justifyClass} ${isFoil}" style="${styles}">
-            ${this.escapeHtml(el.content)}
+          <div class="text-content-inner w-full h-full ${nowrapClass}" style="${styles}">
+            <span class="text-foil-run ${foilClass}">${textHtml}</span>
           </div>
         `;
       } else if (el.type === 'svg') {
@@ -5836,21 +5902,22 @@
     startInlineEdit(el, elNode) {
       const textInner = elNode.querySelector('.text-content-inner');
       if (!textInner) return;
+      const editTarget = this.getTextFoilRun(textInner) || textInner;
   
       this.isInlineEditing = true;
-      textInner.contentEditable = "true";
+      editTarget.contentEditable = "true";
       textInner.classList.add('text-editing-active');
-      textInner.focus();
+      editTarget.focus();
   
       // Select all text for easy replacement
       const range = document.createRange();
-      range.selectNodeContents(textInner);
+      range.selectNodeContents(editTarget);
       const sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
   
       const onInput = () => {
-        el.content = textInner.innerText;
+        el.content = editTarget.innerText;
         // Sync dock + right sidebar textareas if open
         const textarea = document.getElementById('ins-text-content');
         if (textarea && textarea.value !== el.content) {
@@ -5865,29 +5932,30 @@
       const onKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
-          textInner.blur();
+          editTarget.blur();
         } else if (e.key === 'Escape') {
-          textInner.blur();
+          editTarget.blur();
         }
       };
   
       const onBlur = () => {
-        textInner.contentEditable = "false";
+        editTarget.contentEditable = "false";
         textInner.classList.remove('text-editing-active');
         this.isInlineEditing = false;
-        el.content = textInner.innerText;
+        el.content = editTarget.innerText;
+        this.syncTextFoilClass(textInner, el);
         this.saveState();
-        textInner.removeEventListener('input', onInput);
-        textInner.removeEventListener('keydown', onKeyDown);
-        textInner.removeEventListener('blur', onBlur);
+        editTarget.removeEventListener('input', onInput);
+        editTarget.removeEventListener('keydown', onKeyDown);
+        editTarget.removeEventListener('blur', onBlur);
         if (this.options.onElementSelect) {
           this.options.onElementSelect(el);
         }
       };
   
-      textInner.addEventListener('input', onInput);
-      textInner.addEventListener('keydown', onKeyDown);
-      textInner.addEventListener('blur', onBlur);
+      editTarget.addEventListener('input', onInput);
+      editTarget.addEventListener('keydown', onKeyDown);
+      editTarget.addEventListener('blur', onBlur);
     }
   
     finishInlineEdit() {
@@ -5895,8 +5963,9 @@
       const elNode = this.getCanvasElementNode(this.selectedElementId);
       if (!elNode) return;
       const textInner = elNode.querySelector('.text-content-inner');
-      if (textInner && textInner.contentEditable === "true") {
-        textInner.blur();
+      const editTarget = textInner ? (this.getTextFoilRun(textInner) || textInner) : null;
+      if (editTarget && editTarget.contentEditable === "true") {
+        editTarget.blur();
       }
     }
   
@@ -6016,8 +6085,7 @@
    * Professional Multi-Format Export Engine
    * 100% Live-Preview & Guest-View Fidelity Capture Engine
    * Exports Front & Back together across WhatsApp, Email JPG, Print PDF, and PNG.
-   */
-  class CardExporter {
+   */class CardExporter {
     constructor(editor) {
       this.editor = editor;
       this._busy = false;
@@ -6277,8 +6345,24 @@
           try { await document.fonts.ready; } catch (_) {}
         }
   
+        // Explicitly load fonts used by this side so name glyphs measure correctly
+        try {
+          const fontLoads = [];
+          elements.forEach((el) => {
+            if (el.type !== 'text' || !el.fontFamily) return;
+            const family = String(el.fontFamily).replace(/['"]/g, '').split(',')[0].trim();
+            if (!family) return;
+            const size = Math.max(12, el.fontSize || 16);
+            fontLoads.push(document.fonts.load(`${el.fontWeight || 400} ${size}px "${family}"`));
+            fontLoads.push(document.fonts.load(`italic ${size}px "${family}"`));
+          });
+          await Promise.all(fontLoads.map((p) => p.catch(() => null)));
+        } catch (_) { /* ignore */ }
+  
         await this.waitForImages(exportCard);
         await this.waitForPaint();
+        // Extra settle time for script fonts (Great Vibes / Pinyon) after load
+        await new Promise((r) => setTimeout(r, 120));
   
         const canvas = await window.html2canvas(exportCard, {
           scale,
@@ -6310,6 +6394,42 @@
               clonedCard.style.borderRadius = '0px';
             }
   
+            // Preserve name / text alignment exactly as designed
+            clonedDoc.querySelectorAll('.text-content-inner').forEach((node) => {
+              const align = (node.style.textAlign || 'center').toLowerCase();
+              const isNowrap = node.classList.contains('is-text-nowrap')
+                || (node.style.whiteSpace || '').includes('nowrap');
+  
+              if (isNowrap) {
+                node.style.setProperty('display', 'block', 'important');
+                node.style.setProperty('width', '100%', 'important');
+                node.style.setProperty('height', '100%', 'important');
+                node.style.setProperty('text-align', align, 'important');
+                node.style.setProperty('white-space', 'nowrap', 'important');
+                node.style.setProperty('overflow', 'hidden', 'important');
+                // Keep authored line-height (equals box height for vertical center)
+                if (!node.style.lineHeight) {
+                  const h = parseFloat(node.style.height) || node.parentElement?.offsetHeight || 0;
+                  if (h) node.style.setProperty('line-height', `${h}px`, 'important');
+                }
+              } else {
+                const justify = align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center';
+                node.style.setProperty('display', 'flex', 'important');
+                node.style.setProperty('align-items', 'center', 'important');
+                node.style.setProperty('justify-content', justify, 'important');
+                node.style.setProperty('width', '100%', 'important');
+                node.style.setProperty('height', '100%', 'important');
+                node.style.setProperty('text-align', align, 'important');
+              }
+              node.style.setProperty('box-sizing', 'border-box', 'important');
+            });
+  
+            clonedDoc.querySelectorAll('.text-foil-run').forEach((run) => {
+              run.style.setProperty('display', 'inline', 'important');
+              run.style.setProperty('max-width', '100%', 'important');
+              run.style.setProperty('vertical-align', 'baseline', 'important');
+            });
+  
             // Strip background gradients from foil elements so html2canvas renders pure elegant metallic text without solid rectangular bars
             const foilElements = clonedDoc.querySelectorAll('.foil-gold, .foil-rose, .foil-silver, [class*="foil-"]');
             foilElements.forEach((el) => {
@@ -6331,10 +6451,21 @@
   
             const style = clonedDoc.createElement('style');
             style.textContent = `
-              * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
-              .text-content-inner { overflow: visible !important; }
+              * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: geometricPrecision; }
+              .text-content-inner {
+                box-sizing: border-box !important;
+              }
+              .text-content-inner.is-text-nowrap {
+                display: block !important;
+                overflow: hidden !important;
+                white-space: nowrap !important;
+              }
+              .text-foil-run {
+                display: inline !important;
+                max-width: 100% !important;
+              }
               .canvas-element { outline: none !important; box-shadow: none !important; }
-              .foil-gold, [class*="foil-gold"] {
+              .foil-gold, .text-foil-run.foil-gold, [class*="foil-gold"] {
                 background: none !important;
                 background-image: none !important;
                 -webkit-background-clip: initial !important;
@@ -6866,8 +6997,7 @@
   /**
    * Interactive Guest Experience & Digital Mobile Invite Module
    * 3D Envelope opening animation, card flip, bespoke luxury RSVP modal, and Google Calendar / Maps integration.
-   */
-  class GuestExperienceModal {
+   */class GuestExperienceModal {
     constructor(editor) {
       this.editor = editor;
       this.modal = null;
@@ -7420,7 +7550,8 @@
   /**
    * Etsy Digital Product Seller & Buyer Toolkit
    * Printing guides, paper recommendations, and Etsy order demo simulation.
-   */class EtsyGuideManager {
+   */
+  class EtsyGuideManager {
     constructor() {
       this.init();
     }

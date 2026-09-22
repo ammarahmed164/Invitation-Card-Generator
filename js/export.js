@@ -264,8 +264,24 @@ export class CardExporter {
         try { await document.fonts.ready; } catch (_) {}
       }
 
+      // Explicitly load fonts used by this side so name glyphs measure correctly
+      try {
+        const fontLoads = [];
+        elements.forEach((el) => {
+          if (el.type !== 'text' || !el.fontFamily) return;
+          const family = String(el.fontFamily).replace(/['"]/g, '').split(',')[0].trim();
+          if (!family) return;
+          const size = Math.max(12, el.fontSize || 16);
+          fontLoads.push(document.fonts.load(`${el.fontWeight || 400} ${size}px "${family}"`));
+          fontLoads.push(document.fonts.load(`italic ${size}px "${family}"`));
+        });
+        await Promise.all(fontLoads.map((p) => p.catch(() => null)));
+      } catch (_) { /* ignore */ }
+
       await this.waitForImages(exportCard);
       await this.waitForPaint();
+      // Extra settle time for script fonts (Great Vibes / Pinyon) after load
+      await new Promise((r) => setTimeout(r, 120));
 
       const canvas = await window.html2canvas(exportCard, {
         scale,
@@ -297,6 +313,42 @@ export class CardExporter {
             clonedCard.style.borderRadius = '0px';
           }
 
+          // Preserve name / text alignment exactly as designed
+          clonedDoc.querySelectorAll('.text-content-inner').forEach((node) => {
+            const align = (node.style.textAlign || 'center').toLowerCase();
+            const isNowrap = node.classList.contains('is-text-nowrap')
+              || (node.style.whiteSpace || '').includes('nowrap');
+
+            if (isNowrap) {
+              node.style.setProperty('display', 'block', 'important');
+              node.style.setProperty('width', '100%', 'important');
+              node.style.setProperty('height', '100%', 'important');
+              node.style.setProperty('text-align', align, 'important');
+              node.style.setProperty('white-space', 'nowrap', 'important');
+              node.style.setProperty('overflow', 'hidden', 'important');
+              // Keep authored line-height (equals box height for vertical center)
+              if (!node.style.lineHeight) {
+                const h = parseFloat(node.style.height) || node.parentElement?.offsetHeight || 0;
+                if (h) node.style.setProperty('line-height', `${h}px`, 'important');
+              }
+            } else {
+              const justify = align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center';
+              node.style.setProperty('display', 'flex', 'important');
+              node.style.setProperty('align-items', 'center', 'important');
+              node.style.setProperty('justify-content', justify, 'important');
+              node.style.setProperty('width', '100%', 'important');
+              node.style.setProperty('height', '100%', 'important');
+              node.style.setProperty('text-align', align, 'important');
+            }
+            node.style.setProperty('box-sizing', 'border-box', 'important');
+          });
+
+          clonedDoc.querySelectorAll('.text-foil-run').forEach((run) => {
+            run.style.setProperty('display', 'inline', 'important');
+            run.style.setProperty('max-width', '100%', 'important');
+            run.style.setProperty('vertical-align', 'baseline', 'important');
+          });
+
           // Strip background gradients from foil elements so html2canvas renders pure elegant metallic text without solid rectangular bars
           const foilElements = clonedDoc.querySelectorAll('.foil-gold, .foil-rose, .foil-silver, [class*="foil-"]');
           foilElements.forEach((el) => {
@@ -318,10 +370,21 @@ export class CardExporter {
 
           const style = clonedDoc.createElement('style');
           style.textContent = `
-            * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
-            .text-content-inner { overflow: visible !important; }
+            * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: geometricPrecision; }
+            .text-content-inner {
+              box-sizing: border-box !important;
+            }
+            .text-content-inner.is-text-nowrap {
+              display: block !important;
+              overflow: hidden !important;
+              white-space: nowrap !important;
+            }
+            .text-foil-run {
+              display: inline !important;
+              max-width: 100% !important;
+            }
             .canvas-element { outline: none !important; box-shadow: none !important; }
-            .foil-gold, [class*="foil-gold"] {
+            .foil-gold, .text-foil-run.foil-gold, [class*="foil-gold"] {
               background: none !important;
               background-image: none !important;
               -webkit-background-clip: initial !important;

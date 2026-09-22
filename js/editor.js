@@ -265,6 +265,41 @@ export class CardEditor {
       .replace(/"/g, '&quot;');
   }
 
+  formatTextHtml(content, { allowBreaks = false } = {}) {
+    const escaped = this.escapeHtml(content);
+    if (!allowBreaks) return escaped;
+    return escaped.replace(/\r\n|\r|\n/g, '<br>');
+  }
+
+  getTextFoilRun(textInner) {
+    if (!textInner) return null;
+    return textInner.querySelector('.text-foil-run');
+  }
+
+  setTextElementContent(textInner, content) {
+    if (!textInner) return;
+    const run = this.getTextFoilRun(textInner);
+    if (run) run.textContent = content ?? '';
+    else textInner.textContent = content ?? '';
+  }
+
+  syncTextFoilClass(textInner, element) {
+    if (!textInner || !element) return;
+    let run = this.getTextFoilRun(textInner);
+    if (!run) {
+      run = document.createElement('span');
+      run.className = 'text-foil-run';
+      run.textContent = element.content ?? textInner.innerText ?? '';
+      textInner.textContent = '';
+      textInner.appendChild(run);
+    }
+    run.classList.toggle('foil-gold', !!element.isFoil);
+    if (!element.isFoil && element.color) {
+      run.style.color = element.color;
+      textInner.style.color = element.color;
+    }
+  }
+
   openImageFilePicker(onDataUrl) {
     const existing = document.getElementById('ins-photo-file-input') || document.getElementById('float-photo-input');
     if (existing) {
@@ -343,8 +378,8 @@ export class CardEditor {
       if (element.type === 'text') {
         const textInner = elNode.querySelector('.text-content-inner');
         if (textInner) {
-          if (updates.content !== undefined && document.activeElement !== textInner) {
-            textInner.textContent = element.content;
+          if (updates.content !== undefined && document.activeElement !== textInner && !textInner.contains(document.activeElement)) {
+            this.setTextElementContent(textInner, element.content);
           }
           if (updates.fontFamily !== undefined) textInner.style.fontFamily = element.fontFamily;
           if (updates.fontSize !== undefined) textInner.style.fontSize = `${element.fontSize}px`;
@@ -366,17 +401,19 @@ export class CardEditor {
           if (updates.color !== undefined) {
             element.color = updates.color;
             textInner.style.color = element.color;
+            const run = this.getTextFoilRun(textInner);
+            if (run && !element.isFoil) run.style.color = element.color;
             // Explicit color choice removes gold foil override so the picked color is 100% visible live!
             if (updates.isFoil === undefined && element.isFoil) {
               element.isFoil = false;
-              textInner.classList.remove('foil-gold');
+              this.syncTextFoilClass(textInner, element);
               const foilCheck = document.getElementById('ins-foil-check');
               if (foilCheck) foilCheck.checked = false;
             }
           }
           if (updates.isFoil !== undefined) {
             element.isFoil = !!updates.isFoil;
-            textInner.classList.toggle('foil-gold', element.isFoil);
+            this.syncTextFoilClass(textInner, element);
             if (!element.isFoil && element.color) {
               textInner.style.color = element.color;
             }
@@ -965,34 +1002,60 @@ export class CardEditor {
     const previewKey = options.previewKey || 'pv';
     const domId = isPreview ? `pv-${previewKey}-${el.id}` : el.id;
     const isSelected = !isPreview && (this.selectedElementIds || []).includes(el.id);
-    const isFoil = el.isFoil ? 'foil-gold' : '';
     const rotation = el.rotation ? `transform: rotate(${el.rotation}deg);` : '';
 
     let contentHTML = '';
 
     if (el.type === 'text') {
-      const isSingleLine = !String(el.content).includes('\n');
+      const align = el.textAlign || 'center';
+      const isSingleLine = !String(el.content ?? '').includes('\n');
       const shouldNoWrap = el.noWrap || (isSingleLine && (el.height <= (el.fontSize || 14) * 2.5));
+      const foilClass = el.isFoil ? 'foil-gold' : '';
+      let justifyClass = 'justify-center';
+      if (align === 'left') justifyClass = 'justify-start';
+      else if (align === 'right') justifyClass = 'justify-end';
+
+      // Single-line names use block + line-height centering (html2canvas-stable).
+      // Multi-line keeps flex. Foil class lives on inner span so it never kills layout display.
+      const layoutStyles = shouldNoWrap
+        ? `
+          display: block;
+          width: 100%;
+          height: 100%;
+          line-height: ${Math.max(1, el.height || (el.fontSize || 14))}px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: clip;
+        `
+        : `
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          white-space: pre-wrap;
+          word-break: keep-all;
+          overflow-wrap: normal;
+          line-height: ${el.lineHeight || 1.3};
+        `;
+
       const styles = `
         font-family: ${el.fontFamily || "'Cormorant Garamond', serif"};
         font-size: ${el.fontSize || 14}px;
         font-weight: ${el.fontWeight || '400'};
         font-style: ${el.fontStyle || 'normal'};
         letter-spacing: ${el.letterSpacing !== undefined ? el.letterSpacing + 'px' : 'normal'};
-        line-height: ${el.lineHeight || 1.3};
-        text-align: ${el.textAlign || 'center'};
+        text-align: ${align};
         color: ${el.color || '#2C2825'};
-        white-space: ${shouldNoWrap ? 'nowrap' : 'pre-wrap'};
-        word-break: ${shouldNoWrap ? 'normal' : 'keep-all'};
-        overflow-wrap: normal;
+        box-sizing: border-box;
+        ${layoutStyles}
       `;
-      let justifyClass = 'justify-center';
-      if (el.textAlign === 'left') justifyClass = 'justify-start';
-      else if (el.textAlign === 'right') justifyClass = 'justify-end';
+
+      const nowrapClass = shouldNoWrap ? 'is-text-nowrap' : justifyClass;
+      const textHtml = this.formatTextHtml(el.content, { allowBreaks: !shouldNoWrap });
 
       contentHTML = `
-        <div class="text-content-inner w-full h-full flex items-center ${justifyClass} ${isFoil}" style="${styles}">
-          ${this.escapeHtml(el.content)}
+        <div class="text-content-inner w-full h-full ${nowrapClass}" style="${styles}">
+          <span class="text-foil-run ${foilClass}">${textHtml}</span>
         </div>
       `;
     } else if (el.type === 'svg') {
@@ -1265,21 +1328,22 @@ export class CardEditor {
   startInlineEdit(el, elNode) {
     const textInner = elNode.querySelector('.text-content-inner');
     if (!textInner) return;
+    const editTarget = this.getTextFoilRun(textInner) || textInner;
 
     this.isInlineEditing = true;
-    textInner.contentEditable = "true";
+    editTarget.contentEditable = "true";
     textInner.classList.add('text-editing-active');
-    textInner.focus();
+    editTarget.focus();
 
     // Select all text for easy replacement
     const range = document.createRange();
-    range.selectNodeContents(textInner);
+    range.selectNodeContents(editTarget);
     const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
 
     const onInput = () => {
-      el.content = textInner.innerText;
+      el.content = editTarget.innerText;
       // Sync dock + right sidebar textareas if open
       const textarea = document.getElementById('ins-text-content');
       if (textarea && textarea.value !== el.content) {
@@ -1294,29 +1358,30 @@ export class CardEditor {
     const onKeyDown = (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        textInner.blur();
+        editTarget.blur();
       } else if (e.key === 'Escape') {
-        textInner.blur();
+        editTarget.blur();
       }
     };
 
     const onBlur = () => {
-      textInner.contentEditable = "false";
+      editTarget.contentEditable = "false";
       textInner.classList.remove('text-editing-active');
       this.isInlineEditing = false;
-      el.content = textInner.innerText;
+      el.content = editTarget.innerText;
+      this.syncTextFoilClass(textInner, el);
       this.saveState();
-      textInner.removeEventListener('input', onInput);
-      textInner.removeEventListener('keydown', onKeyDown);
-      textInner.removeEventListener('blur', onBlur);
+      editTarget.removeEventListener('input', onInput);
+      editTarget.removeEventListener('keydown', onKeyDown);
+      editTarget.removeEventListener('blur', onBlur);
       if (this.options.onElementSelect) {
         this.options.onElementSelect(el);
       }
     };
 
-    textInner.addEventListener('input', onInput);
-    textInner.addEventListener('keydown', onKeyDown);
-    textInner.addEventListener('blur', onBlur);
+    editTarget.addEventListener('input', onInput);
+    editTarget.addEventListener('keydown', onKeyDown);
+    editTarget.addEventListener('blur', onBlur);
   }
 
   finishInlineEdit() {
@@ -1324,8 +1389,9 @@ export class CardEditor {
     const elNode = this.getCanvasElementNode(this.selectedElementId);
     if (!elNode) return;
     const textInner = elNode.querySelector('.text-content-inner');
-    if (textInner && textInner.contentEditable === "true") {
-      textInner.blur();
+    const editTarget = textInner ? (this.getTextFoilRun(textInner) || textInner) : null;
+    if (editTarget && editTarget.contentEditable === "true") {
+      editTarget.blur();
     }
   }
 
